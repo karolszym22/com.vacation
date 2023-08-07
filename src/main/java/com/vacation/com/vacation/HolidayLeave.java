@@ -13,6 +13,17 @@ public class HolidayLeave implements Vacation{
 
     private String description;
     private int daysNum;
+    private boolean done; // Nowe pole 'done'
+
+    // pozostałe metody
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
 
     HolidayLeave(){
 
