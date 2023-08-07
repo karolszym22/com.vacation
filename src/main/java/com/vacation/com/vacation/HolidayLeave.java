@@ -1,20 +1,22 @@
 package com.vacation.com.vacation;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "vacations")
 public class HolidayLeave implements Vacation{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
+
     private String description;
     private int daysNum;
 
+    HolidayLeave(){
+
+    }
     public int getId() {
         return id;
     }
