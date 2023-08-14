@@ -11,7 +11,7 @@ public interface HolidayLeaveRepository {
 
     Page<HolidayLeave> findAll(Pageable page);
     Optional<HolidayLeave> findById(Integer id);
-
+    void deleteById(Integer id);
     boolean existsById(Integer id);
     HolidayLeave save(HolidayLeave entity);
 

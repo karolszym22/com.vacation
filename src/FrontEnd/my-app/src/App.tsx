@@ -31,7 +31,10 @@ function App() {
     setDone(false);
   };
 
-
+  const handleDeleteVacation = (id: number) => {
+    const updatedVacations = vacations.filter(vacation => vacation.id !== id);
+    setVacations(updatedVacations);
+  };
 
 
 
@@ -55,6 +58,7 @@ function App() {
             <td>{vacation.description}</td>
             <td>{vacation.days}</td>
             <td>{vacation.done ? 'Yes' : 'No'}</td>
+            <td><button onClick={() => handleDeleteVacation(vacation.id)}>Delete</button></td>
           </tr>
         ))}
       </tbody>

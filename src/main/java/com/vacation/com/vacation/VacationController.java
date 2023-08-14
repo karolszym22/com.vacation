@@ -49,4 +49,12 @@ class VacationController {
         repository.save(toUpdate);
         return ResponseEntity.noContent().build();
     }
+    @DeleteMapping("/vacations/{id}")
+    ResponseEntity<?> deleteVacation(@PathVariable int id) {
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
