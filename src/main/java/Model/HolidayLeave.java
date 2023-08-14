@@ -1,4 +1,4 @@
-package com.vacation.com.vacation;
+package Model;
 
 
 import jakarta.persistence.*;
@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "vacations")
-public class HolidayLeave implements Vacation{
+public class HolidayLeave implements Vacation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -21,7 +21,6 @@ public class HolidayLeave implements Vacation{
     private int daysNum;
     private boolean done; // Nowe pole 'done'
 
-    // pozostałe metody
 
     public boolean isDone() {
         return done;

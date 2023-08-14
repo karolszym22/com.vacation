@@ -1,5 +1,6 @@
-package com.vacation.com.vacation;
+package Repository;
 
+import Model.HolidayLeave;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

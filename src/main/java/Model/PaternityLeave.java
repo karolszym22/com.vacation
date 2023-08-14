@@ -1,6 +1,6 @@
-package com.vacation.com.vacation;
+package Model;
 
-public class PaternityLeave implements Vacation{
+public class PaternityLeave implements Vacation {
     @Override
     public String Type() {
         return "Urlop tacierzyński";

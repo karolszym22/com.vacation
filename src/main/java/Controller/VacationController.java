@@ -1,5 +1,8 @@
-package com.vacation.com.vacation;
+package Controller;
 
+import Model.HolidayLeave;
+import Repository.HolidayLeaveRepository;
+import Repository.SqlHolidayLeaveRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +16,7 @@ import java.util.List;
 class VacationController {
     private static final Logger logger = LoggerFactory.getLogger(VacationController.class);
     private final HolidayLeaveRepository repository;
-    
+
     VacationController(final SqlHolidayLeaveRepository repository){
         this.repository = repository;
     }
