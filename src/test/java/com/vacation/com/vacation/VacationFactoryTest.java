@@ -1,4 +1,5 @@
 package com.vacation.com.vacation;
+import Model.Vacation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

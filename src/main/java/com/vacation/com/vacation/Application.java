@@ -2,10 +2,11 @@ package com.vacation.com.vacation;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 
 @SpringBootApplication
+@EnableJpaRepositories
 public class Application {
 
 	public static void main(String[] args) {

@@ -1,5 +1,10 @@
 package com.vacation.com.vacation;
 
+import Model.HolidayLeave;
+import Model.MaternityLeave;
+import Model.PaternityLeave;
+import Model.Vacation;
+
 public class VacationFactory {
     public Vacation createVacation(String rodzaj) {
         if (rodzaj.equalsIgnoreCase("wypoczynkowy")) {

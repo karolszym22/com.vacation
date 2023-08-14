@@ -1,4 +1,4 @@
-package com.vacation.com.vacation;
+package Model;
 
 public interface Vacation {
     String Type();
