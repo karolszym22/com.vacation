@@ -69,7 +69,7 @@ const SideMenu = styled.div`
   width: 280px;
   background-color: #2e4051;
   height: 100vh;
-  position: absolute;
+ 
   top: 0;
   display: flex;
   flex-direction: column; /* Changed to column */
@@ -96,6 +96,10 @@ const Menu = () => {
         <NavLinkName>Lista urlopów</NavLinkName>
       </MenuNavLink>
       <SubMenu expanded={isSubMenuOpen} />
+      <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName>Dodaj nowy urlop</NavLinkName>
+      </MenuNavLink>
     </SideMenu>
   );
 };
