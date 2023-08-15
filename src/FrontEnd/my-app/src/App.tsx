@@ -1,5 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import styled from 'styled-components';
+import Menu  from './Components/SideMenu/SideMenu';
+import Header from './Components/Header/Header';
+import MainMenu from './Components/Main/Main'
+
+const MainWrapper = styled.div`
+width: 100%;
+height: 100vh;
+display:flex ;
+`;
+
+const Wrapper = styled.div`
+  width: 100%;
+  display:flex ;
+  flex-direction: column;
+`
+
+
 
 interface Vacation {
   id: number;
@@ -50,55 +68,15 @@ function App() {
 
   return (
     <div>
-      <h1>Vacation List</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Description</th>
-            <th>Days</th>
-            <th>Done</th>
-          </tr>
-        </thead>
-        <tbody>
-          {vacations.map((vacation) => (
-            <tr key={vacation.id}>
-              <td>{vacation.id}</td>
-              <td>{vacation.description}</td>
-              <td>{vacation.days}</td>
-              <td>{vacation.done ? 'Yes' : 'No'}</td>
-              <td><button onClick={() => handleDeleteVacation(vacation.id)}>Delete</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <form onSubmit={handleAddVacation}>
-        <label htmlFor="description">Description:</label>
-        <input
-          type="text"
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <br />
-        <label htmlFor="daysNum">Days:</label>
-        <input
-          type="number"
-          id="daysNum"
-          value={days}
-          onChange={(e) => setDays(Number(e.target.value))}
-        />
-        <br />
-        <label htmlFor="done">Done:</label>
-        <input
-          type="checkbox"
-          id="done"
-          checked={done}
-          onChange={(e) => setDone(e.target.checked)}
-        />
-        <br />
-        <button type="submit">Add Vacation</button>
-      </form>
+   
+   <MainWrapper>
+    <Menu/>
+     <Wrapper>
+      <Header/>
+      <MainMenu></MainMenu>
+      
+      </Wrapper>
+      </MainWrapper>
     </div>
   );
 }
