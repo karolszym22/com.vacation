@@ -1,4 +1,4 @@
-package com.vacation.com.vacation;
+package com.vacation.com.vacation.Model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,6 +1,6 @@
-package Repository;
+package com.vacation.com.vacation;
 
-import Model.HolidayLeave;
+import com.vacation.com.vacation.Model.HolidayLeave;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;

@@ -1,4 +1,4 @@
-package Model;
+package com.vacation.com.vacation.Model;
 
 
 import jakarta.persistence.*;
@@ -19,7 +19,7 @@ public class HolidayLeave implements Vacation {
     private Date endDate;
     private String description;
     private int daysNum;
-    private boolean done; // Nowe pole 'done'
+    private boolean done;
 
 
     public boolean isDone() {
@@ -30,7 +30,7 @@ public class HolidayLeave implements Vacation {
         this.done = done;
     }
 
-    HolidayLeave(){
+    public HolidayLeave(){
 
     }
     public int getId() {
