@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Home, List } from "feather-icons-react";
+import {NavLink, useNavigate} from 'react-router-dom';
 
 const CustomHomeIcon = styled(Home)`
   width: 15px;
@@ -89,7 +90,15 @@ const Menu = () => {
       </MenuLogoContainer>
       <MenuNavLink>
         <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/Register">Rejestracja nowego pracownika</NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomHomeIcon />
         <NavLinkName>Strona główna</NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/SignIn" >Zaloguj się!</NavLinkName>
       </MenuNavLink>
       <MenuNavLink onClick={toggleSubMenu}>
         <CustomListIcon />
