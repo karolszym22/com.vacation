@@ -1,10 +1,10 @@
 package com.vacation.com.vacation.Controller;
 
-import com.vacation.com.vacation.Repository.UserRepository;
-import com.vacation.com.vacation.UserCredentials;
+import com.vacation.com.vacation.Model.UserExistResponse;
 import com.vacation.com.vacation.Model.UserEntity;
 import com.vacation.com.vacation.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,16 +13,36 @@ import java.util.List;
 @RestController
 public class UserController {
     private final UserService userService;
-
+    private boolean exist = false;
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/NewUser")
-    public ResponseEntity<String> registerUser(@RequestBody UserCredentials credentials) {
-        userService.registerUser(mapToUserEntity(credentials));
-        return ResponseEntity.ok("User registered successfully");
+    public ResponseEntity<String> registerUser(@RequestBody UserEntity user) {
+        if (userService.registerUser(mapToUserEntity(user))) {
+            return ResponseEntity.ok("User registered!");
+        } else {
+            return ResponseEntity.badRequest().body("User exists!");
+        }
+
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody UserEntity user) {
+        boolean loggedIn = userService.loginUser(user.getEmail(), user.getPassword());
+        if (loggedIn) {
+            return ResponseEntity.ok("Login successful!");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed!");
+        }
+    }
+
+
+    @GetMapping("/exist")
+    public ResponseEntity<UserExistResponse> checkExist() {
+        UserExistResponse response = new UserExistResponse(exist);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/NewUser")
@@ -31,10 +51,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    private UserEntity mapToUserEntity(UserCredentials credentials) {
+    private UserEntity mapToUserEntity(UserEntity credentials) {
         UserEntity user = new UserEntity();
         user.setUsername(credentials.getUsername());
         user.setPassword(credentials.getPassword());
+        user.setEmail(credentials.getEmail());
+        user.setEmployerType((credentials.getEmployerType()));
         return user;
     }
 }
