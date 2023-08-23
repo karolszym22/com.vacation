@@ -3,9 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux"; 
 import { userLogin } from "../../Components/Actions/actions"; 
+import { initialState } from "../../Reducers/authorizationReducer";
+
 
 const Login: React.FC = () => {
-  const [username, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
@@ -14,7 +16,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:8080/login", {
-        username,
+        email,
         password,
       });
 
@@ -25,9 +27,11 @@ const Login: React.FC = () => {
           userLogin({
             id: response.data.id,
             name: response.data.username,
+            email: response.data.email,
           })
         );
         navigate("/");
+        console.log("Initial State after Login:", initialState);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -40,8 +44,8 @@ const Login: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Username"
-          value={username}
+          placeholder="email"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
