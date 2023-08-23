@@ -22,6 +22,8 @@ public class HolidayLeave implements Vacation {
     private boolean done;
 
 
+    private int personId;
+
     public boolean isDone() {
         return done;
     }
@@ -40,7 +42,13 @@ public class HolidayLeave implements Vacation {
     public void setId(int id) {
         this.id = id;
     }
+    public int getPersonId() {
+        return personId;
+    }
 
+    public void setPersonId(int personId) {
+        this.personId = personId;
+    }
     public String getDescription() {
         return description;
     }
