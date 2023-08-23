@@ -9,7 +9,7 @@ interface AppState {
 }
   
 type AppAction =
-   { type: "EMPLOYEE_AUTHORIZATION"; payload: { userData: User } }
+   { type: "EMPLOYEE_AUTHORIZATION"; payload: { user: User } }
 
 export const initialState: AppState = {
   user: { id: 0, name: '', email: '' },
@@ -19,7 +19,7 @@ const authorizationReducer = (state: AppState = initialState, action: AppAction)
   switch (action.type) {
     case 'EMPLOYEE_AUTHORIZATION':
     
-      return { ...state, user: action.payload.userData };
+      return { ...state, user: action.payload.user };
       
     default:
       return state;

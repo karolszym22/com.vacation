@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux"; 
-import { userLogin } from "../../Components/Actions/actions"; 
-import { initialState } from "../../Reducers/authorizationReducer";
+import { useDispatch } from "react-redux";
+import { user } from "../../Components/Actions/actions";
 
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,19 +19,15 @@ const Login: React.FC = () => {
         password,
       });
 
-      console.log(response.data);
-
-      if (response.data === "Login successful!") {
-        dispatch(
-          userLogin({
-            id: response.data.id,
-            name: response.data.username,
-            email: response.data.email,
-          })
-        );
-        navigate("/");
-        console.log("Initial State after Login:", initialState);
-      }
+      dispatch(
+        user({
+          id: response.data.id,
+          name: response.data.username,
+          email: response.data.email,
+        })
+      );
+      navigate("/");
+      console.log("Initial State after Login:", response.data.id, response.data.username, response.data.email);
     } catch (error) {
       console.error("Login error:", error);
     }

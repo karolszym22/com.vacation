@@ -1,7 +1,7 @@
 type AppAction = { type: "EMPLOYEE_AUTHORIZATION"; payload: object }
 
 
-  export const userLogin = (employerContent: object) => {
+  export const user = (employerContent: object) => {
     
     return {
       type: "EMPLOYEE_AUTHORIZATION",
@@ -12,5 +12,6 @@ type AppAction = { type: "EMPLOYEE_AUTHORIZATION"; payload: object }
       },
     };
   };
+
 
 export {};
