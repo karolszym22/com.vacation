@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux"; 
+import { userLogin } from "../../Components/Actions/actions"; 
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
+  const [username, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch(); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,8 +17,16 @@ const Login: React.FC = () => {
         username,
         password,
       });
+
       console.log(response.data);
+
       if (response.data === "Login successful!") {
+        dispatch(
+          userLogin({
+            id: response.data.id,
+            name: response.data.username,
+          })
+        );
         navigate("/");
       }
     } catch (error) {
@@ -31,7 +42,7 @@ const Login: React.FC = () => {
           type="text"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
