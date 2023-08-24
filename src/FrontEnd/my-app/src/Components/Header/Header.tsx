@@ -1,7 +1,25 @@
 import styled from "styled-components";
-import { User } from "feather-icons-react";
 import img from "../../resources/pexels-karolina-grabowska-7876708.jpg";
 import userIcon from "../../resources/user.png";
+import {NavLink, useNavigate} from 'react-router-dom';
+import { connect } from "react-redux"
+import { useSelector } from "react-redux";
+import RootState from "../../Reducers/Store/index"; 
+import { Store } from "redux";
+
+interface UserState {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface AuthorizationState {
+  user: UserState;
+}
+
+interface RootState {
+  authorization: AuthorizationState;
+}
 
 const UserIcon = styled.div`
   background-image: url(${userIcon});
@@ -15,7 +33,7 @@ const UserIcon = styled.div`
 const HeaderContainer = styled.div`
   width: 100%;
   height: 500px;
-  position: relative; /* Dodaj pozycję względem której będzie pozycjonowany pseudoelement */
+  position: relative; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,10 +112,15 @@ const HeaderElementContainer = styled.div`
 `;
 
 const Header = () => {
+  const userName = useSelector((state: RootState) => state.authorization.user.name);
+
+
+
   return (
     <HeaderContainer>
       <HeaderTop>
-        <UserIcon></UserIcon>
+        <UserIcon  as={NavLink} to="/SignIn"></UserIcon>
+        <a>{userName}</a> {}
       </HeaderTop>
       <HeaderBackground>
         <HeaderTitle>Dodawaj i obserwuj swoje urlopy! </HeaderTitle>
