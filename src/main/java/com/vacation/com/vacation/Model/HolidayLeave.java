@@ -20,7 +20,7 @@ public class HolidayLeave implements Vacation {
     private String description;
     private int daysNum;
     private boolean done;
-
+    private String employerName;
 
     private int personId;
 
@@ -39,6 +39,9 @@ public class HolidayLeave implements Vacation {
         return id;
     }
 
+    public String getEmployerName() {
+        return employerName;
+    }
     public void setId(int id) {
         this.id = id;
     }
@@ -56,7 +59,6 @@ public class HolidayLeave implements Vacation {
     public void setDescription(String description) {
         this.description = description;
     }
-
     public int getDaysNum() {
         return daysNum;
     }
