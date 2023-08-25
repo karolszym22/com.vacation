@@ -19,7 +19,7 @@ public class UserService {
     }
 
     public boolean registerUser(UserEntity user) {
-        UserEntity existingUser = userRepository.findByUsername(user.getUsername());
+        UserEntity existingUser = userRepository.findByEmail(user.getEmail());
         if (existingUser == null) {
             userRepository.save(user);
             System.out.println("User registered!");
@@ -29,7 +29,19 @@ public class UserService {
             return false;
         }
     }
-
+    public boolean loginUser(String email, String password) {
+        UserEntity user = userRepository.findByEmail(email);
+        if (user != null && user.getPassword().equals(password)) {
+            System.out.println("Login successful!");
+            return true;
+        } else {
+            System.out.println("Login failed!");
+            return false;
+        }
+    }
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
