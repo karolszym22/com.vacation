@@ -29,12 +29,13 @@ public class UserController {
 
     }
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserEntity user) {
+    public ResponseEntity<UserEntity> loginUser(@RequestBody UserEntity user) {
         boolean loggedIn = userService.loginUser(user.getEmail(), user.getPassword());
         if (loggedIn) {
-            return ResponseEntity.ok("Login successful!");
+            UserEntity loggedInUser = userService.getUserByEmail(user.getEmail());
+            return ResponseEntity.ok(loggedInUser);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
 
