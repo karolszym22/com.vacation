@@ -13,14 +13,23 @@ const CustomListIcon = styled(List)`
   height: 15px;
   margin: 5px;
 `;
+const HrTitle = styled.div`
+  
+  font-size: 15px;
+  color: #95c1ec;
+  font-weight: bold;
+  position: absolute;
+  left: 170px;
+  top: 60px;
 
+`
 
 const MenuLogoContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center; /* Added alignment */
-  padding: 10px 20px; /* Added padding */
+  align-items: center; 
+  padding: 10px 20px; 
   box-sizing: border-box;
 `;
 
@@ -42,7 +51,7 @@ const MenuNavLink = styled.div`
   color: white;
   padding: 8px 5px;
   display: flex;
-  align-items: center; /* Added alignment */
+  align-items: center;
   cursor: pointer;
   &:hover {
     background-color: #293744;
@@ -73,7 +82,7 @@ const SideMenu = styled.div`
  
   top: 0;
   display: flex;
-  flex-direction: column; /* Changed to column */
+  flex-direction: column; 
 `;
 
 const Menu = () => {
@@ -86,6 +95,7 @@ const Menu = () => {
   return (
     <SideMenu>
       <MenuLogoContainer>
+        <HrTitle>HR</HrTitle>
         <MenuNavLogo>Urlopy</MenuNavLogo>
       </MenuLogoContainer>
       <MenuNavLink>
@@ -107,7 +117,7 @@ const Menu = () => {
       <SubMenu expanded={isSubMenuOpen} />
       <MenuNavLink>
         <CustomHomeIcon />
-        <NavLinkName>Dodaj nowy urlop</NavLinkName>
+        <NavLinkName as={NavLink} to="/NewVacation" >Dodaj nowy urlop</NavLinkName>
       </MenuNavLink>
     </SideMenu>
   );
