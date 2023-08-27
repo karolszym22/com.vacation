@@ -42,6 +42,10 @@ public class HolidayLeave implements Vacation {
     public String getEmployerName() {
         return employerName;
     }
+
+    public void  SetEmployerName(String employerName) {
+        this.employerName = employerName;
+    }
     public void setId(int id) {
         this.id = id;
     }
