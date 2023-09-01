@@ -120,8 +120,8 @@ const Register: React.FC = () => {
       >
         <option value="">Select user type</option>
         <option value="HR">HR</option>
-        <option value="Pracownik">Pracownik</option>
-        <option value="Pracodawca">Pracodawca</option>
+        <option value="PRACOWNIK">Pracownik</option>
+        <option value="PRACODAWCA">Pracodawca</option>
       </Select>
       <Button type="submit">Register</Button>
     </Form>
