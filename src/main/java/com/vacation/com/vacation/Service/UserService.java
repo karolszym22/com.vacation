@@ -1,4 +1,4 @@
-package com.vacation.com.vacation;
+package com.vacation.com.vacation.Service;
 
 import com.vacation.com.vacation.Model.UserEntity;
 import com.vacation.com.vacation.Repository.UserRepository;
