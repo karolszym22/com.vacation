@@ -21,6 +21,7 @@ public class HolidayLeave implements Vacation {
     private int daysNum;
     private boolean done;
     private String employerName;
+    private String taskStatus;
 
     private int personId;
 
@@ -30,6 +31,14 @@ public class HolidayLeave implements Vacation {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public void setTaskStatus(String taskStatus){
+        this.taskStatus = taskStatus;
+    }
+
+    public String getTaskStatus(){
+        return taskStatus;
     }
 
     public HolidayLeave(){
