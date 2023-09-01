@@ -1,6 +1,7 @@
-import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import styled from "styled-components";
 
 interface Vacation {
   description: string;
@@ -8,22 +9,40 @@ interface Vacation {
   daysNum: number;
 }
 
-const MainMenu = styled.div`
-  width: 100%;
-  right: 0px;
+const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+const TaskButton = styled.button`
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
+const VacationDetails = styled.div`
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
 `;
 
 const VacationPreview: React.FC = () => {
   const { paramValue } = useParams<{ paramValue: string }>();
   const [vacationData, setVacationData] = useState<Vacation | null>(null);
+  const [taskEnums, setTaskEnums] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/vacations/${paramValue}`);
-        const data = await response.json();
+        const response = await fetch(
+          `http://localhost:8080/vacations/${paramValue}`
+        );
+        const data: Vacation = await response.json();
         setVacationData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -33,18 +52,67 @@ const VacationPreview: React.FC = () => {
     fetchData();
   }, [paramValue]);
 
+  useEffect(() => {
+    console.log("Sending task...");
+
+    const sendTask = async () => {
+      try {
+        const taskData = {
+          taskStatus: `Pracodawca:Zaakceptowane`,
+          userType: "HR",
+        };
+
+        const response = await axios.post(
+          `http://localhost:8080/tasks/tasksToDo`,
+          taskData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          console.log("Task sent successfully:", response.data.taskEnums);
+          setTaskEnums(response.data.taskEnums);
+        } else {
+          console.error("Failed to send task.");
+        }
+      } catch (error) {
+        console.error("Error sending task:", error);
+      }
+    };
+
+    sendTask();
+  }, []);
+
+  const handleTaskButtonClick = (action: string) => {};
+
+  const renderTaskButtons = () => {
+    return taskEnums.map((taskEnum) => (
+      <TaskButton
+        key={taskEnum}
+        onClick={() => handleTaskButtonClick(taskEnum)}
+      >
+        {taskEnum}
+      </TaskButton>
+    ));
+  };
+
   return (
     <div>
       {vacationData ? (
-        <div>
+        <VacationDetails>
           <h2>Vacation Details</h2>
           <p>Description: {vacationData.description}</p>
           <p>Employer: {vacationData.employerName}</p>
           <p>Days: {vacationData.daysNum}</p>
-        </div>
+        </VacationDetails>
       ) : (
         <p>Loading...</p>
       )}
+
+      <ButtonContainer>{renderTaskButtons()}</ButtonContainer>
     </div>
   );
 };
