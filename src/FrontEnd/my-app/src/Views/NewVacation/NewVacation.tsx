@@ -80,7 +80,39 @@ function NewVacation() {
 
     return businessDays;
   };
-
+  const handleEndDateChange = async (newEndDate: string) => {
+    setEndDate(newEndDate);
+    console.log("Sending request with data:", {
+      personId,
+      startDate,
+      endDate: newEndDate,
+    });
+    const startDateObj = new Date(startDate);
+  const endDateObj = new Date(newEndDate);
+  try {
+    const response = await fetch("http://localhost:8080/dateValidate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        personId,
+        startDate: startDateObj, // Użyj daty jako obiektu
+        endDate: endDateObj,     // Użyj daty jako obiektu
+      }),
+    });
+  
+    if (!response.ok) {
+      const responseData = await response.text(); // Pobierz dane z odpowiedzi jako tekst
+      throw new Error(`Request failed with status: ${response.status}, Response data: ${responseData}`);
+    }
+  
+    const validationResult = await response.text(); // Pobierz dane z odpowiedzi jako tekst
+    console.log(validationResult);
+  } catch (error) {
+    console.error("Error validating date:", error);
+  }
+  };
 
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -92,7 +124,9 @@ function NewVacation() {
       done,
       personId,
       employerName,
-      taskStatus
+      taskStatus,
+      startDate,
+      endDate
     };
 
     try {
@@ -156,7 +190,7 @@ function NewVacation() {
         id="endDate"
         name="endDate"
         value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
+        onChange={(e) => handleEndDateChange(e.target.value)}
       />
         <button type="submit">Add Vacation</button>
       </StyledForm>
