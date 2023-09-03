@@ -1,8 +1,13 @@
 package com.vacation.com.vacation.Model;
 
-import java.util.Date;
+import jakarta.persistence.*;
 
+import java.util.Date;
+@Entity
+@Table(name = "documents")
 public class Document {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private Date currentData;
     private String description;
