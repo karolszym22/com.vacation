@@ -37,9 +37,11 @@ public class VacationService {
     }
 
     public void updateVacation(Integer id, HolidayLeave updatedVacation) {
-        if (holidayLeaveRepository.existsById(id)) {
-            updatedVacation.setId(id);
-            holidayLeaveRepository.save(updatedVacation);
+        Optional<HolidayLeave> optionalVacation = holidayLeaveRepository.findById(id);
+        if (optionalVacation.isPresent()) {
+            HolidayLeave vacation = optionalVacation.get();
+            vacation.setTaskStatus(updatedVacation.getTaskStatus());
+            holidayLeaveRepository.save(vacation);
         }
     }
 

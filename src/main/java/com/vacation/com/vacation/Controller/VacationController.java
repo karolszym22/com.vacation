@@ -53,4 +53,12 @@ class VacationController {
         vacationService.deleteVacation(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/vacations/acceptStatus/{id}")
+    ResponseEntity<Void> acceptVacationStatus(
+            @PathVariable int id,
+            @RequestBody HolidayLeave updatedVacation
+    ) {
+        vacationService.updateVacation(id, updatedVacation);
+        return ResponseEntity.noContent().build();
+    }
 }
