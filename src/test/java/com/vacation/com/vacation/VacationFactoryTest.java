@@ -1,5 +1,5 @@
 package com.vacation.com.vacation;
-import Model.Vacation;
+import com.vacation.com.vacation.Model.Vacation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
