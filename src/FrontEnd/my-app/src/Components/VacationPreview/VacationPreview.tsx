@@ -9,6 +9,7 @@ interface Vacation {
   description: string;
   employerName: string;
   daysNum: number;
+  personId: number;
 }
 interface UserState {
   id: number;
@@ -91,6 +92,7 @@ const VacationPreview: React.FC = () => {
 
         if (response.status === 200) {
           console.log("Task sent successfully:", response.data.taskEnums);
+          console.log( response.data.taskEnums)
           setTaskEnums(response.data.taskEnums);
         } else {
           console.error("Failed to send task.");
@@ -107,16 +109,16 @@ const VacationPreview: React.FC = () => {
 
   const acceptHandleButton = async () => {
     try {
-      const updatedVacationData = { ...vacationData, taskStatus: "Zarealizowano" };
+      const updatedVacationData = { ...vacationData, taskStatus: "Zrealizowano" };
       console.log(vacationData?.id);
   
-      // Wysyłanie danych do /document/word
       const documentData = {
         description: updatedVacationData.description,
         employerName: updatedVacationData.employerName,
         daysNum: updatedVacationData.daysNum,
         taskStatus: updatedVacationData.taskStatus,
         vacationId: updatedVacationData.id,
+        personId: updatedVacationData.personId,
       };
   
       const documentResponse = await axios.post(
