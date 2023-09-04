@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import RootState from "../../Reducers/Store/index"; 
 import { Store } from "redux";
 import React, { useEffect, useState } from "react";
+import axios from 'axios'; 
 
 interface UserState {
   id: number;
@@ -123,15 +124,23 @@ const Header = () => {
   const userName = useSelector((state: RootState) => state.authorization.user.name);
   const [realizedVacations, setRealizedVacations] = useState<Vacation[]>([]);
   useEffect(() => {
-    fetch(`http://localhost:8080/vacations/status/Zrealizowano`)
-      .then((response) => response.json())
-      .then((data) => {
-        setRealizedVacations(data.vacations);
-        console.log(realizedVacations);
-      })
-      .catch((error) =>
-        console.error("Error fetching realized vacations:", error)
-      );
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/vacations/status/Zrealizowano');
+        
+        if (response.status === 200) {
+          const data = response.data;
+          setRealizedVacations(data);
+          console.log(data);
+        } else {
+          console.error('Failed to fetch realized vacations.');
+        }
+      } catch (error) {
+        console.error('Error fetching realized vacations:', error);
+      }
+    };
+  
+    fetchData();
   }, []);
 
   return (
