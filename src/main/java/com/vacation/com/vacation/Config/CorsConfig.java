@@ -1,4 +1,4 @@
-package com.vacation.com.vacation;
+package com.vacation.com.vacation.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
