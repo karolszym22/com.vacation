@@ -154,7 +154,7 @@ const Header = () => {
         <HeaderElementContainer>
           <HeaderElement>
             {" "}
-            <HeaderElementValue color="#2cfc03">10</HeaderElementValue>
+            <HeaderElementValue color="#2cfc03">{realizedVacations.length}</HeaderElementValue>
             <Value>Zaakceptowane</Value>
           </HeaderElement>
           <HeaderElement>
