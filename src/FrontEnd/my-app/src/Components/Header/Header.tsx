@@ -6,13 +6,21 @@ import { connect } from "react-redux"
 import { useSelector } from "react-redux";
 import RootState from "../../Reducers/Store/index"; 
 import { Store } from "redux";
+import React, { useEffect, useState } from "react";
 
 interface UserState {
   id: number;
   name: string;
   email: string;
 }
-
+interface Vacation {
+  id: number;
+  description: string;
+  employerName: string;
+  daysNum: number;
+  personId: number;
+  taskStatus: string
+}
 interface AuthorizationState {
   user: UserState;
 }
@@ -113,8 +121,18 @@ const HeaderElementContainer = styled.div`
 
 const Header = () => {
   const userName = useSelector((state: RootState) => state.authorization.user.name);
-
-
+  const [realizedVacations, setRealizedVacations] = useState<Vacation[]>([]);
+  useEffect(() => {
+    fetch(`http://localhost:8080/vacations/status/Zrealizowano`)
+      .then((response) => response.json())
+      .then((data) => {
+        setRealizedVacations(data.vacations);
+        console.log(realizedVacations);
+      })
+      .catch((error) =>
+        console.error("Error fetching realized vacations:", error)
+      );
+  }, []);
 
   return (
     <HeaderContainer>
