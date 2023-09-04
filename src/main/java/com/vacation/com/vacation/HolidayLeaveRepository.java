@@ -14,6 +14,7 @@ public interface HolidayLeaveRepository {
     List<HolidayLeave> findByPersonId(Integer personId);
     Page<HolidayLeave> findAll(Pageable page);
     Optional<HolidayLeave> findById(Integer id);
+    List<HolidayLeave> findByTaskStatus(String taskStatus);
     void deleteById(Integer id);
     boolean existsById(Integer id);
     HolidayLeave save(HolidayLeave entity);
