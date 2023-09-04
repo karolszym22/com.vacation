@@ -1,13 +1,8 @@
 package com.vacation.com.vacation.Controller;
 
-import com.vacation.com.vacation.HolidayLeaveRepository;
 import com.vacation.com.vacation.Model.HolidayLeave;
-import com.vacation.com.vacation.SqlHolidayLeaveRepository;
-import com.vacation.com.vacation.VacationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.vacation.com.vacation.Service.VacationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +29,12 @@ class VacationController {
         List<HolidayLeave> vacations = vacationService.getAllVacations();
         return ResponseEntity.ok(vacations);
     }
-
+    @GetMapping("vacations/status/{taskStatus}")
+    public ResponseEntity<List<HolidayLeave>> getVacationsByTaskStatus(@PathVariable String taskStatus) {
+        List<HolidayLeave> vacations = vacationService.getVacationByTaskStatus(taskStatus);
+        System.out.println(vacations);
+        return ResponseEntity.ok(vacations);
+    }
     @GetMapping("/vacations/{id}")
     ResponseEntity<HolidayLeave> readVacation(@PathVariable int id){
         return vacationService.getVacationById(id)
@@ -61,4 +61,5 @@ class VacationController {
         vacationService.updateVacation(id, updatedVacation);
         return ResponseEntity.noContent().build();
     }
+
 }

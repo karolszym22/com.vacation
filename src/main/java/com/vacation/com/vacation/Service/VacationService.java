@@ -1,4 +1,4 @@
-package com.vacation.com.vacation;
+package com.vacation.com.vacation.Service;
 
 import com.vacation.com.vacation.Model.HolidayLeave;
 import com.vacation.com.vacation.HolidayLeaveRepository;
@@ -20,10 +20,11 @@ public class VacationService {
         this.holidayLeaveRepository = holidayLeaveRepository;
     }
 
-    public List<HolidayLeave> getAllVacations() {
+    public List<HolidayLeave> getAllVacations() {System.out.println("Asdasdasdasdas");
         return holidayLeaveRepository.findAll();
     }
 
+    public List<HolidayLeave> getVacationByTaskStatus(String taskStatus) {System.out.println(taskStatus + " aaaaaaaaaaaaaa"); return holidayLeaveRepository.findByTaskStatus(taskStatus);}
     public Page<HolidayLeave> getAllVacationsPaged(Pageable pageable) {
         return holidayLeaveRepository.findAll(pageable);
     }
