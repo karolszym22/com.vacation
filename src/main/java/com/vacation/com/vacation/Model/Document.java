@@ -15,7 +15,7 @@ public class Document {
     private int daysNum;
     private String taskStatus;
     private int vacationId;
-
+    private int personId;
 
     public long getId() {
         return id;
@@ -24,7 +24,13 @@ public class Document {
     public void setId(int id) {
         this.id = id;
     }
+    public long getPersonId() {
+        return personId;
+    }
 
+    public void setPersonId(int personId) {
+        this.personId = personId;
+    }
     public Date getCurrentData() {
         return currentData;
     }
