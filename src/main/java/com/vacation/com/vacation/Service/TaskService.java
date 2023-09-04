@@ -18,8 +18,8 @@ public class TaskService {
         List<Task.Tasks> taskEnums = new ArrayList<>();
 
         if ("HR".equals(userType)) {
-            if ("Pracodawca:Zaakceptowane".equals(taskStatus)) {
-
+            if ("Zaakceptowane".equals(taskStatus)) {
+                taskEnums.add(Task.Tasks.ODRZUC);
                 taskEnums.add(Task.Tasks.ZWROC);
                 taskEnums.add(Task.Tasks.ZAAKCEPTUJ);
             }
@@ -30,7 +30,12 @@ public class TaskService {
                 taskEnums.add(Task.Tasks.ZAAKCEPTUJ);
             }
         }
+        if ("PRACOWNIK".equals(userType)) {
+            if ("Zwrócone".equals(taskStatus)) {
 
+                taskEnums.add(Task.Tasks.DODAJ);
+            }
+        }
         taskData.setTaskEnums(taskEnums);
         return taskData;
     }

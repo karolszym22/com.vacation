@@ -10,6 +10,7 @@ interface Vacation {
   employerName: string;
   daysNum: number;
   personId: number;
+  taskStatus: string
 }
 interface UserState {
   id: number;
@@ -62,6 +63,7 @@ const VacationPreview: React.FC = () => {
         );
         const data: Vacation = await response.json();
         setVacationData(data);
+       
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -72,53 +74,70 @@ const VacationPreview: React.FC = () => {
 
   useEffect(() => {
     console.log("Sending task...");
-
+    console.log(vacationData, "sssssssssssssssss");
+    console.log(vacationData?.taskStatus, "asdasdasdasdas")
+    
     const sendTask = async () => {
       try {
-        const taskData = {
-          taskStatus: `Pracownik:Dodane`,
-          userType: userType,
-        };
-        console.log(userType)
-        const response = await axios.post(
-          `http://localhost:8080/tasks/tasksToDo`,
-          taskData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
+        if (vacationData) {
+          const taskData = {
+            taskStatus: vacationData.taskStatus,
+            userType: userType,
+          };
+          console.log(taskData)
+          const response = await axios.post(
+            `http://localhost:8080/tasks/tasksToDo`,
+            taskData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+  
+          if (response.status === 200) {
+            console.log("Task sent successfully:", response.data.taskEnums);
+            console.log(response.data.taskEnums)
+            setTaskEnums(response.data.taskEnums);
+          } else {
+            console.error("Failed to send task.");
           }
-        );
-
-        if (response.status === 200) {
-          console.log("Task sent successfully:", response.data.taskEnums);
-          console.log( response.data.taskEnums)
-          setTaskEnums(response.data.taskEnums);
-        } else {
-          console.error("Failed to send task.");
         }
       } catch (error) {
         console.error("Error sending task:", error);
       }
     };
-
+  
     sendTask();
-  }, []);
+  }, [vacationData, userType]);
 
   const handleTaskButtonClick = (action: string) => {};
 
-  const acceptHandleButton = async () => {
+  
+  
+const employerHandleButton = async (taskEnum: string) => {
     try {
-      const updatedVacationData = { ...vacationData, taskStatus: "Zrealizowano" };
-      console.log(vacationData?.id);
+      let updatedVacationData
+      if(taskEnum === "ZAAKCEPTUJ")
+      {
+        updatedVacationData = { ...vacationData, taskStatus: "Zrealizowano" };
+      }else if(taskEnum === "ZWROC")
+      {
+        updatedVacationData = { ...vacationData, taskStatus: "Zwrócone" };
+      }
+      else if(taskEnum === "ODRZUC")
+      {
+        updatedVacationData = { ...vacationData, taskStatus: "Odrzucono" };
+      }
+      
   
       const documentData = {
-        description: updatedVacationData.description,
-        employerName: updatedVacationData.employerName,
-        daysNum: updatedVacationData.daysNum,
-        taskStatus: updatedVacationData.taskStatus,
-        vacationId: updatedVacationData.id,
-        personId: updatedVacationData.personId,
+        description: updatedVacationData?.description,
+        employerName: updatedVacationData?.employerName,
+        daysNum: updatedVacationData?.daysNum,
+        taskStatus: updatedVacationData?.taskStatus,
+        vacationId: updatedVacationData?.id,
+        personId: updatedVacationData?.personId,
       };
   
       const documentResponse = await axios.post(
@@ -137,7 +156,7 @@ const VacationPreview: React.FC = () => {
         console.error("Failed to send document data.");
       }
       const response = await axios.put(
-        `http://localhost:8080/vacations/${updatedVacationData.id}`,
+        `http://localhost:8080/vacations/${updatedVacationData?.id}`,
         updatedVacationData,
         {
           headers: {
@@ -155,30 +174,19 @@ const VacationPreview: React.FC = () => {
       console.error("Error handling vacation:", error);
     }
   };
-  
-
 
   const renderTaskButtons = () => {
     return taskEnums.map((taskEnum) => {
-      if (taskEnum === 'ZAAKCEPTUJ') {
+   
         return (
           <TaskButton
             key={taskEnum}
-            onClick={acceptHandleButton}
+            onClick={() => employerHandleButton(taskEnum)}
           >
             {taskEnum}
           </TaskButton>
         );
-      } else {
-        return (
-          <TaskButton
-            key={taskEnum}
-            onClick={() => handleTaskButtonClick(taskEnum)}
-          >
-            {taskEnum}
-          </TaskButton>
-        );
-      }
+      
     });
   };
 
