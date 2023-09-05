@@ -35,4 +35,14 @@ public class DocumentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/exist")
+    public ResponseEntity<String> checkDocumentExistence(
+            @RequestParam("personId") int personId,
+            @RequestParam("vacationId") int vacationId) {
+        String existenceStatus = documentService.userDocument(personId, vacationId);
+        System.out.println(personId + "czy backend działa");
+        System.out.println(vacationId + "czy backend działa");
+        System.out.println(existenceStatus + "czy backend działa");
+        return new ResponseEntity<>(existenceStatus, HttpStatus.OK);
+    }
 }
