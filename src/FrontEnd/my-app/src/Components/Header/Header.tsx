@@ -123,6 +123,8 @@ const HeaderElementContainer = styled.div`
 const Header = () => {
   const userName = useSelector((state: RootState) => state.authorization.user.name);
   const [realizedVacations, setRealizedVacations] = useState<Vacation[]>([]);
+  const [rejectedVacations, setRejectedVacations] = useState<Vacation[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -131,6 +133,19 @@ const Header = () => {
         if (response.status === 200) {
           const data = response.data;
           setRealizedVacations(data);
+          console.log(data);
+        } else {
+          console.error('Failed to fetch realized vacations.');
+        }
+      } catch (error) {
+        console.error('Error fetching realized vacations:', error);
+      }
+      try {
+        const response = await axios.get('http://localhost:8080/vacations/status/Odrzucono');
+        
+        if (response.status === 200) {
+          const data = response.data;
+         setRejectedVacations(data);
           console.log(data);
         } else {
           console.error('Failed to fetch realized vacations.');
@@ -164,7 +179,7 @@ const Header = () => {
           </HeaderElement>
           <HeaderElement>
             {" "}
-            <HeaderElementValue color="brown">0</HeaderElementValue>
+            <HeaderElementValue color="brown">{rejectedVacations.length}</HeaderElementValue>
             <Value>Odrzucone</Value>
           </HeaderElement>
         </HeaderElementContainer>
