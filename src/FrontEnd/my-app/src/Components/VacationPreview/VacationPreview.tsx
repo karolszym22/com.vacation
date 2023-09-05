@@ -10,7 +10,7 @@ interface Vacation {
   employerName: string;
   daysNum: number;
   personId: number;
-  taskStatus: string
+  taskStatus: string;
 }
 interface UserState {
   id: number;
@@ -26,7 +26,11 @@ interface AuthorizationState {
 interface RootState {
   authorization: AuthorizationState;
 }
-
+const DocumentDownloadContainer = styled.div`
+  width: 180px;
+  height: 50px;
+  border: 1px solid black;
+`;
 const ButtonContainer = styled.div`
   display: flex;
   gap: 10px;
@@ -53,8 +57,12 @@ const VacationPreview: React.FC = () => {
   const { paramValue } = useParams<{ paramValue: string }>();
   const [vacationData, setVacationData] = useState<Vacation | null>(null);
   const [taskEnums, setTaskEnums] = useState<string[]>([]);
-  const userType = useSelector((state: RootState) => state.authorization.user.employerType);
-  
+  const userType = useSelector(
+    (state: RootState) => state.authorization.user.employerType
+  );
+  const userId = useSelector((state: RootState) => state.authorization.user.id);
+  const [documentExistence, setDocumentExistence] = useState<string>("");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -63,7 +71,6 @@ const VacationPreview: React.FC = () => {
         );
         const data: Vacation = await response.json();
         setVacationData(data);
-       
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -75,8 +82,8 @@ const VacationPreview: React.FC = () => {
   useEffect(() => {
     console.log("Sending task...");
     console.log(vacationData, "sssssssssssssssss");
-    console.log(vacationData?.taskStatus, "asdasdasdasdas")
-    
+    console.log(vacationData?.taskStatus, "asdasdasdasdas");
+
     const sendTask = async () => {
       try {
         if (vacationData) {
@@ -84,7 +91,7 @@ const VacationPreview: React.FC = () => {
             taskStatus: vacationData.taskStatus,
             userType: userType,
           };
-          console.log(taskData)
+          console.log(taskData);
           const response = await axios.post(
             `http://localhost:8080/tasks/tasksToDo`,
             taskData,
@@ -94,10 +101,10 @@ const VacationPreview: React.FC = () => {
               },
             }
           );
-  
+
           if (response.status === 200) {
             console.log("Task sent successfully:", response.data.taskEnums);
-            console.log(response.data.taskEnums)
+            console.log(response.data);
             setTaskEnums(response.data.taskEnums);
           } else {
             console.error("Failed to send task.");
@@ -107,54 +114,71 @@ const VacationPreview: React.FC = () => {
         console.error("Error sending task:", error);
       }
     };
-  
+
     sendTask();
   }, [vacationData, userType]);
 
   const handleTaskButtonClick = (action: string) => {};
+  useEffect(() => {
+    const checkDocumentExistence = async () => {
+      console.log("istnieje1?", userId);
+      console.log("istnieje2?", vacationData?.id);
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/document/word/exist?personId=${userId}&vacationId=${vacationData?.id}`
+        );
 
-  
-  
-const employerHandleButton = async (taskEnum: string) => {
+        const data: string = response.data;
+        setDocumentExistence(data);
+      } catch (error) {
+        console.error("Error checking document existence:", error);
+      }
+    };
+
+    if (vacationData) {
+      checkDocumentExistence();
+    }
+  }, [vacationData]);
+
+  const employerHandleButton = async (taskEnum: string) => {
     try {
-      let updatedVacationData
-      if(taskEnum === "ZAAKCEPTUJ")
-      {
+      let updatedVacationData;
+
+      if (taskEnum === "DO_REALIZACJI") {
         updatedVacationData = { ...vacationData, taskStatus: "Zrealizowano" };
-      }else if(taskEnum === "ZWROC")
-      {
-        updatedVacationData = { ...vacationData, taskStatus: "Zwrócone" };
-      }
-      else if(taskEnum === "ODRZUC")
-      {
-        updatedVacationData = { ...vacationData, taskStatus: "Odrzucono" };
-      }
-      
-  
-      const documentData = {
-        description: updatedVacationData?.description,
-        employerName: updatedVacationData?.employerName,
-        daysNum: updatedVacationData?.daysNum,
-        taskStatus: updatedVacationData?.taskStatus,
-        vacationId: updatedVacationData?.id,
-        personId: updatedVacationData?.personId,
-      };
-  
-      const documentResponse = await axios.post(
-        `http://localhost:8080/document/word`,
-        documentData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+
+        const documentData = {
+          description: updatedVacationData?.description,
+          employerName: updatedVacationData?.employerName,
+          daysNum: updatedVacationData?.daysNum,
+          taskStatus: updatedVacationData?.taskStatus,
+          vacationId: updatedVacationData?.id,
+          personId: updatedVacationData?.personId,
+        };
+
+        const documentResponse = await axios.post(
+          `http://localhost:8080/document/word`,
+          documentData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (documentResponse.status === 200) {
+          console.log("Document data sent successfully.");
+        } else {
+          console.error("Failed to send document data.");
         }
-      );
-  
-      if (documentResponse.status === 200) {
-        console.log("Document data sent successfully.");
-      } else {
-        console.error("Failed to send document data.");
+      } else if (taskEnum === "ZWROC") {
+        updatedVacationData = { ...vacationData, taskStatus: "Zwrócono" };
+      } else if (taskEnum === "ODRZUC") {
+        updatedVacationData = { ...vacationData, taskStatus: "Odrzucono" };
+      } else if (taskEnum === "ZAAKCEPTUJ") {
+        updatedVacationData = { ...vacationData, taskStatus: "Zaakceptowane" };
       }
+
       const response = await axios.put(
         `http://localhost:8080/vacations/${updatedVacationData?.id}`,
         updatedVacationData,
@@ -164,7 +188,7 @@ const employerHandleButton = async (taskEnum: string) => {
           },
         }
       );
-  
+
       if (response.status === 204) {
         console.log("Vacation data updated successfully.");
       } else {
@@ -177,16 +201,14 @@ const employerHandleButton = async (taskEnum: string) => {
 
   const renderTaskButtons = () => {
     return taskEnums.map((taskEnum) => {
-   
-        return (
-          <TaskButton
-            key={taskEnum}
-            onClick={() => employerHandleButton(taskEnum)}
-          >
-            {taskEnum}
-          </TaskButton>
-        );
-      
+      return (
+        <TaskButton
+          key={taskEnum}
+          onClick={() => employerHandleButton(taskEnum)}
+        >
+          {taskEnum}
+        </TaskButton>
+      );
     });
   };
 
@@ -198,6 +220,9 @@ const employerHandleButton = async (taskEnum: string) => {
           <p>Description: {vacationData.description}</p>
           <p>Employer: {vacationData.employerName}</p>
           <p>Days: {vacationData.daysNum}</p>
+          {documentExistence === "exist" && (
+            <DocumentDownloadContainer>w realizacji</DocumentDownloadContainer>
+          )}
         </VacationDetails>
       ) : (
         <p>Loading...</p>
