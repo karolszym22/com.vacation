@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import Login from "../Login/Login.tsx/Login"
-import {NavLink, useNavigate} from 'react-router-dom';
+import Login from "../Login/Login.tsx/Login";
+import { NavLink, useNavigate } from "react-router-dom";
 
 interface Vacation {
   id: number;
   description: string;
   daysNum: number;
   done: boolean;
+  taskStatus: string
 }
 
 const MainMenu = styled.div`
@@ -34,8 +35,8 @@ const CustomerElement = styled.div`
   justify-content: start;
   margin: 10px;
   -webkit-box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
--moz-box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
-box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
+  box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
 `;
 const CustomerInitiated = styled.div`
   box-sizing: border-box;
@@ -140,8 +141,20 @@ const TableCell = styled.td`
   color: #565454;
 `;
 
+const getColorByTaskStatus = (taskStatus: string) => {
+  switch (taskStatus) {
+    case "Zrealizowano":
+      return "green";
+    case "Odrzucono":
+      return "red";
+    default:
+      return "orange";
+  }
+};
+
 const Menu = () => {
   const [vacations, setVacations] = useState<Vacation[]>([]);
+ 
 
   useEffect(() => {
     fetch("http://localhost:8080/vacations")
@@ -150,20 +163,20 @@ const Menu = () => {
         setVacations(data);
       })
       .catch((error) => console.error("Error fetching data:", error));
+  
   }, []);
 
   const handlePreviewClick = (vacationId: number) => {
-  fetch(`http://localhost:8080/vacationsPreview`, {
-      method: 'POST', 
+    fetch(`http://localhost:8080/vacationsPreview`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ vacationId })
+      body: JSON.stringify({ vacationId }),
     })
-    .then(response => response.json())
-    .then(data => {
-    })
-  }
+      .then((response) => response.json())
+      .then((data) => {});
+  };
   return (
     <MainMenu>
       <CustomersTitle>Pracownicy</CustomersTitle>
@@ -254,27 +267,26 @@ const Menu = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {vacations.map((vacation) => (
-            <TableRow  key={vacation.id}>
-              <TableCell>{vacation.id}</TableCell>
-              <TableCell>{vacation.description}</TableCell>
-              <TableCell >{vacation.daysNum}</TableCell>
-              <TableCell
-                style={{
-                  color: vacation.done ? "green" : "red",
-                  fontWeight: vacation.done ? "bold" : "bold",
-                }}
-              >
-                {vacation.done ? "Zaakceptowany" : "Odrzucony"}
-              </TableCell>
-              <TableCell>
-              <NavLink to={`/vacationId/${vacation.id}`}>
-                Podgląd
-              </NavLink>
+        {vacations.map((vacation) => (
+          <TableRow key={vacation.id}>
+            <TableCell>{vacation.id}</TableCell>
+            <TableCell>{vacation.description}</TableCell>
+            <TableCell>{vacation.daysNum}</TableCell>
+            <TableCell
+              style={{
+                color: getColorByTaskStatus(vacation.taskStatus), // Ustalanie koloru na podstawie taskStatus
+                fontWeight: "bold",
+              }}
+            >
+              {vacation.taskStatus}
             </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+            <TableCell>
+              <NavLink to={`/vacationId/${vacation.id}`}>Podgląd</NavLink>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+
       </Table>
     </MainMenu>
   );
