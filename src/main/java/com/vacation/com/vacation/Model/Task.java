@@ -2,10 +2,11 @@ package com.vacation.com.vacation.Model;
 public class Task {
     public enum Tasks {
         ZWROC("Zwróć"),
-        ZAAKCEPTUJ("Zakceptuj"),
+        ZAAKCEPTUJ("Zaakceptuj"),
         ZWROC_DO_HR("Zwróć do HR"),
         ODRZUC("Odrzuć"),
-        DODAJ("Dodaj");
+        DODAJ("Dodaj"),
+        DO_REALIZACJI("Do realizacji");
 
         private final String opis;
 
@@ -31,5 +32,4 @@ public class Task {
     public void setTask(Tasks task) {
         this.task = task;
     }
-
 }
