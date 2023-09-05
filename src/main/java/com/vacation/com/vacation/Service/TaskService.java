@@ -21,10 +21,10 @@ public class TaskService {
             if ("Zaakceptowane".equals(taskStatus)) {
                 taskEnums.add(Task.Tasks.ODRZUC);
                 taskEnums.add(Task.Tasks.ZWROC);
-                taskEnums.add(Task.Tasks.ZAAKCEPTUJ);
+                taskEnums.add(Task.Tasks.DO_REALIZACJI);
             }
         } else if ("PRACODAWCA".equals(userType)) {
-            if ("Pracownik:Dodane".equals(taskStatus) || "HR:Zwróc".equals(taskStatus)) {;
+            if ("W realizacji".equals(taskStatus) || "HR:Zwróc".equals(taskStatus)) {;
                 taskEnums.add(Task.Tasks.ODRZUC);
                 taskEnums.add(Task.Tasks.ZWROC);
                 taskEnums.add(Task.Tasks.ZAAKCEPTUJ);
