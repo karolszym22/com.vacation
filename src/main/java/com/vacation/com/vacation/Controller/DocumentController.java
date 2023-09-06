@@ -61,12 +61,17 @@ public class DocumentController {
         int vacationId = requestData.get("vacationId");
         Document document = documentService.getCurrentDocument(personId, vacationId);
 
+        Date startDate = document.getStartDate();
+        Date endDate = document.getEndDate();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String startDateStr = dateFormat.format(startDate);
+        String endDateStr = dateFormat.format(endDate);
 
-        String description = "Niniejszym składam wniosek o udzielenie w dniach od 02.05.2023 do 02.09.2023\n" +
+        String description = "Niniejszym składam wniosek o udzielenie w dniach od " +  startDateStr +" do " + endDateStr +
         "przysługującego za rok 2023 urlopu wypoczynkowego. Powód: " + document.getDescription() ;
-        String comment = document.getDescription();
         String taskStatus = document.getTaskStatus();
-        String employerName = "Pracownik" + document.getEmployerName();
+        String employerName = "Pracownik " + document.getEmployerName();
+        String daysNum = "Liczba dni: " + document.getDaysNum();
 
         XWPFDocument wordDocument = new XWPFDocument();
 
@@ -74,7 +79,6 @@ public class DocumentController {
         XWPFParagraph dateParagraph = wordDocument.createParagraph();
         dateParagraph.setAlignment(ParagraphAlignment.RIGHT);
         XWPFRun dateRun = dateParagraph.createRun();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = dateFormat.format(new Date());
         dateRun.setText(currentDate);
 
@@ -93,13 +97,15 @@ public class DocumentController {
         descriptionParagraph.setSpacingAfter(200);
         XWPFRun descriptionRun = descriptionParagraph.createRun();
         descriptionRun.setText(description);
+        descriptionRun.setFontSize(14);
 
-
-        XWPFParagraph commentParagraph = wordDocument.createParagraph();
-        commentParagraph.setAlignment(ParagraphAlignment.LEFT);
-        commentParagraph.setSpacingAfter(3000);
-        XWPFRun commentRun = commentParagraph.createRun();
-
+        XWPFParagraph daysNumParagraph = wordDocument.createParagraph();
+        descriptionParagraph.setAlignment(ParagraphAlignment.CENTER);
+        descriptionParagraph.setSpacingBefore(700);
+        XWPFRun daysNumRun = daysNumParagraph.createRun();
+        daysNumRun.setText(daysNum);
+        daysNumRun.setFontSize(14);
+        daysNumRun.setBold(true);
 
 
         XWPFParagraph statusParagraph = wordDocument.createParagraph();
@@ -112,7 +118,7 @@ public class DocumentController {
 
         XWPFParagraph employerNameParagraph = wordDocument.createParagraph();
         employerNameParagraph.setAlignment(ParagraphAlignment.LEFT);
-        employerNameParagraph.setSpacingBefore(1200);
+        employerNameParagraph.setSpacingBefore(400);
         XWPFRun employerNameRun = employerNameParagraph.createRun();
         employerNameRun.setText(employerName);
         employerNameRun.setFontSize(14);
