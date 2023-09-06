@@ -11,6 +11,8 @@ interface Vacation {
   daysNum: number;
   personId: number;
   taskStatus: string;
+  startDate: Date;
+  endDate: Date;
 }
 interface UserState {
   id: number;
@@ -189,6 +191,8 @@ const VacationPreview: React.FC = () => {
           taskStatus: updatedVacationData?.taskStatus,
           vacationId: updatedVacationData?.id,
           personId: updatedVacationData?.personId,
+          startDate: updatedVacationData?.startDate,
+          endDate: updatedVacationData?.endDate,
         };
 
         const documentResponse = await axios.post(
