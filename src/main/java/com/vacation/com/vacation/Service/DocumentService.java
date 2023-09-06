@@ -34,4 +34,10 @@ public class DocumentService {
     public List<Document> getAllDocuments() {
         return documentRepository.findAll();
     }
+
+    public Document getCurrentDocument(int personId, int vacationId){
+
+        return documentRepository.findByPersonIdAndVacationId(personId,  vacationId);
+
+    }
 }
