@@ -12,8 +12,8 @@ const Container = styled.div`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 230px;
+  
+  width: 250px;
 `;
 const Title = styled.h2`
   font-size: 1.5em;
@@ -22,8 +22,9 @@ const Title = styled.h2`
 
 const ErrorText = styled.div`
   color: red;
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
+  font-size: 12px;
 `;
 
 const Input = styled.input`
@@ -33,18 +34,28 @@ const Input = styled.input`
 `;
 
 const Select = styled.select`
-  padding: 10px;
+  padding: 5px;
   margin: 5px 0;
-  width: 30%;
+  width: 150px;
+  border: 1px solid #b1adad;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #646262;
 `;
 
 const Button = styled.button`
-  padding: 10px;
-  background-color: #007bff;
+  padding: 10px 25px;
+  margin: 15px 80px;
+  width: 100px;
+  background-color: orange;
   color: white;
+  font-weight: bold;
   border: none;
   cursor: pointer;
 `;
+const BottomTitle = styled.h2`
+  color: #646262;
+`
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -52,6 +63,8 @@ const Register: React.FC = () => {
   const [employerType, setEmployerType] = useState("");
   const [email, setEmail] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(""); 
+  const [confirmPassword, setConfirmPassword] = useState(""); 
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
 
@@ -67,7 +80,10 @@ const Register: React.FC = () => {
       setPasswordError("Password must be at least 8 characters long.");
       return;
     }
-
+    if (password !== confirmPassword) { 
+      setConfirmPasswordError("Passwords do not match.");
+      return;
+    }
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email.match(emailPattern)) {
       setEmailError("Invalid email address.");
@@ -90,41 +106,49 @@ const Register: React.FC = () => {
 
   return (
     <Container>
-    <Title>Register</Title>
+    <BottomTitle>Zaarejestruj się</BottomTitle>
     <Form onSubmit={handleSubmit}>
       
       <Input
         type="text"
-        placeholder="Username"
+        placeholder="Nazwa użytkownika"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
       <ErrorText>{usernameError}</ErrorText>
       <Input
         type="password"
-        placeholder="Password"
+        placeholder="Hasło"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <ErrorText>{usernameError}</ErrorText>
+      <ErrorText>{passwordError}</ErrorText>
+      <Input
+        type="password"
+        placeholder="Potwierdz hasło" 
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+      <ErrorText>{confirmPasswordError}</ErrorText>
       <Input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <ErrorText>{usernameError}</ErrorText>
+      <ErrorText>{emailError}</ErrorText>
       <Select
         value={employerType}
         onChange={(e) => setEmployerType(e.target.value)}
       >
-        <option value="">Select user type</option>
+        <option value="">Wybierz rolę</option>
         <option value="HR">HR</option>
         <option value="PRACOWNIK">Pracownik</option>
         <option value="PRACODAWCA">Pracodawca</option>
       </Select>
-      <Button type="submit">Register</Button>
+      <Button type="submit">Dołącz</Button>
     </Form>
+    <h3>Masz już konto? Zaloguj się!</h3>
   </Container>
   );
 };
