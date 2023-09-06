@@ -44,8 +44,11 @@ const MenuNavLogo = styled.h1`
 `;
 
 const NavLinkName = styled.a`
-  font-size: 14px;
+  font-size: 15px;
   margin: 5px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
 `;
 const MenuNavLink = styled.div`
   color: white;
@@ -104,15 +107,11 @@ const Menu = () => {
       </MenuNavLink>
       <MenuNavLink>
         <CustomHomeIcon />
-        <NavLinkName>Strona główna</NavLinkName>
+        <NavLinkName as={NavLink} to="/">Strona główna</NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
         <CustomHomeIcon />
         <NavLinkName as={NavLink} to="/SignIn" >Zaloguj się!</NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink onClick={toggleSubMenu}>
-        <CustomListIcon />
-        <NavLinkName>Lista urlopów</NavLinkName>
       </MenuNavLink>
       <SubMenu expanded={isSubMenuOpen} />
       <MenuNavLink>
