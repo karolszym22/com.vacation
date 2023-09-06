@@ -180,83 +180,7 @@ const Menu = () => {
   return (
     <MainMenu>
       <CustomersTitle>Pracownicy</CustomersTitle>
-      <CustomersContainer>
-        <CustomerElement>
-          <CustomerInitiated color="#404f8c">KS</CustomerInitiated>
-          <CustomerName>Karol Szymański</CustomerName>
-          <CustomerVacationsContainer>
-            <CustomerVacationsAccepts>
-              <VacationsAcceptsColor></VacationsAcceptsColor>
-              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsAccepts>
-          </CustomerVacationsContainer>
-          <CustomerVacationsContainer>
-            <CustomerVacationsDuring>
-              <VacationsDuringColor></VacationsDuringColor>
-              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsDuring>
-          </CustomerVacationsContainer>
-          <CustomerVacationsContainer>
-            <CustomerVacationsRejected>
-              <VacationsRejectedColor></VacationsRejectedColor>
-              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsRejected>
-          </CustomerVacationsContainer>
-        </CustomerElement>
-        <CustomerElement>
-          <CustomerInitiated color="#4aa70c">JK</CustomerInitiated>
-          <CustomerName>Jan Kowalski</CustomerName>
-          <CustomerVacationsContainer>
-            <CustomerVacationsAccepts>
-              <VacationsAcceptsColor></VacationsAcceptsColor>
-              <VacationsAcceptsNumber>1</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsAccepts>
-          </CustomerVacationsContainer>
-          <CustomerVacationsContainer>
-            <CustomerVacationsDuring>
-              <VacationsDuringColor></VacationsDuringColor>
-              <VacationsAcceptsNumber>14</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsDuring>
-          </CustomerVacationsContainer>
-          <CustomerVacationsContainer>
-            <CustomerVacationsRejected>
-              <VacationsRejectedColor></VacationsRejectedColor>
-              <VacationsAcceptsNumber>22</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsRejected>
-          </CustomerVacationsContainer>
-        </CustomerElement>
-        <CustomerElement>
-          <CustomerInitiated color="#9a1d9e">HR</CustomerInitiated>
-          <CustomerName>HR</CustomerName>
-          <CustomerVacationsContainer>
-            <CustomerVacationsAccepts>
-              <VacationsAcceptsColor></VacationsAcceptsColor>
-              <VacationsAcceptsNumber>0</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsAccepts>
-          </CustomerVacationsContainer>
-          <CustomerVacationsContainer>
-            <CustomerVacationsDuring>
-              <VacationsDuringColor></VacationsDuringColor>
-              <VacationsAcceptsNumber>0</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsDuring>
-          </CustomerVacationsContainer>
-          <CustomerVacationsContainer>
-            <CustomerVacationsRejected>
-              <VacationsRejectedColor></VacationsRejectedColor>
-              <VacationsAcceptsNumber>0</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsRejected>
-          </CustomerVacationsContainer>
-        </CustomerElement>
-      </CustomersContainer>
+      
       <Table>
         <TableHeader>
           <TableRow>
@@ -274,7 +198,7 @@ const Menu = () => {
             <TableCell>{vacation.daysNum}</TableCell>
             <TableCell
               style={{
-                color: getColorByTaskStatus(vacation.taskStatus), // Ustalanie koloru na podstawie taskStatus
+                color: getColorByTaskStatus(vacation.taskStatus), 
                 fontWeight: "bold",
               }}
             >
