@@ -17,6 +17,9 @@ public class Document {
     private int vacationId;
     private int personId;
 
+    private Date startDate;
+
+    private Date endDate;
     public long getId() {
         return id;
     }
@@ -24,6 +27,11 @@ public class Document {
     public void setId(int id) {
         this.id = id;
     }
+
+    public void setStartDate(Date startDate) {this.startDate = startDate;}
+    public Date getStartDate() {return startDate;}
+    public void setEndDate(Date endDate) {this.endDate = endDate;}
+    public Date getEndDate() {return endDate;}
     public long getPersonId() {
         return personId;
     }
