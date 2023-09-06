@@ -2,7 +2,95 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import RootState from "../../Reducers/Store/index";
-import {addDays, isSaturday, isSunday } from "date-fns";
+import { addDays, isSaturday, isSunday } from "date-fns";
+import Menu from "../../Components/SideMenu/SideMenu";
+import { NavLink, useNavigate } from "react-router-dom";
+import userIcon from "../../resources/user.png";
+
+
+
+
+
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  
+`;
+
+const TableHeader = styled.thead`
+  background-color: #ede7e7;
+`;
+
+const TableTitle = styled.div`
+margin-top: 120px;
+  width: 100%;
+  height: 50px;
+  background-color: rgb(180, 175, 175);
+  display: flex;
+  align-items: center;
+`
+const TableHeaderCell = styled.th`
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+`;
+
+const TableBody = styled.tbody``;
+
+const TableRow = styled.tr`
+  &:nth-child(even) {
+    background-color: #f0ebeb;
+  }
+`;
+
+const TableCell = styled.td`
+  padding: 10px;
+  text-align: center;
+  font-weight: 500;
+  border-bottom: 1px solid #ddd;
+  color: #565454;
+`;
+
+
+
+const HeaderTop = styled.div`
+  width: 100%;
+  height: 40px;
+  background-color: white;
+  top: 0px;
+  display: flex;
+  justify-content: end;
+`;
+const UserIcon = styled.div`
+  background-image: url(${userIcon});
+  color: white;
+  height: 24px;
+  width: 24px;
+  margin: 5px 20px;
+  background-color: white;
+`;
+
+const MainWrapper = styled.div`
+  display: flex;
+`;
+const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  font-family: sans-serif;
+  color: #646262;
+`;
+const Header = styled.div`
+  width: 100%;
+  height: 70px;
+  background-color: rgb(248, 244, 244);
+`;
+const HeaderTitle = styled.h1`
+  margin: 10px;
+  color: #696666;
+`;
 
 const StyledTable = styled.table`
   width: 100%;
@@ -19,7 +107,9 @@ const StyledTable = styled.table`
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  margin-top: 16px;
+  margin-top: 100px;
+  justify-content: center;
+  width: 30%;
 
   label {
     margin-bottom: 4px;
@@ -30,13 +120,62 @@ const StyledForm = styled.form`
     margin-bottom: 8px;
   }
 `;
+const Select = styled.select`
+  padding: 5px;
+  margin: 15px 10px;
+  width: 150px;
+  border: 1px solid #c7bfbf;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #646262;
+`;
+
+const Button = styled.button`
+  background-color: orange;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  width: 110px;
+`;
+
+const DescriptionInput = styled.textarea`
+  height: 130px;
+  margin: 5px;
+`;
+
+const Input = styled.input`
+  padding: 8px;
+  border: 1px solid #ccc; /* Kolor granicy */
+  border-radius: 5px;
+  background-color: #f5f5f5; /* Tło */
+  color: #333; /* Kolor tekstu */
+  font-family: Arial, sans-serif; /* Font-family */
+  font-size: 14px; /* Rozmiar czcionki */
+  margin: 8px;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;
+const BottomTitle = styled.h2`
+  color: #646262;
+`;
 
 interface Vacation {
   id: number;
   description: string;
   daysNum: number;
   done: boolean;
+  taskStatus: string;
+  startDate: string;
+  endDate: string;
+  
 }
+
 interface UserState {
   id: number;
   name: string;
@@ -50,22 +189,52 @@ interface RootState {
   authorization: AuthorizationState;
 }
 
+
+
+
+const getColorByTaskStatus = (taskStatus: string) => {
+  switch (taskStatus) {
+    case "Zrealizowano":
+      return "green";
+    case "Odrzucono":
+      return "red";
+    default:
+      return "orange";
+  }
+};
+
+
+
+
 function NewVacation() {
   const [vacations, setVacations] = useState<Vacation[]>([]);
   const [description, setDescription] = useState("");
   const [done, setDone] = useState<boolean>(false);
-  const [taskStatus, setTaskStatus] = useState("Pracownik:Dodane");
+  const [taskStatus, setTaskStatus] = useState("W realizacji");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [daysNum, setDaysNum] = useState<number>(0);
+  const userName = useSelector((state: RootState) => state.authorization.user.name);
 
+
+
+  useEffect(() => {
+    fetch("http://localhost:8080/vacations")
+      .then((response) => response.json())
+      .then((data) => {
+        setVacations(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+
+  
   const personId = useSelector(
     (state: RootState) => state.authorization.user.id
   );
   const employerName = useSelector(
     (state: RootState) => state.authorization.user.name
   );
-
 
   const calculateBusinessDays = (start: Date, end: Date) => {
     let currentDate = new Date(start);
@@ -88,32 +257,33 @@ function NewVacation() {
       endDate: newEndDate,
     });
     const startDateObj = new Date(startDate);
-  const endDateObj = new Date(newEndDate);
-  try {
-    const response = await fetch("http://localhost:8080/dateValidate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        personId,
-        startDate: startDateObj, // Użyj daty jako obiektu
-        endDate: endDateObj,     // Użyj daty jako obiektu
-      }),
-    });
-  
-    if (!response.ok) {
-      const responseData = await response.text(); // Pobierz dane z odpowiedzi jako tekst
-      throw new Error(`Request failed with status: ${response.status}, Response data: ${responseData}`);
-    }
-  
-    const validationResult = await response.text(); // Pobierz dane z odpowiedzi jako tekst
-    console.log(validationResult);
-  } catch (error) {
-    console.error("Error validating date:", error);
-  }
-  };
+    const endDateObj = new Date(newEndDate);
+    try {
+      const response = await fetch("http://localhost:8080/dateValidate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          personId,
+          startDate: startDateObj,
+          endDate: endDateObj,
+        }),
+      });
 
+      if (!response.ok) {
+        const responseData = await response.text();
+        throw new Error(
+          `Request failed with status: ${response.status}, Response data: ${responseData}`
+        );
+      }
+
+      const validationResult = await response.text();
+      console.log(validationResult);
+    } catch (error) {
+      console.error("Error validating date:", error);
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -126,7 +296,7 @@ function NewVacation() {
       employerName,
       taskStatus,
       startDate,
-      endDate
+      endDate,
     };
 
     try {
@@ -151,50 +321,91 @@ function NewVacation() {
   };
 
   return (
-    <div>
-      <StyledForm onSubmit={handleSubmit}>
-        <label htmlFor="description">Description:</label>
-        <input
-          type="text"
-          id="description"
-          name="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <label htmlFor="daysNum">Days:</label>
-        <input
-          type="number"
-          id="daysNum"
-          name="daysNum"
-          value={daysNum}
-          onChange={(e) => setDaysNum(parseInt(e.target.value))}
-        />
-        <label htmlFor="done">Done:</label>
-        <input
-          type="checkbox"
-          id="done"
-          name="done"
-          checked={done}
-          onChange={(e) => setDone(e.target.checked)}
-        />
-         <input
-        type="date"
-        id="startDate"
-        name="startDate"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-      />
-      <label htmlFor="endDate">End Date:</label>
-      <input
-        type="date"
-        id="endDate"
-        name="endDate"
-        value={endDate}
-        onChange={(e) => handleEndDateChange(e.target.value)}
-      />
-        <button type="submit">Add Vacation</button>
-      </StyledForm>
-    </div>
+    <MainWrapper>
+      <Menu />
+      <FormWrapper>
+        <HeaderTop>
+          <UserIcon as={NavLink} to="/SignIn"></UserIcon>
+          <a>{userName}</a> {}
+        </HeaderTop>
+        <Header>
+          <HeaderTitle>Nowy urlop</HeaderTitle>
+        </Header>
+
+        <StyledForm onSubmit={handleSubmit}>
+          <BottomTitle>Dodaj nowy urlop</BottomTitle>
+          <label htmlFor="endDate">Data rozpoczęcia urlopu:</label>
+          <Input
+            type="date"
+            id="startDate"
+            name="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+          <label htmlFor="endDate">Data zakończenia urlopu:</label>
+          <Input
+            type="date"
+            id="endDate"
+            name="endDate"
+            value={endDate}
+            onChange={(e) => handleEndDateChange(e.target.value)}
+          />
+          <Select>
+            <option value="">Typ urlopu</option>
+            <option value="HR">Wypoczynkowy</option>
+            <option value="PRACOWNIK">Pracownik</option>
+          </Select>
+          <label htmlFor="description">Przyczyna:</label>
+          <DescriptionInput
+            id="description"
+            name="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <Button type="submit">Dodaj urlop</Button>
+        </StyledForm>
+        <TableTitle>
+          <h2>Twoje wcześniejsze urlopy</h2>
+        </TableTitle>
+        <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHeaderCell>ID</TableHeaderCell>
+            <TableHeaderCell>Opis</TableHeaderCell>
+            <TableHeaderCell>Dni</TableHeaderCell>
+           
+            <TableHeaderCell>Data rozpoczęcia</TableHeaderCell>
+            <TableHeaderCell>Data zakończenia</TableHeaderCell>
+            <TableHeaderCell>Stan</TableHeaderCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+        {vacations.map((vacation) => (
+          <TableRow key={vacation.id}>
+            <TableCell>{vacation.id}</TableCell>
+            <TableCell>{vacation.description}</TableCell>
+            <TableCell>{vacation.daysNum}</TableCell>
+            <TableCell>{vacation.startDate}</TableCell>
+            <TableCell>{vacation.endDate}</TableCell>
+            <TableCell
+              style={{
+                color: getColorByTaskStatus(vacation.taskStatus), 
+                fontWeight: "bold",
+              }}
+            >
+              {vacation.taskStatus}
+            </TableCell>
+            <TableCell>
+              <NavLink to={`/vacationId/${vacation.id}`}>Podgląd</NavLink>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+
+      </Table>
+      </FormWrapper>
+     
+    </MainWrapper>
   );
 }
 
