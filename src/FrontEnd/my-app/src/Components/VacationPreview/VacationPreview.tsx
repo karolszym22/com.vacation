@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-
+import Menu from "../SideMenu/SideMenu";
 interface Vacation {
   id: number;
   description: string;
@@ -11,8 +11,8 @@ interface Vacation {
   daysNum: number;
   personId: number;
   taskStatus: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string
 }
 interface UserState {
   id: number;
@@ -28,6 +28,18 @@ interface AuthorizationState {
 interface RootState {
   authorization: AuthorizationState;
 }
+
+
+const MainWrapper = styled.div`
+  display: flex;
+`;
+
+const PreviewWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+
 const DocumentDownloadContainer = styled.div`
   width: 180px;
   height: 50px;
@@ -41,7 +53,7 @@ const ButtonContainer = styled.div`
 
 const TaskButton = styled.button`
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: ${({ color }) => color};
   color: white;
   border: none;
   border-radius: 4px;
@@ -54,6 +66,28 @@ const VacationDetails = styled.div`
   padding: 10px;
   border-radius: 4px;
 `;
+
+const Text = styled.p`
+  font-size: 16px; 
+`;
+
+
+const DateInput = styled.input`
+  font-size: 16px; 
+  border: none;
+  background-color: transparent;
+  pointer-events: none; 
+`;
+
+
+const TextArea = styled.textarea`
+  font-size: 16px; 
+  border: 1px solid #ccc; 
+  padding: 4px;
+  resize: none; 
+`;
+
+
 
 const VacationPreview: React.FC = () => {
   const { paramValue } = useParams<{ paramValue: string }>();
@@ -240,35 +274,75 @@ const VacationPreview: React.FC = () => {
 
   const renderTaskButtons = () => {
     return taskEnums.map((taskEnum) => {
-      return (
-        <TaskButton
-          key={taskEnum}
-          onClick={() => employerHandleButton(taskEnum)}
-        >
-          {taskEnum}
-        </TaskButton>
-      );
+      if(taskEnum === "ZAAKCEPTUJ")
+      {
+        return (
+          <TaskButton
+             color="green"
+            key={taskEnum}
+            onClick={() => employerHandleButton(taskEnum)}
+          >
+            {taskEnum}
+          </TaskButton>
+        );
+      }
+      if(taskEnum === "ODRZUC")
+      {
+        return (
+          <TaskButton
+             color="red"
+            key={taskEnum}
+            onClick={() => employerHandleButton(taskEnum)}
+          >
+            {taskEnum}
+          </TaskButton>
+        );
+      }
+      if(taskEnum === "ZWROC")
+      {
+        return (
+          <TaskButton
+             color="purple"
+            key={taskEnum}
+            onClick={() => employerHandleButton(taskEnum)}
+          >
+            {taskEnum}
+          </TaskButton>
+        );
+      }
+      
     });
   };
 
   return (
-    <div>
-      {vacationData ? (
-        <VacationDetails>
-          <h2>Vacation Details</h2>
-          <p>Description: {vacationData.description}</p>
-          <p>Employer: {vacationData.employerName}</p>
-          <p>Days: {vacationData.daysNum}</p>
-          {documentExistence === "exist" && (
-            <DocumentDownloadContainer onClick={downloadDocument}>w realizacji</DocumentDownloadContainer>
-          )}
-        </VacationDetails>
-      ) : (
-        <p>Loading...</p>
-      )}
+    <MainWrapper>
+      <Menu></Menu>
+      <PreviewWrapper>
+        {vacationData ? (
+          <VacationDetails>
+            <h2>Szczegóły urlopu</h2>
+            <Text>Pracownik: {vacationData.employerName}</Text>
+            <Text>Ilość dni zostaw: {vacationData.daysNum}</Text>
+            <Text>Data rozpoczęcia:</Text>
+            <DateInput type="date" value={vacationData.startDate} readOnly />
+            <Text>Data zakończenia:</Text>
+            <DateInput type="date" value={vacationData.endDate} readOnly />
+            <Text>Opis:</Text>
+            <TextArea rows={4} value={vacationData.description} readOnly />
+            <p></p>
+            {documentExistence === "exist" && (
+              <DocumentDownloadContainer onClick={downloadDocument}>
+                w realizacji
+              </DocumentDownloadContainer>
+            )}
+          </VacationDetails>
+        ) : (
+          <p>Loading...</p>
+        )}
 
-      <ButtonContainer>{renderTaskButtons()}</ButtonContainer>
-    </div>
+        <ButtonContainer>{renderTaskButtons()}</ButtonContainer>
+      </PreviewWrapper>
+    </MainWrapper>
   );
 };
 
