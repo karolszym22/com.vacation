@@ -57,11 +57,12 @@ const VacationPreview: React.FC = () => {
   const { paramValue } = useParams<{ paramValue: string }>();
   const [vacationData, setVacationData] = useState<Vacation | null>(null);
   const [taskEnums, setTaskEnums] = useState<string[]>([]);
+  const userId = useSelector((state: RootState) => state.authorization.user.id);
+  const [documentExistence, setDocumentExistence] = useState<string>("");
   const userType = useSelector(
     (state: RootState) => state.authorization.user.employerType
   );
-  const userId = useSelector((state: RootState) => state.authorization.user.id);
-  const [documentExistence, setDocumentExistence] = useState<string>("");
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,10 +80,44 @@ const VacationPreview: React.FC = () => {
     fetchData();
   }, [paramValue]);
 
+  const downloadDocument = async () => {
+    try {
+      if (vacationData) {
+        const downloadUrl = `http://localhost:8080/document/word/download`;
+  
+        const requestData = {
+          personId: userId,
+          vacationId: vacationData.id
+        };
+  
+        const response = await fetch(downloadUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+          body: JSON.stringify(requestData), 
+        });
+  
+        if (response.ok) {
+          console.log("Document downloaded successfully");
+        } else {
+          console.error("Error downloading document:", response.statusText);
+        }
+      }
+    } catch (error) {
+      console.error("Error downloading document:", error);
+    }
+  };
+  
+
+
   useEffect(() => {
     console.log("Sending task...");
     console.log(vacationData, "sssssssssssssssss");
     console.log(vacationData?.taskStatus, "asdasdasdasdas");
+
+    
+
 
     const sendTask = async () => {
       try {
@@ -221,7 +256,7 @@ const VacationPreview: React.FC = () => {
           <p>Employer: {vacationData.employerName}</p>
           <p>Days: {vacationData.daysNum}</p>
           {documentExistence === "exist" && (
-            <DocumentDownloadContainer>w realizacji</DocumentDownloadContainer>
+            <DocumentDownloadContainer onClick={downloadDocument}>w realizacji</DocumentDownloadContainer>
           )}
         </VacationDetails>
       ) : (
