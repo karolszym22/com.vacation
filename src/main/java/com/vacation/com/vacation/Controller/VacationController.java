@@ -23,7 +23,12 @@ class VacationController {
         vacationService.createVacation(toCreate);
         return ResponseEntity.created(URI.create("/" + toCreate.getId())).body(toCreate);
     }
-
+    @GetMapping("/vacations/personVacations/{personId}")
+    public ResponseEntity<List<HolidayLeave>> readCurrentPersonVacations(@PathVariable Integer personId) {
+        System.out.println("Co leci"+ personId);
+        List<HolidayLeave> vacations = vacationService.getAllPersonVacations(personId);
+        return ResponseEntity.ok(vacations);
+    }
     @GetMapping(value = "/vacations", params = {"!sort", "!page", "!size"})
     ResponseEntity<List<HolidayLeave>> readAllVacations(){
         List<HolidayLeave> vacations = vacationService.getAllVacations();
