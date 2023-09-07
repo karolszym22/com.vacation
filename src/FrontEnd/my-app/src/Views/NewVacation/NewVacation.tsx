@@ -23,7 +23,7 @@ const TableHeader = styled.thead`
 `;
 
 const TableTitle = styled.div`
-margin-top: 120px;
+margin-top: 5%;
   width: 100%;
   height: 50px;
   background-color: rgb(180, 175, 175);
@@ -107,7 +107,7 @@ const StyledTable = styled.table`
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
-  margin-top: 100px;
+  margin-top: 50px;
   justify-content: center;
   width: 30%;
 
@@ -148,12 +148,12 @@ const DescriptionInput = styled.textarea`
 
 const Input = styled.input`
   padding: 8px;
-  border: 1px solid #ccc; /* Kolor granicy */
+  border: 1px solid #ccc; 
   border-radius: 5px;
-  background-color: #f5f5f5; /* Tło */
-  color: #333; /* Kolor tekstu */
-  font-family: Arial, sans-serif; /* Font-family */
-  font-size: 14px; /* Rozmiar czcionki */
+  background-color: #f5f5f5; 
+  color: #333; 
+  font-family: Arial, sans-serif; 
+  font-size: 14px;
   margin: 8px;
 
   &:focus {
@@ -175,7 +175,16 @@ interface Vacation {
   endDate: string;
   
 }
-
+interface PersonVacation {
+  id: number;
+  description: string;
+  daysNum: number;
+  done: boolean;
+  taskStatus: string;
+  startDate: string;
+  endDate: string;
+  
+}
 interface UserState {
   id: number;
   name: string;
@@ -207,7 +216,8 @@ const getColorByTaskStatus = (taskStatus: string) => {
 
 
 function NewVacation() {
-  const [vacations, setVacations] = useState<Vacation[]>([]);
+  const [vacations, setVacations] = useState<any[]>([]);
+  const [personVacations, setPersonVacations] = useState<Vacation[]>([]);
   const [description, setDescription] = useState("");
   const [done, setDone] = useState<boolean>(false);
   const [taskStatus, setTaskStatus] = useState("W realizacji");
@@ -215,26 +225,24 @@ function NewVacation() {
   const [endDate, setEndDate] = useState<string>("");
   const [daysNum, setDaysNum] = useState<number>(0);
   const userName = useSelector((state: RootState) => state.authorization.user.name);
-
+  const personId = useSelector( (state: RootState) => state.authorization.user.id);
+  const employerName = useSelector( (state: RootState) => state.authorization.user.name);
 
 
   useEffect(() => {
-    fetch("http://localhost:8080/vacations")
+    console.log("MOJ person:", personId)
+    fetch(`http://localhost:8080/vacations/personVacations/${personId}`)
       .then((response) => response.json())
       .then((data) => {
-        setVacations(data);
+        setPersonVacations(data);
+        console.log(personVacations);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
 
   
-  const personId = useSelector(
-    (state: RootState) => state.authorization.user.id
-  );
-  const employerName = useSelector(
-    (state: RootState) => state.authorization.user.name
-  );
+ 
 
   const calculateBusinessDays = (start: Date, end: Date) => {
     let currentDate = new Date(start);
@@ -380,27 +388,27 @@ function NewVacation() {
           </TableRow>
         </TableHeader>
         <TableBody>
-        {vacations.map((vacation) => (
-          <TableRow key={vacation.id}>
-            <TableCell>{vacation.id}</TableCell>
-            <TableCell>{vacation.description}</TableCell>
-            <TableCell>{vacation.daysNum}</TableCell>
-            <TableCell>{vacation.startDate}</TableCell>
-            <TableCell>{vacation.endDate}</TableCell>
-            <TableCell
-              style={{
-                color: getColorByTaskStatus(vacation.taskStatus), 
-                fontWeight: "bold",
-              }}
-            >
-              {vacation.taskStatus}
-            </TableCell>
-            <TableCell>
-              <NavLink to={`/vacationId/${vacation.id}`}>Podgląd</NavLink>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
+  {personVacations.map((personVacation) => (
+    <TableRow key={personVacation.id}>
+      <TableCell>{personVacation.id}</TableCell>
+      <TableCell>{personVacation.description}</TableCell>
+      <TableCell>{personVacation.daysNum}</TableCell>
+      <TableCell>{personVacation.startDate}</TableCell>
+      <TableCell>{personVacation.endDate}</TableCell>
+      <TableCell
+        style={{
+          color: getColorByTaskStatus(personVacation.taskStatus),
+          fontWeight: "bold",
+        }}
+      >
+        {personVacation.taskStatus}
+      </TableCell>
+      <TableCell>
+        <NavLink to={`/vacationId/${personVacation.id}`}>Podgląd</NavLink>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
 
       </Table>
       </FormWrapper>
