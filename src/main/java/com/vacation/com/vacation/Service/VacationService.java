@@ -23,7 +23,9 @@ public class VacationService {
     public List<HolidayLeave> getAllVacations() {System.out.println("Asdasdasdasdas");
         return holidayLeaveRepository.findAll();
     }
-
+    public List<HolidayLeave> getAllPersonVacations(Integer personId) {
+        return holidayLeaveRepository.findByPersonId(personId);
+    }
     public List<HolidayLeave> getVacationByTaskStatus(String taskStatus) {System.out.println(taskStatus + " aaaaaaaaaaaaaa"); return holidayLeaveRepository.findByTaskStatus(taskStatus);}
     public Page<HolidayLeave> getAllVacationsPaged(Pageable pageable) {
         return holidayLeaveRepository.findAll(pageable);
