@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import img from "../../resources/pexels-karolina-grabowska-7876708.jpg";
 import userIcon from "../../resources/user.png";
-import {NavLink, useNavigate} from 'react-router-dom';
-import { connect } from "react-redux"
+import { NavLink, useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
 import { useSelector } from "react-redux";
-import RootState from "../../Reducers/Store/index"; 
+import RootState from "../../Reducers/Store/index";
 import { Store } from "redux";
 import React, { useEffect, useState } from "react";
-import axios from 'axios'; 
+import axios from "axios";
+import { FiUser, FiAlignLeft } from "react-icons/fi";
 
 interface UserState {
   id: number;
@@ -20,7 +21,7 @@ interface Vacation {
   employerName: string;
   daysNum: number;
   personId: number;
-  taskStatus: string
+  taskStatus: string;
 }
 interface AuthorizationState {
   user: UserState;
@@ -29,20 +30,38 @@ interface AuthorizationState {
 interface RootState {
   authorization: AuthorizationState;
 }
+const SignIn = styled.div`
+  color: #928d8d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 15px;
+`;
+const HeaderTopInformation = styled.div`
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  color: #928d8d;
+`;
+const Information = styled(FiAlignLeft)`
+  width: 25px;
+  height: 25px;
+  margin: 5px;
+  display: inline-block;
+`;
 
-const UserIcon = styled.div`
-  background-image: url(${userIcon});
-  color: white;
-  height: 24px;
-  width: 24px;
-  margin: 5px 20px;
-  background-color: white;
+const UserIcon = styled(FiUser)`
+  width: 25px;
+  height: 25px;
+  margin: 5px;
+  display: inline-block;
 `;
 
 const HeaderContainer = styled.div`
   width: 100%;
   height: 500px;
-  position: relative; 
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,7 +88,7 @@ const HeaderTop = styled.div`
   position: absolute;
   top: 0px;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
 `;
 const HeaderTitle = styled.h1`
   width: 100%;
@@ -121,65 +140,81 @@ const HeaderElementContainer = styled.div`
 `;
 
 const Header = () => {
-  const userName = useSelector((state: RootState) => state.authorization.user.name);
+  const userName = useSelector(
+    (state: RootState) => state.authorization.user.name
+  );
   const [realizedVacations, setRealizedVacations] = useState<Vacation[]>([]);
   const [rejectedVacations, setRejectedVacations] = useState<Vacation[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/vacations/status/Zrealizowano');
-        
+        const response = await axios.get(
+          "http://localhost:8080/vacations/status/Zrealizowano"
+        );
+
         if (response.status === 200) {
           const data = response.data;
           setRealizedVacations(data);
           console.log(data);
         } else {
-          console.error('Failed to fetch realized vacations.');
+          console.error("Failed to fetch realized vacations.");
         }
       } catch (error) {
-        console.error('Error fetching realized vacations:', error);
+        console.error("Error fetching realized vacations:", error);
       }
       try {
-        const response = await axios.get('http://localhost:8080/vacations/status/Odrzucono');
-        
+        const response = await axios.get(
+          "http://localhost:8080/vacations/status/Odrzucono"
+        );
+
         if (response.status === 200) {
           const data = response.data;
-         setRejectedVacations(data);
+          setRejectedVacations(data);
           console.log(data);
         } else {
-          console.error('Failed to fetch realized vacations.');
+          console.error("Failed to fetch realized vacations.");
         }
       } catch (error) {
-        console.error('Error fetching realized vacations:', error);
+        console.error("Error fetching realized vacations:", error);
       }
     };
-  
+
     fetchData();
   }, []);
 
   return (
     <HeaderContainer>
       <HeaderTop>
-        <UserIcon  as={NavLink} to="/SignIn"></UserIcon>
-        <a>{userName}</a> {}
+        <HeaderTopInformation>
+          <Information />
+          <a>Strona główna</a>
+        </HeaderTopInformation>
+        <SignIn>
+          <UserIcon />
+          <a>Karol</a>
+        </SignIn>
       </HeaderTop>
       <HeaderBackground>
         <HeaderTitle>Dodawaj i obserwuj swoje urlopy! </HeaderTitle>
         <HeaderElementContainer>
           <HeaderElement>
             {" "}
-            <HeaderElementValue color="#2cfc03">{realizedVacations.length}</HeaderElementValue>
+            <HeaderElementValue color="#2dfc0394">
+              {realizedVacations.length}
+            </HeaderElementValue>
             <Value>Zaakceptowane</Value>
           </HeaderElement>
           <HeaderElement>
             {" "}
-            <HeaderElementValue color="orange">23</HeaderElementValue>
+            <HeaderElementValue color="#f2c121a4">3</HeaderElementValue>
             <Value>W trakcie</Value>
           </HeaderElement>
           <HeaderElement>
             {" "}
-            <HeaderElementValue color="brown">{rejectedVacations.length}</HeaderElementValue>
+            <HeaderElementValue color="#f3211d93">
+              {rejectedVacations.length}
+            </HeaderElementValue>
             <Value>Odrzucone</Value>
           </HeaderElement>
         </HeaderElementContainer>
