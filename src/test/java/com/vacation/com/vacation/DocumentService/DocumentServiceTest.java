@@ -16,7 +16,6 @@ public class DocumentServiceTest {
 
     @InjectMocks
     private DocumentService documentService;
-
     @Mock
     private DocumentRepository documentRepository;
 
@@ -27,7 +26,7 @@ public class DocumentServiceTest {
 
     @Test
     public void testUserDocumentWhenDocumentExists() {
-
+        //(given)
         int personId = 1;
         int vacationId = 2;
         Document existingDocument = new Document();
@@ -36,7 +35,6 @@ public class DocumentServiceTest {
 
         when(documentRepository.findByPersonIdAndVacationId(personId, vacationId))
                 .thenReturn(existingDocument);
-
         String result = documentService.userDocument(personId, vacationId);
 
         assertEquals("exist", result);
@@ -44,14 +42,15 @@ public class DocumentServiceTest {
 
     @Test
     public void testUserDocumentWhenDocumentDoesNotExist() {
+        //(given)
         int personId = 1;
         int vacationId = 2;
-
+        //(given)
         when(documentRepository.findByPersonIdAndVacationId(personId, vacationId))
                 .thenReturn(null);
-
+        //(when)
         String result = documentService.userDocument(personId, vacationId);
-
+        //(then)
         assertEquals("notExist", result);
     }
 }

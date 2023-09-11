@@ -3,6 +3,7 @@ package com.vacation.com.vacation.Controller;
 import com.vacation.com.vacation.HolidayLeaveRepository;
 import com.vacation.com.vacation.Model.DateValidationRequest;
 import com.vacation.com.vacation.Model.HolidayLeave;
+import com.vacation.com.vacation.Service.DateValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,23 +17,19 @@ import java.util.Date;
 @RequestMapping("/dateValidate")
 public class DateValidationController {
 
-    private final HolidayLeaveRepository holidayLeaveRepository;
+    private final DateValidationService dateValidationService;
 
     @Autowired
-    public DateValidationController(HolidayLeaveRepository holidayLeaveRepository) {
-        this.holidayLeaveRepository = holidayLeaveRepository;
+    public DateValidationController(DateValidationService dateValidationService) {
+        this.dateValidationService = dateValidationService;
     }
 
     @PostMapping
     public ResponseEntity<String> validateDate(@RequestBody DateValidationRequest dateValidationRequest) {
-        Iterable<HolidayLeave> holidays = holidayLeaveRepository.findByPersonId(dateValidationRequest.getPersonId());
-        System.out.println(holidays);
-        for (HolidayLeave holiday : holidays) {
-            if (isDateRangeOverlap(dateValidationRequest.getStartDate(), dateValidationRequest.getEndDate(), holiday.getStartDate(), holiday.getEndDate())) {
-                return ResponseEntity.badRequest().body("Date range overlaps with an existing vacation");
-            }
+        boolean isDateValid = dateValidationService.isDateValid(dateValidationRequest);
+        if (!isDateValid) {
+            return ResponseEntity.badRequest().body("Date range overlaps with an existing vacation");
         }
-
         return ResponseEntity.ok("Date is valid");
     }
 
