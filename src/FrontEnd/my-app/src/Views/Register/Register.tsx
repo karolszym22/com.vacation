@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import background from "../../resources/rm222batch3-mind-10.jpg"
+import Overlay from "../../Components/Overlay/Overlay"
 
 const Container = styled.div`
   text-align: center;
@@ -8,6 +10,11 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-image: url(${background});
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;
+  height: 100vh; 
 `;
 const Form = styled.form`
   display: flex;
@@ -67,6 +74,7 @@ const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState(""); 
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [overlayVisible, setOverlayVisible] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,8 +111,12 @@ const Register: React.FC = () => {
     }
     
   };
-
+const closeOverlay = () => {
+    setOverlayVisible(false);
+  };
   return (
+<div>
+
     <Container>
     <BottomTitle>Zaarejestruj się</BottomTitle>
     <Form onSubmit={handleSubmit}>
@@ -145,11 +157,13 @@ const Register: React.FC = () => {
         <option value="HR">HR</option>
         <option value="PRACOWNIK">Pracownik</option>
         <option value="PRACODAWCA">Pracodawca</option>
+        <option value="TESTER">Tester</option>
       </Select>
       <Button type="submit">Dołącz</Button>
     </Form>
     <h3>Masz już konto? Zaloguj się!</h3>
   </Container>
+  </div>
   );
 };
 
