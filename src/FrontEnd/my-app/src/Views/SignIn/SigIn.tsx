@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { user } from "../../Components/Actions/actions";
-
+import background from "../../resources/rm222batch3-mind-10.jpg"
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -12,6 +12,11 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-image: url(${background});
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;
+  height: 100vh; 
 `;
 
 const Form = styled.form`
