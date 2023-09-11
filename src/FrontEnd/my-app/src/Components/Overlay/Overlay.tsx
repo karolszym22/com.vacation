@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 interface OverlayWrapperProps {
-    visible: boolean; 
-  }
+  visible: boolean;
+}
 
-
-
-  const OverlayWrapper = styled.div<OverlayWrapperProps>`
+const OverlayWrapper = styled.div<OverlayWrapperProps>`
   width: 100%;
   height: 100vh;
   display: flex;
@@ -61,20 +59,13 @@ const TitleValue = styled.a`
   margin: 0px 10px;
 `;
 
-interface Vacation {
-  id: number;
-  description: string;
-  days: number;
-  done: boolean;
+interface OverlayProps {
+  visible: boolean;
+  onClose: () => void;
+  errorMessage: string; 
 }
 
-function Overlay() {
-  const [visible, setVisible] = useState(true); 
-
-  const closeModal = () => {
-    setVisible(false); 
-  };
-
+const Overlay: React.FC<OverlayProps> = ({ visible, onClose, errorMessage }) => {
   return (
     <OverlayWrapper visible={visible}>
       <Modal>
@@ -82,12 +73,12 @@ function Overlay() {
           <TitleValue>Błąd</TitleValue>
         </ModalTitle>
         <ModalDescription>
-          Data nowego urlopu koliduje z innymi urlopami. Wybierz inną datę.
+          {errorMessage} {}
         </ModalDescription>
-        <ModalButton onClick={closeModal}>ok</ModalButton>
+        <ModalButton onClick={onClose}>ok</ModalButton>
       </Modal>
     </OverlayWrapper>
   );
-}
+};
 
 export default Overlay;
