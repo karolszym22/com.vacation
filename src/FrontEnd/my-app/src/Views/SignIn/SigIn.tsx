@@ -3,8 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { user } from "../../Components/Actions/actions";
-import background from "../../resources/rm222batch3-mind-10.jpg"
+import background from "../../resources/rm222batch3-mind-10.jpg";
 import styled from "styled-components";
+import Overlay from "../../Components/Overlay/Overlay";
 
 const Container = styled.div`
   text-align: center;
@@ -13,10 +14,10 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   background-image: url(${background});
-  background-size: cover; 
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  height: 100vh; 
+  height: 100vh;
 `;
 
 const Form = styled.form`
@@ -47,21 +48,22 @@ const Title = styled.h2`
   margin-bottom: 20px;
   color: #646262;
 `;
-const BottomTitle =  styled.h4`
-   color: black;
-   cursor: pointer;
-   &:hover {
-    color: #777575; 
-    
-  }
-`
 
+const BottomTitle = styled.h4`
+  color: black;
+  cursor: pointer;
+  &:hover {
+    color: #777575;
+  }
+`;
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // Nowy state do przechowywania tekstu błędu
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,18 +78,30 @@ const Login: React.FC = () => {
           id: response.data.id,
           name: response.data.username,
           email: response.data.email,
-          employerType: response.data.employerType
+          employerType: response.data.employerType,
         })
       );
       navigate("/");
-      console.log("Initial State after Login:", response.data.id, response.data.username, response.data.email);
+      console.log(
+        "Initial State after Login:",
+        response.data.id,
+        response.data.username,
+        response.data.email
+      );
     } catch (error) {
       console.error("Login error:", error);
+      setOverlayVisible(true);
+      setErrorMessage("Logowanie nie udane. Zły email lub hasło"); // Ustaw tekst błędu
     }
+  };
+
+  const closeOverlay = () => {
+    setOverlayVisible(false);
   };
 
   return (
     <Container>
+      <Overlay visible={overlayVisible} onClose={closeOverlay} errorMessage={errorMessage} />
       <Title>Login</Title>
       <Form onSubmit={handleSubmit}>
         <Input
