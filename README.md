@@ -8,6 +8,11 @@ Leave creator
 ![Generator](https://github.com/karolszym22/com.vacation/assets/32464644/4deffa37-0c1e-4a7a-9599-5f1ffcfd8807)
 
 
+Available steps depend on the logged in user. In this case, the employer is logged in and can take the following steps: Reject, Return, Accept
+
+![Kroki](https://github.com/karolszym22/com.vacation/assets/32464644/5fa8beea-60d9-41c1-a62e-61a4fdd83e35)
+
+
 User login validation
 
 ![LogowanieWalidacja](https://github.com/karolszym22/com.vacation/assets/32464644/a4c196a9-55ed-46f3-9802-f17d3d892cc9)
