@@ -75,6 +75,7 @@ const Register: React.FC = () => {
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,6 +109,8 @@ const Register: React.FC = () => {
       console.log(response.data);
     } catch (error) {
       console.error("Registration error:", error);
+      setOverlayVisible(true);
+      setErrorMessage("Użytkownik o takim adresie email istnieje już w bazie danych"); 
     }
     
   };
@@ -116,7 +119,7 @@ const closeOverlay = () => {
   };
   return (
 <div>
-
+<Overlay visible={overlayVisible} onClose={closeOverlay} errorMessage={errorMessage} />
     <Container>
     <BottomTitle>Zaarejestruj się</BottomTitle>
     <Form onSubmit={handleSubmit}>

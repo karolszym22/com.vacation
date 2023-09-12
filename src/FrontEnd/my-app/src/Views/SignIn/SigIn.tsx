@@ -63,7 +63,8 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // Nowy state do przechowywania tekstu błędu
+  const [errorMessage, setErrorMessage] = useState(""); 
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +92,7 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error("Login error:", error);
       setOverlayVisible(true);
-      setErrorMessage("Logowanie nie udane. Zły email lub hasło"); // Ustaw tekst błędu
+      setErrorMessage("Logowanie nie udane. Zły email lub hasło"); 
     }
   };
 
