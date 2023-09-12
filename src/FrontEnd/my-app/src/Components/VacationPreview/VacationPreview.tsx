@@ -4,6 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Menu from "../SideMenu/SideMenu";
+import wordIcon from "../../resources/word.png";
 interface Vacation {
   id: number;
   description: string;
@@ -12,7 +13,7 @@ interface Vacation {
   personId: number;
   taskStatus: string;
   startDate: string;
-  endDate: string
+  endDate: string;
 }
 interface UserState {
   id: number;
@@ -29,7 +30,6 @@ interface RootState {
   authorization: AuthorizationState;
 }
 
-
 const MainWrapper = styled.div`
   display: flex;
 `;
@@ -37,13 +37,26 @@ const MainWrapper = styled.div`
 const PreviewWrapper = styled.div`
   display: flex;
   flex-direction: column;
-`
-
-
+`;
 const DocumentDownloadContainer = styled.div`
+  width: 200px;
+  height: 50px;
+  border-top: 10px solid #0000;
+  margin-bottom: 150px;
+`;
+const DocumentDownload = styled.div`
   width: 180px;
   height: 50px;
-  border: 1px solid black;
+  display: flex;
+  cursor: pointer;
+`;
+const WordIcon = styled.div`
+  background-image: url(${wordIcon});
+  color: white;
+  height: 34px;
+  width: 34px;
+  margin: 5px 20px;
+  background-color: white;
 `;
 const ButtonContainer = styled.div`
   display: flex;
@@ -58,36 +71,67 @@ const TaskButton = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
 `;
 
-const VacationDetails = styled.div`
-  margin-top: 20px;
-  border: 1px solid #ccc;
+const WrapperContainer = styled.div`
+  margin: 100px;
   padding: 10px;
+  border-top: 1px solid black;
   border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+`;
+const VacationDetails = styled.div`
+  display: flex;
+`;
+const AdditionalDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const DetailsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0px 50px;
 `;
 
+const CommentTitle = styled.div`
+  font-size: 15px;
+`;
+
+const CommentContainer = styled.div`
+  width: 200px;
+  height: 90px;
+  margin: 100px 0px;
+`;
+const CommentArea = styled.textarea`
+  width: 100%;
+  height: 100%;
+`;
+const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 const Text = styled.p`
-  font-size: 16px; 
+  font-size: 16px;
 `;
-
 
 const DateInput = styled.input`
-  font-size: 16px; 
+  font-size: 16px;
   border: none;
   background-color: transparent;
-  pointer-events: none; 
+  pointer-events: none;
 `;
-
 
 const TextArea = styled.textarea`
-  font-size: 16px; 
-  border: 1px solid #ccc; 
+  font-size: 16px;
+  border: none;
+  background-color: #fbf6ed;
   padding: 4px;
-  resize: none; 
+  resize: none;
+  width: 90%;
 `;
-
-
 
 const VacationPreview: React.FC = () => {
   const { paramValue } = useParams<{ paramValue: string }>();
@@ -98,7 +142,6 @@ const VacationPreview: React.FC = () => {
   const userType = useSelector(
     (state: RootState) => state.authorization.user.employerType
   );
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -120,20 +163,20 @@ const VacationPreview: React.FC = () => {
     try {
       if (vacationData) {
         const downloadUrl = `http://localhost:8080/document/word/download`;
-  
+
         const requestData = {
           personId: userId,
-          vacationId: vacationData.id
+          vacationId: vacationData.id,
         };
-  
+
         const response = await fetch(downloadUrl, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json', 
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestData), 
+          body: JSON.stringify(requestData),
         });
-  
+
         if (response.ok) {
           console.log("Document downloaded successfully");
         } else {
@@ -144,17 +187,8 @@ const VacationPreview: React.FC = () => {
       console.error("Error downloading document:", error);
     }
   };
-  
-
 
   useEffect(() => {
-    console.log("Sending task...");
-    console.log(vacationData, "sssssssssssssssss");
-    console.log(vacationData?.taskStatus, "asdasdasdasdas");
-
-    
-
-
     const sendTask = async () => {
       try {
         if (vacationData) {
@@ -274,11 +308,10 @@ const VacationPreview: React.FC = () => {
 
   const renderTaskButtons = () => {
     return taskEnums.map((taskEnum) => {
-      if(taskEnum === "ZAAKCEPTUJ")
-      {
+      if (taskEnum === "ZAAKCEPTUJ") {
         return (
           <TaskButton
-             color="green"
+            color="#dcc024d1"
             key={taskEnum}
             onClick={() => employerHandleButton(taskEnum)}
           >
@@ -286,11 +319,32 @@ const VacationPreview: React.FC = () => {
           </TaskButton>
         );
       }
-      if(taskEnum === "ODRZUC")
-      {
+      if (taskEnum === "ODRZUC") {
         return (
           <TaskButton
-             color="red"
+            color="#f3201dd7"
+            key={taskEnum}
+            onClick={() => employerHandleButton(taskEnum)}
+          >
+            {"ODRZUĆ"}
+          </TaskButton>
+        );
+      }
+      if (taskEnum === "ZWROC") {
+        return (
+          <TaskButton
+            color="#cf19bdd6"
+            key={taskEnum}
+            onClick={() => employerHandleButton(taskEnum)}
+          >
+            {"ZWRÓĆ"}
+          </TaskButton>
+        );
+      }
+      if (taskEnum === "DODAJ") {
+        return (
+          <TaskButton
+            color="#e06228d5"
             key={taskEnum}
             onClick={() => employerHandleButton(taskEnum)}
           >
@@ -298,19 +352,17 @@ const VacationPreview: React.FC = () => {
           </TaskButton>
         );
       }
-      if(taskEnum === "ZWROC")
-      {
+      if (taskEnum === "DO_REALIZACJI") {
         return (
           <TaskButton
-             color="purple"
+            color="#4de028d4"
             key={taskEnum}
             onClick={() => employerHandleButton(taskEnum)}
           >
-            {taskEnum}
+            {"DO REALIZACJI"}
           </TaskButton>
         );
       }
-      
     });
   };
 
@@ -319,28 +371,51 @@ const VacationPreview: React.FC = () => {
       <Menu></Menu>
       <PreviewWrapper>
         {vacationData ? (
-          <VacationDetails>
-            <h2>Szczegóły urlopu</h2>
-            <Text>Pracownik: {vacationData.employerName}</Text>
-            <Text>Ilość dni zostaw: {vacationData.daysNum}</Text>
-            <Text>Data rozpoczęcia:</Text>
-            <DateInput type="date" value={vacationData.startDate} readOnly />
-            <Text>Data zakończenia:</Text>
-            <DateInput type="date" value={vacationData.endDate} readOnly />
-            <Text>Opis:</Text>
-            <TextArea rows={4} value={vacationData.description} readOnly />
-            <p></p>
-            {documentExistence === "exist" && (
-              <DocumentDownloadContainer onClick={downloadDocument}>
-                w realizacji
-              </DocumentDownloadContainer>
-            )}
-          </VacationDetails>
-        ) : (
-          <p>Loading...</p>
-        )}
+          <WrapperContainer>
+            <VacationDetails>
+              <DetailsContainer>
+                <h2>Szczegóły urlopu</h2>
+                <Text>Pracownik: {vacationData.employerName}</Text>
+                <Text>Ilość dni: {vacationData.daysNum}</Text>
+                <Text>Data rozpoczęcia:</Text>
+                <DateInput
+                  type="date"
+                  value={vacationData.startDate}
+                  readOnly
+                />
+                <Text>Data zakończenia:</Text>
+                <DateInput type="date" value={vacationData.endDate} readOnly />
+                <Text>Opis:</Text>
+                <TextArea
+                  rows={4}
+                  value={vacationData.description}
+                  readOnly
+                />
+              </DetailsContainer>
+              <DetailsContainer>
+                <CommentContainer>
+                  <CommentTitle>Komentarz:</CommentTitle>
+                  <CommentArea readOnly={userType !== "PRACODAWCA" && userType !== "TESTER"}></CommentArea>
+                </CommentContainer>
+                <DocumentDownloadContainer>
+                  {documentExistence === "exist" && (
+                    <DocumentDownload onClick={downloadDocument}>
+                      <WordIcon></WordIcon>
+                      Pobierz wniosek
+                    </DocumentDownload>
+                  )}
+                </DocumentDownloadContainer>
+              </DetailsContainer>
+            </VacationDetails>
 
-        <ButtonContainer>{renderTaskButtons()}</ButtonContainer>
+            <p></p>
+
+            <ButtonContainer>{renderTaskButtons()}</ButtonContainer>
+            <ButtonsContainer></ButtonsContainer>
+          </WrapperContainer>
+        ) : (
+          <p>Brak dokumentu...</p>
+        )}
       </PreviewWrapper>
     </MainWrapper>
   );
