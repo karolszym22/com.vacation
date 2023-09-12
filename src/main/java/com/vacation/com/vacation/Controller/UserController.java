@@ -2,7 +2,7 @@ package com.vacation.com.vacation.Controller;
 
 import com.vacation.com.vacation.Model.UserExistResponse;
 import com.vacation.com.vacation.Model.UserEntity;
-import com.vacation.com.vacation.UserService;
+import com.vacation.com.vacation.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +49,7 @@ public class UserController {
     @GetMapping("/NewUser")
     public ResponseEntity<List<UserEntity>> getAllUsers() {
         List<UserEntity> users = userService.getAllUsers();
+
         return ResponseEntity.ok(users);
     }
 

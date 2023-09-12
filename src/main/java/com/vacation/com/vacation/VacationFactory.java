@@ -1,9 +1,9 @@
 package com.vacation.com.vacation;
 
-import Model.HolidayLeave;
-import Model.MaternityLeave;
-import Model.PaternityLeave;
-import Model.Vacation;
+import com.vacation.com.vacation.Model.HolidayLeave;
+import com.vacation.com.vacation.Model.MaternityLeave;
+import com.vacation.com.vacation.Model.PaternityLeave;
+import com.vacation.com.vacation.Model.Vacation;
 
 public class VacationFactory {
     public Vacation createVacation(String rodzaj) {

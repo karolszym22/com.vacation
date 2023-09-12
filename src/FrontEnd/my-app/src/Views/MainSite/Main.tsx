@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import Header from "../../Components/Header/Header";
 import MainMenu from "../../Components/Main/Main";
-import {NavLink, useNavigate} from 'react-router-dom';
+import OverlayWrapper from "../../Components/Overlay/Overlay"
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -26,9 +26,6 @@ interface Vacation {
 
 function Main() {
   const [vacations, setVacations] = useState<Vacation[]>([]);
-  const [description, setDescription] = useState<string>("");
-  const [days, setDays] = useState<number>(0);
-  const [done, setDone] = useState<boolean>(false);
 
   useEffect(() => {
     fetch("http://localhost:8080/vacations")
@@ -39,36 +36,11 @@ function Main() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  const handleAddVacation = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newVacation: Vacation = {
-      id: vacations.length + 1,
-      description: description,
-      days: days,
-      done: done,
-    };
-    setVacations([...vacations, newVacation]);
-    setDescription("");
-    setDays(0);
-    setDone(false);
-  };
-
-  const handleDeleteVacation = (id: number) => {
-    fetch(`http://localhost:8080/vacations/${id}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        const updatedVacations = vacations.filter(
-          (vacation) => vacation.id !== id
-        );
-        setVacations(updatedVacations);
-      })
-      .catch((error) => console.error("Error deleting vacation:", error));
-  };
-
   return (
     <div>
+
       <MainWrapper>
+      
         <Menu />
         <Wrapper>
           <Header />

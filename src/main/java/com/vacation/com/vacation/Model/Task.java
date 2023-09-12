@@ -1,5 +1,7 @@
 package com.vacation.com.vacation.Model;
 public class Task {
+
+
     public enum Tasks {
         ZWROC("Zwróć"),
         ZAAKCEPTUJ("Zaakceptuj"),

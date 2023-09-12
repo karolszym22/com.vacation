@@ -6,7 +6,6 @@ public enum Tasks {
     ZWROC_DO_HR("Zwróć do HR"),
     ODRZUC("Odrzuć"),
     DODAJ("Dodaj");
-
     private final String opis;
 
     Tasks(String opis) {

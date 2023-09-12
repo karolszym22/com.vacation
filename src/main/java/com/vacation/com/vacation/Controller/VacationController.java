@@ -10,7 +10,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-class VacationController {
+public class VacationController {
     private final VacationService vacationService;
 
     @Autowired

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import Login from "../Login/Login.tsx/Login";
 import { NavLink, useNavigate } from "react-router-dom";
 
 interface Vacation {
@@ -139,8 +138,15 @@ const TableCell = styled.td`
   font-weight: 500;
   border-bottom: 1px solid #ddd;
   color: #565454;
+  text-decoration: none;
 `;
-
+const NavLinkName = styled.a`
+  font-size: 15px;
+  margin: 5px;
+  color: #a19b9b;
+  font-weight: bold;
+  text-decoration: none;
+`;
 const getColorByTaskStatus = (taskStatus: string) => {
   switch (taskStatus) {
     case "Zrealizowano":
@@ -179,7 +185,7 @@ const Menu = () => {
   };
   return (
     <MainMenu>
-      <CustomersTitle>Pracownicy</CustomersTitle>
+      <CustomersTitle>Lista urlopów</CustomersTitle>
       
       <Table>
         <TableHeader>
@@ -188,6 +194,7 @@ const Menu = () => {
             <TableHeaderCell>Opis</TableHeaderCell>
             <TableHeaderCell>Dni</TableHeaderCell>
             <TableHeaderCell>Stan</TableHeaderCell>
+            <TableHeaderCell>Szczegóły</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -205,7 +212,7 @@ const Menu = () => {
               {vacation.taskStatus}
             </TableCell>
             <TableCell>
-              <NavLink to={`/vacationId/${vacation.id}`}>Podgląd</NavLink>
+              <NavLinkName as={NavLink} to={`/vacationId/${vacation.id}`}>Podgląd</NavLinkName>
             </TableCell>
           </TableRow>
         ))}
