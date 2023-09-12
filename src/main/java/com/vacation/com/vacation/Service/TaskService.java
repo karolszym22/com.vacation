@@ -17,24 +17,29 @@ public class TaskService {
         TaskData taskData = new TaskData();
         List<Task.Tasks> taskEnums = new ArrayList<>();
 
-        if ("HR".equals(userType)) {
-            if ("Zaakceptowane".equals(taskStatus)) {
-                taskEnums.add(Task.Tasks.ODRZUC);
-                taskEnums.add(Task.Tasks.ZWROC);
-                taskEnums.add(Task.Tasks.DO_REALIZACJI);
-            }
-        } else if ("PRACODAWCA".equals(userType)) {
+        if ("PRACODAWCA".equals(userType) || "TESTER".equals(userType)) {
             if ("W realizacji".equals(taskStatus) || "HR:Zwróc".equals(taskStatus)) {;
+                System.out.println("2");
                 taskEnums.add(Task.Tasks.ODRZUC);
                 taskEnums.add(Task.Tasks.ZWROC);
                 taskEnums.add(Task.Tasks.ZAAKCEPTUJ);
             }
         }
-        if ("PRACOWNIK".equals(userType)) {
+        if ("HR".equals(userType) || "TESTER".equals(userType)) {
+            if ("Zaakceptowane".equals(taskStatus)) {
+                System.out.println("1");
+                taskEnums.add(Task.Tasks.ODRZUC);
+                taskEnums.add(Task.Tasks.ZWROC);
+                taskEnums.add(Task.Tasks.DO_REALIZACJI);
+            }
+        }
+        if ("PRACOWNIK".equals(userType) || "TESTER".equals(userType)) {
             if ("Zwrócone".equals(taskStatus)) {
 
                 taskEnums.add(Task.Tasks.DODAJ);
             }
+        }else{
+            System.out.println("3");
         }
         taskData.setTaskEnums(taskEnums);
         return taskData;
