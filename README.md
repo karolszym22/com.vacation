@@ -13,7 +13,8 @@ Leave creator
 
 Available steps depend on the logged in user. In this case, the employer is logged in and can take the following steps: Reject, Return, Accept
 
-![Kroki](https://github.com/karolszym22/com.vacation/assets/32464644/5fa8beea-60d9-41c1-a62e-61a4fdd83e35)
+![Kroki](https://github.com/karolszym22/com.vacation/assets/32464644/b586a5d7-8a3d-4a94-9591-d1d7d395db4f)
+
 
 
 User login validation
@@ -29,6 +30,4 @@ User registration:
 ![Rejestracja](https://github.com/karolszym22/com.vacation/assets/32464644/5e2f3726-ee61-4727-8845-cdf3264eff5d)
 
 
-Request generated based on leave status
 
-![Wniosek](https://github.com/karolszym22/com.vacation/assets/32464644/57f5eb90-5d2f-48af-9440-5bf35290541c)
