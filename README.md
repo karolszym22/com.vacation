@@ -1,7 +1,8 @@
 
 Home
 
-![Glowna](https://github.com/karolszym22/com.vacation/assets/32464644/7efa6d15-644a-4402-a823-0cd38671cd1e)
+![Glowna](https://github.com/karolszym22/com.vacation/assets/32464644/e08f7f1e-d23b-44a7-8058-91b5abb3688b)
+
 
 Leave creator
 
