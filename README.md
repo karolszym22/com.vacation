@@ -5,7 +5,9 @@ Home
 
 Leave creator
 
-![Generator](https://github.com/karolszym22/com.vacation/assets/32464644/4deffa37-0c1e-4a7a-9599-5f1ffcfd8807)
+![Generator](https://github.com/karolszym22/com.vacation/assets/32464644/40583137-0471-4ac0-96b0-c6a9e50841c8)
+
+
 
 
 Available steps depend on the logged in user. In this case, the employer is logged in and can take the following steps: Reject, Return, Accept
