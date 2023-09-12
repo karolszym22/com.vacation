@@ -1,35 +1,46 @@
 import React from "react";
 import styled from "styled-components";
-import { Home, List } from "feather-icons-react";
-import {NavLink, useNavigate} from 'react-router-dom';
+import { FiHome, FiGitBranch, FiPlusCircle, FiFile } from "react-icons/fi";
+import { NavLink, useNavigate } from "react-router-dom";
 
-const CustomHomeIcon = styled(Home)`
+const CustomHomeIcon = styled(FiHome)`
   width: 15px;
   height: 15px;
   margin: 5px;
 `;
-const CustomListIcon = styled(List)`
+
+const CustomLoginIcon = styled(FiGitBranch)`
   width: 15px;
   height: 15px;
   margin: 5px;
 `;
+const CustomRegisterIcon = styled(FiPlusCircle)`
+  width: 15px;
+  height: 15px;
+  margin: 5px;
+`;
+
+const CustomNewVacationIcon = styled(FiFile)`
+  width: 15px;
+  height: 15px;
+  margin: 5px;
+`;
+
 const HrTitle = styled.div`
-  
   font-size: 15px;
   color: #95c1ec;
   font-weight: bold;
   position: absolute;
   left: 170px;
   top: 60px;
-
-`
+`;
 
 const MenuLogoContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center; 
-  padding: 10px 20px; 
+  align-items: center;
+  padding: 10px 20px;
   box-sizing: border-box;
 `;
 
@@ -82,10 +93,10 @@ const SideMenu = styled.div`
   width: 280px;
   background-color: #2e4051;
   height: 100vh;
- 
+
   top: 0;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
 `;
 
 const Menu = () => {
@@ -98,25 +109,33 @@ const Menu = () => {
   return (
     <SideMenu>
       <MenuLogoContainer>
-        <HrTitle>HR</HrTitle>
         <MenuNavLogo>Urlopy</MenuNavLogo>
       </MenuLogoContainer>
+
       <MenuNavLink>
         <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/Register">Rejestracja nowego pracownika</NavLinkName>
+        <NavLinkName as={NavLink} to="/">
+          Strona główna
+        </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/">Strona główna</NavLinkName>
+        <CustomRegisterIcon />
+        <NavLinkName as={NavLink} to="/Register">
+          Rejestracja nowego pracownika
+        </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/SignIn" >Zaloguj się!</NavLinkName>
+        <CustomLoginIcon />
+        <NavLinkName as={NavLink} to="/SignIn">
+          Zaloguj się!
+        </NavLinkName>
       </MenuNavLink>
       <SubMenu expanded={isSubMenuOpen} />
       <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/NewVacation" >Dodaj nowy urlop</NavLinkName>
+        <CustomNewVacationIcon />
+        <NavLinkName as={NavLink} to="/NewVacation">
+          Dodaj nowy urlop
+        </NavLinkName>
       </MenuNavLink>
     </SideMenu>
   );
