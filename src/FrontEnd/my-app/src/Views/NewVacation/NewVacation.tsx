@@ -6,7 +6,8 @@ import { addDays, isSaturday, isSunday } from "date-fns";
 import Menu from "../../Components/SideMenu/SideMenu";
 import { NavLink, useNavigate } from "react-router-dom";
 import userIcon from "../../resources/user.png";
-import OverlayWrapper from "../../Components/Overlay/Overlay";
+import Overlay from "../../Components/Overlay/Overlay"
+
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -214,6 +215,11 @@ function NewVacation() {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [daysNum, setDaysNum] = useState<number>(0);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); 
+
+
+
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
   );
@@ -225,7 +231,6 @@ function NewVacation() {
   );
 
   useEffect(() => {
-    console.log("MOJ person:", personId);
     fetch(`http://localhost:8080/vacations/personVacations/${personId}`)
       .then((response) => response.json())
       .then((data) => {
@@ -281,6 +286,8 @@ function NewVacation() {
       console.log(validationResult);
     } catch (error) {
       console.error("Error validating date:", error);
+      setOverlayVisible(true);
+      setErrorMessage("Tworzony przez Ciebie urlop koliduje z innym urlopem dziejącym się w tym samym okresie"); 
     }
   };
 
@@ -318,10 +325,12 @@ function NewVacation() {
       console.error("Error adding vacation:", error);
     }
   };
-
+  const closeOverlay = () => {
+    setOverlayVisible(false);
+  };
   return (
     <div>
-
+<Overlay visible={overlayVisible} onClose={closeOverlay} errorMessage={errorMessage} />
     <MainWrapper>
       <Menu />
       <FormWrapper>
