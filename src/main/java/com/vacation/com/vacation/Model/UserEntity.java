@@ -14,7 +14,7 @@ public class UserEntity {
     private String username;
     private String password;
     private String email;
-
+    private String token;
     private String employerType;
 
     public int getId() {
@@ -24,7 +24,13 @@ public class UserEntity {
     public void setId(int id) {
         this.id = id;
     }
+    public String getToken() {
+        return token;
+    }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
     public String getUsername() {
         return username;
     }
