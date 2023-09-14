@@ -3,12 +3,14 @@ package com.vacation.com.vacation.Controller;
 import com.vacation.com.vacation.Model.UserExistResponse;
 import com.vacation.com.vacation.Model.UserEntity;
 import com.vacation.com.vacation.Service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -29,10 +31,17 @@ public class UserController {
 
     }
     @PostMapping("/login")
-    public ResponseEntity<UserEntity> loginUser(@RequestBody UserEntity user) {
+    public ResponseEntity<UserEntity> loginUser(@RequestBody UserEntity user, HttpSession session) {
         boolean loggedIn = userService.loginUser(user.getEmail(), user.getPassword());
         if (loggedIn) {
             UserEntity loggedInUser = userService.getUserByEmail(user.getEmail());
+
+            String token = UUID.randomUUID().toString();
+
+            session.setAttribute("userToken", token);
+
+            loggedInUser.setToken(token);
+
             return ResponseEntity.ok(loggedInUser);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
