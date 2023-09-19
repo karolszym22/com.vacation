@@ -192,7 +192,7 @@ const Header = () => {
         </HeaderTopInformation>
         <SignIn>
           <UserIcon />
-          <a>Karol</a>
+          <a>{userName}</a>
         </SignIn>
       </HeaderTop>
       <HeaderBackground>

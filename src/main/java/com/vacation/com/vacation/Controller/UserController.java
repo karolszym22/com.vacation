@@ -3,6 +3,7 @@ package com.vacation.com.vacation.Controller;
 import com.vacation.com.vacation.Model.UserExistResponse;
 import com.vacation.com.vacation.Model.UserEntity;
 import com.vacation.com.vacation.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,22 @@ public class UserController {
         }
 
     }
+    @GetMapping("/user-data")
+    public ResponseEntity<?> getUserData(HttpSession session) {
+        Integer loggedInUserId = (Integer) session.getAttribute("loggedInUserId");
+        if (loggedInUserId != null) {
+
+            UserEntity user = userService.getUserById(loggedInUserId);
+
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+    }
     @PostMapping("/login")
     public ResponseEntity<UserEntity> loginUser(@RequestBody UserEntity user, HttpSession session) {
         boolean loggedIn = userService.loginUser(user.getEmail(), user.getPassword());
@@ -39,6 +56,8 @@ public class UserController {
             String token = UUID.randomUUID().toString();
 
             session.setAttribute("userToken", token);
+            session.setAttribute("loggedInUserId", loggedInUser.getId());
+            System.out.println(session.getAttribute("loggedInUserId") + "MOJE ID PRZED ZALOGOWANIU");
 
             loggedInUser.setToken(token);
 

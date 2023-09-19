@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { user } from "../../Components/Actions/actions";
 import background from "../../resources/rm222batch3-mind-10.jpg";
 import styled from "styled-components";
 import Overlay from "../../Components/Overlay/Overlay";
@@ -61,10 +59,9 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); 
-
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,15 +71,11 @@ const Login: React.FC = () => {
         password,
       });
 
-      dispatch(
-        user({
-          id: response.data.id,
-          name: response.data.username,
-          email: response.data.email,
-          employerType: response.data.employerType,
-        })
-      );
       navigate("/");
+
+      localStorage.setItem('userToken', response.data.token);
+      setLoggedIn(true);
+
       console.log(
         "Initial State after Login:",
         response.data.id,

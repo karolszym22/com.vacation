@@ -3,6 +3,7 @@ import axios from "axios";
 import styled from "styled-components";
 import background from "../../resources/rm222batch3-mind-10.jpg"
 import Overlay from "../../Components/Overlay/Overlay"
+import Cookies from 'js-cookie';
 
 const Container = styled.div`
   text-align: center;
@@ -76,44 +77,70 @@ const Register: React.FC = () => {
   const [emailError, setEmailError] = useState("");
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); 
+  const [headers, setHeaders] = useState({});
+  const [csrfToken, setCsrfToken] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (username.length < 3) {
-      setUsernameError("Username must be at least 3 characters long.");
-      return;
-    }
-
-    if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long.");
-      return;
-    }
-    if (password !== confirmPassword) { 
-      setConfirmPasswordError("Passwords do not match.");
-      return;
-    }
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!email.match(emailPattern)) {
-      setEmailError("Invalid email address.");
-      return;
-    }
-
+  const fetchCsrfToken = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/NewUser", {
+      const response = await axios.get("http://localhost:8080/csrf-token"); 
+      const csrfToken = response.data.token;
+      setCsrfToken(csrfToken);
+      console.log(csrfToken, "Moje ciasteczko")
+      Cookies.set('XSRF-TOKEN', csrfToken, { path: '/' });
+    } catch (error) {
+      console.error("Błąd podczas pobierania tokenu CSRF:", error);
+    }
+  };
+
+  fetchCsrfToken();
+
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (username.length < 3) {
+    setUsernameError("Nazwa użytkownika musi mieć co najmniej 3 znaki.");
+    return;
+  }
+
+  if (password.length < 8) {
+    setPasswordError("Hasło musi mieć co najmniej 8 znaków.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setConfirmPasswordError("Hasła nie pasują do siebie.");
+    return;
+  }
+
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!email.match(emailPattern)) {
+    setEmailError("Nieprawidłowy adres email.");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/NewUser",
+      {
         username,
         password,
         employerType,
         email,
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.error("Registration error:", error);
-      setOverlayVisible(true);
-      setErrorMessage("Użytkownik o takim adresie email istnieje już w bazie danych"); 
-    }
-    
-  };
+      },
+      {
+        headers: {
+          "X-XSRF-TOKEN": csrfToken, 
+        },
+      }
+    );
+
+    console.log(response.data);
+  } catch (error) {
+    console.error("Błąd rejestracji:", error);
+    setOverlayVisible(true);
+    setErrorMessage("Użytkownik o takim adresie email istnieje już w bazie danych");
+  }
+};
 const closeOverlay = () => {
     setOverlayVisible(false);
   };

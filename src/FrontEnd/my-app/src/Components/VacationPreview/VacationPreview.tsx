@@ -5,31 +5,8 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Menu from "../SideMenu/SideMenu";
 import wordIcon from "../../resources/word.png";
-interface Vacation {
-  id: number;
-  description: string;
-  employerName: string;
-  daysNum: number;
-  personId: number;
-  taskStatus: string;
-  startDate: string;
-  endDate: string;
-}
-interface UserState {
-  id: number;
-  name: string;
-  email: string;
-  employerType: string;
-}
-
-interface AuthorizationState {
-  user: UserState;
-}
-
-interface RootState {
-  authorization: AuthorizationState;
-}
-
+import { Vacation } from "../../Types/Vacation";
+import { RootState } from "../../Types/RootState";
 const MainWrapper = styled.div`
   display: flex;
 `;
@@ -146,10 +123,10 @@ const VacationPreview: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `http://localhost:8080/vacations/${paramValue}`
         );
-        const data: Vacation = await response.json();
+        const data: Vacation = response.data; 
         setVacationData(data);
       } catch (error) {
         console.error("Error fetching data:", error);

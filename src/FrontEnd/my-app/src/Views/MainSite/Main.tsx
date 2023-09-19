@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import Header from "../../Components/Header/Header";
 import MainMenu from "../../Components/Main/Main";
-import OverlayWrapper from "../../Components/Overlay/Overlay"
+import { fetchUserData, AppThunk } from "../../Components/Actions/actions";
+import { useDispatch } from "react-redux";
 
 const MainWrapper = styled.div`
   width: 100%;
   height: 100vh;
   display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
 `;
 
 const Wrapper = styled.div`
@@ -17,30 +20,27 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-interface Vacation {
-  id: number;
-  description: string;
-  days: number;
-  done: boolean;
-}
-
 function Main() {
-  const [vacations, setVacations] = useState<Vacation[]>([]);
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("userToken");
+
+  const fetchData = async () => {
+    try {
+      if (token) {
+        const userData = await fetchUserData(token)(dispatch);
+        console.log("Pobrane dane:", userData);
+      }
+    } catch (error) {
+    }
+  };
 
   useEffect(() => {
-    fetch("http://localhost:8080/vacations")
-      .then((response) => response.json())
-      .then((data) => {
-        setVacations(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+    fetchData();
+  }, [dispatch, token]);
 
   return (
     <div>
-
       <MainWrapper>
-      
         <Menu />
         <Wrapper>
           <Header />

@@ -15,6 +15,7 @@ const MainMenu = styled.div`
   right: 0px;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 `;
 
 const CustomersTitle = styled.div`
