@@ -1,8 +1,6 @@
 package com.vacation.com.vacation.Controller;
 
-import com.vacation.com.vacation.HolidayLeaveRepository;
 import com.vacation.com.vacation.Model.DateValidationRequest;
-import com.vacation.com.vacation.Model.HolidayLeave;
 import com.vacation.com.vacation.Service.DateValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

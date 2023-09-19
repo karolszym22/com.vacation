@@ -3,7 +3,6 @@ package com.vacation.com.vacation.Controller;
 import com.vacation.com.vacation.Model.UserExistResponse;
 import com.vacation.com.vacation.Model.UserEntity;
 import com.vacation.com.vacation.Service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

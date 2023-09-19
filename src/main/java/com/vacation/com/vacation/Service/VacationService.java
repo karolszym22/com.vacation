@@ -1,7 +1,7 @@
 package com.vacation.com.vacation.Service;
 
 import com.vacation.com.vacation.Model.HolidayLeave;
-import com.vacation.com.vacation.HolidayLeaveRepository;
+import com.vacation.com.vacation.Repository.HolidayLeaveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

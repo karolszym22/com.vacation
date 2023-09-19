@@ -4,9 +4,11 @@ import { useSelector } from "react-redux";
 import RootState from "../../Reducers/Store/index";
 import { addDays, isSaturday, isSunday } from "date-fns";
 import Menu from "../../Components/SideMenu/SideMenu";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import userIcon from "../../resources/user.png";
 import Overlay from "../../Components/Overlay/Overlay"
+import { Vacation } from "../../Types/Vacation";
+import { AuthorizationState } from "../../Types/AuthorizationState";
 
 const Table = styled.table`
   width: 100%;
@@ -164,32 +166,6 @@ const NavLinkName = styled.a`
   font-weight: bold;
   text-decoration: none;
 `
-interface Vacation {
-  id: number;
-  description: string;
-  daysNum: number;
-  done: boolean;
-  taskStatus: string;
-  startDate: string;
-  endDate: string;
-}
-interface PersonVacation {
-  id: number;
-  description: string;
-  daysNum: number;
-  done: boolean;
-  taskStatus: string;
-  startDate: string;
-  endDate: string;
-}
-interface UserState {
-  id: number;
-  name: string;
-  email: string;
-}
-interface AuthorizationState {
-  user: UserState;
-}
 
 interface RootState {
   authorization: AuthorizationState;

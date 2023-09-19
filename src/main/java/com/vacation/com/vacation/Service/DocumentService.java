@@ -1,7 +1,6 @@
 package com.vacation.com.vacation.Service;
 
 import com.vacation.com.vacation.Model.Document;
-import com.vacation.com.vacation.Model.UserEntity;
 import com.vacation.com.vacation.Repository.DocumentRepository;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;

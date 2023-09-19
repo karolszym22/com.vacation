@@ -1,6 +1,6 @@
 package com.vacation.com.vacation.VacationService;
 
-import com.vacation.com.vacation.HolidayLeaveRepository;
+import com.vacation.com.vacation.Repository.HolidayLeaveRepository;
 import com.vacation.com.vacation.Model.HolidayLeave;
 import com.vacation.com.vacation.Service.VacationService;
 import org.junit.jupiter.api.BeforeEach;

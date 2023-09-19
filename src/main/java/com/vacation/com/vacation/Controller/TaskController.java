@@ -1,15 +1,11 @@
 package com.vacation.com.vacation.Controller;
-
-import com.vacation.com.vacation.Model.Task;
-import com.vacation.com.vacation.Model.Task.Tasks;
 import com.vacation.com.vacation.Model.TaskData;
 import com.vacation.com.vacation.Service.TaskService;
-import org.hibernate.usertype.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/tasks")

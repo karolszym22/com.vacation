@@ -1,6 +1,6 @@
 package com.vacation.com.vacation.DateValidation;
 
-import com.vacation.com.vacation.HolidayLeaveRepository;
+import com.vacation.com.vacation.Repository.HolidayLeaveRepository;
 import com.vacation.com.vacation.Model.DateValidationRequest;
 import com.vacation.com.vacation.Model.HolidayLeave;
 import com.vacation.com.vacation.Service.DateValidationService;

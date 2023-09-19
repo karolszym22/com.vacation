@@ -1,4 +1,4 @@
-package com.vacation.com.vacation;
+package com.vacation.com.vacation.Repository;
 
 import com.vacation.com.vacation.Model.HolidayLeave;
 import org.springframework.data.jpa.repository.JpaRepository;
