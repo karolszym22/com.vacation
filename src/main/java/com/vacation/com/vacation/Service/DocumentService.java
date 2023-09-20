@@ -21,7 +21,6 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
 
-    @Autowired
     public DocumentService(DocumentRepository documentRepository) {
         this.documentRepository = documentRepository;
     }

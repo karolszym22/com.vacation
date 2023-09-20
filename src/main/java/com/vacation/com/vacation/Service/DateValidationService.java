@@ -12,7 +12,6 @@ public class DateValidationService {
 
     private final HolidayLeaveRepository holidayLeaveRepository;
 
-    @Autowired
     public DateValidationService(HolidayLeaveRepository holidayLeaveRepository) {
         this.holidayLeaveRepository = holidayLeaveRepository;
     }

@@ -33,7 +33,6 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

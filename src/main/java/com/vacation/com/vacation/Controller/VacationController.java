@@ -13,7 +13,6 @@ import java.util.List;
 public class VacationController {
     private final VacationService vacationService;
 
-    @Autowired
     VacationController(final VacationService vacationService){
         this.vacationService = vacationService;
     }

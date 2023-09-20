@@ -15,18 +15,18 @@ public class VacationService {
 
     private final HolidayLeaveRepository holidayLeaveRepository;
 
-    @Autowired
     public VacationService(HolidayLeaveRepository holidayLeaveRepository) {
         this.holidayLeaveRepository = holidayLeaveRepository;
     }
 
-    public List<HolidayLeave> getAllVacations() {System.out.println("Asdasdasdasdas");
+    public List<HolidayLeave> getAllVacations() {;
         return holidayLeaveRepository.findAll();
     }
     public List<HolidayLeave> getAllPersonVacations(Integer personId) {
         return holidayLeaveRepository.findByPersonId(personId);
     }
-    public List<HolidayLeave> getVacationByTaskStatus(String taskStatus) {System.out.println(taskStatus + " aaaaaaaaaaaaaa"); return holidayLeaveRepository.findByTaskStatus(taskStatus);}
+    public List<HolidayLeave> getVacationByTaskStatus(String taskStatus) {
+        ; return holidayLeaveRepository.findByTaskStatus(taskStatus);}
     public Page<HolidayLeave> getAllVacationsPaged(Pageable pageable) {
         return holidayLeaveRepository.findAll(pageable);
     }
