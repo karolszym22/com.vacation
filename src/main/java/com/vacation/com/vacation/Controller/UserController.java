@@ -15,13 +15,13 @@ import java.util.UUID;
 @RestController
 public class UserController {
     private final UserService userService;
-    private boolean exist = false;
+    private final boolean exist = false;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @PostMapping("/NewUser")
+    @PostMapping("/newUser")
     public ResponseEntity<String> registerUser(@RequestBody UserEntity user) {
         if (userService.registerUser(mapToUserEntity(user))) {
             return ResponseEntity.ok("User registered!");
@@ -51,13 +51,9 @@ public class UserController {
         boolean loggedIn = userService.loginUser(user.getEmail(), user.getPassword());
         if (loggedIn) {
             UserEntity loggedInUser = userService.getUserByEmail(user.getEmail());
-
             String token = UUID.randomUUID().toString();
-
             session.setAttribute("userToken", token);
             session.setAttribute("loggedInUserId", loggedInUser.getId());
-            System.out.println(session.getAttribute("loggedInUserId") + "MOJE ID PRZED ZALOGOWANIU");
-
             loggedInUser.setToken(token);
 
             return ResponseEntity.ok(loggedInUser);

@@ -22,21 +22,5 @@ public class SessionController {
     @GetMapping("/secured")
     public String secured() {return "Hello, Secured!";}
 
-    @GetMapping("/csrf-token")
 
-    @ResponseBody
-    public CsrfToken csrf() {
-        if (csrfToken == null) {
-            csrfToken = generateCsrfToken();
-        }
-        return csrfToken;
-    }
-
-    private CsrfToken generateCsrfToken() {
-        CsrfTokenRepository csrfTokenRepository = new HttpSessionCsrfTokenRepository();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        CsrfToken csrfToken = csrfTokenRepository.generateToken(request);
-        csrfTokenRepository.saveToken(csrfToken, request, null);
-        return csrfToken;
-    }
 }

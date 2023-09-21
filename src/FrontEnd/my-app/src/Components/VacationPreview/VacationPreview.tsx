@@ -175,7 +175,7 @@ const VacationPreview: React.FC = () => {
           };
           console.log(taskData);
           const response = await axios.post(
-            `http://localhost:8080/tasks/tasksToDo`,
+            `http://localhost:8080/tasksToDo`,
             taskData,
             {
               headers: {

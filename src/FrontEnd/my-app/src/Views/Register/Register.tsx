@@ -78,23 +78,9 @@ const Register: React.FC = () => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); 
   const [headers, setHeaders] = useState({});
-  const [csrfToken, setCsrfToken] = useState("");
+ 
 
-  useEffect(() => {
-    fetchCsrfToken();
-  }, []);
 
-  const fetchCsrfToken = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/csrf-token");
-      const csrfToken = response.data.token;
-      setCsrfToken(csrfToken);
-      console.error("TOKEN:", csrfToken);
-      Cookies.set('XSRF-TOKEN', csrfToken, { path: '/' });
-    } catch (error) {
-      console.error("Błąd podczas pobierania tokenu CSRF:", error);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,11 +115,6 @@ const Register: React.FC = () => {
           employerType,
           email,
         },
-        {
-          headers: {
-            "X-XSRF-TOKEN": csrfToken, 
-          },
-        }
       );
 
       console.log(response.data);
