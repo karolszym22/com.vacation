@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import Header from "../../Components/Header/Header";
 import MainMenu from "../../Components/Main/Main";
 import { fetchUserData, AppThunk } from "../../Components/Actions/actions";
 import { useDispatch } from "react-redux";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -21,22 +23,46 @@ const Wrapper = styled.div`
 `;
 
 function Main() {
+  const [csrfToken, setCsrfToken] = useState("");
+  const [tokenFetched, setTokenFetched] = useState(false); 
   const dispatch = useDispatch();
-  const token = localStorage.getItem("userToken");
 
   const fetchData = async () => {
     try {
-      if (token) {
-        const userData = await fetchUserData(token)(dispatch);
-        console.log("Pobrane dane:", userData);
-      }
+      await fetchUserData(csrfToken)(dispatch);
     } catch (error) {
+      console.error("Błąd podczas pobierania danych użytkownika:", error);
     }
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!tokenFetched) { 
+          const response = await axios.get("http://localhost:8080/csrf-token"); 
+          const csrfToken = response.data.token;
+          setCsrfToken(csrfToken);
+          console.log(csrfToken, "Moje ciasteczko");
+          Cookies.set('XSRF-TOKEN', csrfToken, { path: '/' });
+          setTokenFetched(true);
+
+          if (csrfToken) {
+            await fetchUserData(csrfToken)(dispatch);
+          }
+        }
+      } catch (error) {
+        console.error("Błąd podczas pobierania tokenu CSRF:", error);
+      }
+    };
+
     fetchData();
-  }, [dispatch, token]);
+  }, [dispatch, tokenFetched]); 
+
+  useEffect(() => {
+    if (csrfToken) {
+      fetchData();
+    }
+  },);
 
   return (
     <div>

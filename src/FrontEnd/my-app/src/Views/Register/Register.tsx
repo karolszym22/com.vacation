@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import background from "../../resources/rm222batch3-mind-10.jpg"
@@ -80,120 +80,123 @@ const Register: React.FC = () => {
   const [headers, setHeaders] = useState({});
   const [csrfToken, setCsrfToken] = useState("");
 
+  useEffect(() => {
+    fetchCsrfToken();
+  }, []);
+
   const fetchCsrfToken = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/csrf-token"); 
+      const response = await axios.get("http://localhost:8080/csrf-token");
       const csrfToken = response.data.token;
       setCsrfToken(csrfToken);
-      console.log(csrfToken, "Moje ciasteczko")
+      console.error("TOKEN:", csrfToken);
       Cookies.set('XSRF-TOKEN', csrfToken, { path: '/' });
     } catch (error) {
       console.error("Błąd podczas pobierania tokenu CSRF:", error);
     }
   };
 
-  fetchCsrfToken();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    if (username.length < 3) {
+      setUsernameError("Nazwa użytkownika musi mieć co najmniej 3 znaki.");
+      return;
+    }
 
-  if (username.length < 3) {
-    setUsernameError("Nazwa użytkownika musi mieć co najmniej 3 znaki.");
-    return;
-  }
+    if (password.length < 8) {
+      setPasswordError("Hasło musi mieć co najmniej 8 znaków.");
+      return;
+    }
 
-  if (password.length < 8) {
-    setPasswordError("Hasło musi mieć co najmniej 8 znaków.");
-    return;
-  }
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Hasła nie pasują do siebie.");
+      return;
+    }
 
-  if (password !== confirmPassword) {
-    setConfirmPasswordError("Hasła nie pasują do siebie.");
-    return;
-  }
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email.match(emailPattern)) {
+      setEmailError("Nieprawidłowy adres email.");
+      return;
+    }
 
-  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!email.match(emailPattern)) {
-    setEmailError("Nieprawidłowy adres email.");
-    return;
-  }
-
-  try {
-    const response = await axios.post(
-      "http://localhost:8080/NewUser",
-      {
-        username,
-        password,
-        employerType,
-        email,
-      },
-      {
-        headers: {
-          "X-XSRF-TOKEN": csrfToken, 
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/NewUser",
+        {
+          username,
+          password,
+          employerType,
+          email,
         },
-      }
-    );
+        {
+          headers: {
+            "X-XSRF-TOKEN": csrfToken, 
+          },
+        }
+      );
 
-    console.log(response.data);
-  } catch (error) {
-    console.error("Błąd rejestracji:", error);
-    setOverlayVisible(true);
-    setErrorMessage("Użytkownik o takim adresie email istnieje już w bazie danych");
-  }
-};
-const closeOverlay = () => {
+      console.log(response.data);
+    } catch (error) {
+      console.error("Błąd rejestracji:", error);
+      setOverlayVisible(true);
+      setErrorMessage("Użytkownik o takim adresie email istnieje już w bazie danych");
+    }
+  };
+
+  const closeOverlay = () => {
     setOverlayVisible(false);
   };
+
   return (
-<div>
-<Overlay visible={overlayVisible} onClose={closeOverlay} errorMessage={errorMessage} />
-    <Container>
-    <BottomTitle>Zaarejestruj się</BottomTitle>
-    <Form onSubmit={handleSubmit}>
-      
-      <Input
-        type="text"
-        placeholder="Nazwa użytkownika"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <ErrorText>{usernameError}</ErrorText>
-      <Input
-        type="password"
-        placeholder="Hasło"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <ErrorText>{passwordError}</ErrorText>
-      <Input
-        type="password"
-        placeholder="Potwierdz hasło" 
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
-      <ErrorText>{confirmPasswordError}</ErrorText>
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <ErrorText>{emailError}</ErrorText>
-      <Select
-        value={employerType}
-        onChange={(e) => setEmployerType(e.target.value)}
-      >
-        <option value="">Wybierz rolę</option>
-        <option value="HR">HR</option>
-        <option value="PRACOWNIK">Pracownik</option>
-        <option value="PRACODAWCA">Pracodawca</option>
-        <option value="TESTER">Tester</option>
-      </Select>
-      <Button type="submit">Dołącz</Button>
-    </Form>
-    <h3>Masz już konto? Zaloguj się!</h3>
-  </Container>
-  </div>
+    <div>
+      <Overlay visible={overlayVisible} onClose={closeOverlay} errorMessage={errorMessage} />
+      <Container>
+        <BottomTitle>Zarejestruj się</BottomTitle>
+        <Form onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            placeholder="Nazwa użytkownika"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <ErrorText>{usernameError}</ErrorText>
+          <Input
+            type="password"
+            placeholder="Hasło"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <ErrorText>{passwordError}</ErrorText>
+          <Input
+            type="password"
+            placeholder="Potwierdz hasło" 
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <ErrorText>{confirmPasswordError}</ErrorText>
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <ErrorText>{emailError}</ErrorText>
+          <Select
+            value={employerType}
+            onChange={(e) => setEmployerType(e.target.value)}
+          >
+            <option value="">Wybierz rolę</option>
+            <option value="HR">HR</option>
+            <option value="PRACOWNIK">Pracownik</option>
+            <option value="PRACODAWCA">Pracodawca</option>
+            <option value="TESTER">Tester</option>
+          </Select>
+          <Button type="submit">Dołącz</Button>
+        </Form>
+        <h3>Masz już konto? Zaloguj się!</h3>
+      </Container>
+    </div>
   );
 };
 
