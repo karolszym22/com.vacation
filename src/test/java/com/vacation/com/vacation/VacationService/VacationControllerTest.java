@@ -31,11 +31,10 @@ public class VacationControllerTest {
 
     @Test
     public void testGetVacationsByTaskStatus() {
-        // Przygotowanie danych testowych
+        // Given
         String taskStatus = "completed";
         List<HolidayLeave> vacations = new ArrayList<>();
 
-        // Tutaj dodaj przykładowe obiekty HolidayLeave do listy vacations
         HolidayLeave vacation1 = new HolidayLeave();
         vacation1.setTaskStatus("completed");
         vacation1.setDescription("Wakacje 1");
@@ -52,23 +51,23 @@ public class VacationControllerTest {
         vacations.add(vacation2);
         vacations.add(vacation3);
 
-        // Konfiguracja zachowania mocka
+
         when(vacationService.getVacationByTaskStatus(taskStatus)).thenReturn(vacations);
 
-        // Wywołanie metody kontrolera
+        // When
         ResponseEntity<List<HolidayLeave>> responseEntity = vacationController.getVacationsByTaskStatus(taskStatus);
 
-        // Weryfikacja odpowiedzi
+        // Then
         assertEquals(200, responseEntity.getStatusCodeValue()); // Oczekiwany status kodu 200
 
-        // Przefiltrowanie listy vacations po taskStatus "completed"
+
         List<HolidayLeave> expectedVacations = vacations.stream()
                 .filter(vacation -> vacation.getTaskStatus().equals("completed"))
                 .collect(Collectors.toList());
 
         assertEquals(expectedVacations, responseEntity.getBody()); // Oczekiwana lista vacations w ciele odpowiedzi
 
-        // Weryfikacja, czy metoda serwisu została wywołana raz z odpowiednimi argumentami
+
         verify(vacationService, times(1)).getVacationByTaskStatus(taskStatus);
     }
 }

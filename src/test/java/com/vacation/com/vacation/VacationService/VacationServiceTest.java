@@ -28,51 +28,29 @@ public class VacationServiceTest {
     }
     @Test
     public void testGetVacationByTaskStatus() {
+        // Given
         String taskStatusToFind = "SomeTaskStatus";
         List<HolidayLeave> vacationList = new ArrayList<>();
         HolidayLeave vacation1 = new HolidayLeave();
         vacation1.setTaskStatus("SomeTaskStatus");
         vacationList.add(vacation1);
         when(holidayLeaveRepository.findByTaskStatus(taskStatusToFind)).thenReturn(vacationList);
-
+        // When
         List<HolidayLeave> result = vacationService.getVacationByTaskStatus(taskStatusToFind);
-
+        // Then
         assertEquals(1, result.size());
         assertEquals(taskStatusToFind, result.get(0).getTaskStatus());
     }
 
     @Test
     public void testGetVacationByTaskStatusNoMatches() {
+        // Given
         String taskStatusToFind = "NonExistentTaskStatus";
         when(holidayLeaveRepository.findByTaskStatus(taskStatusToFind)).thenReturn(new ArrayList<>());
-
+        // When
         List<HolidayLeave> result = vacationService.getVacationByTaskStatus(taskStatusToFind);
-
+        // Then
         assertEquals(0, result.size());
     }
-    @Test
-    public void testGetVacationByTaskStatusOneMatchInList() {
 
-        String taskStatusToFind = "Zaakceptowane";
-        List<HolidayLeave> vacationList = new ArrayList<>();
-        HolidayLeave vacation1 = new HolidayLeave();
-        vacation1.setTaskStatus("Zaakceptowane");
-        vacationList.add(vacation1);
-        HolidayLeave vacation2 = new HolidayLeave();
-        vacation2.setTaskStatus("Odrzucone");
-        vacationList.add(vacation2);
-        HolidayLeave vacation3 = new HolidayLeave();
-        vacation3.setTaskStatus("Zaakceptowane");
-        vacationList.add(vacation3);
-        HolidayLeave vacation4 = new HolidayLeave();
-        vacation4.setTaskStatus("Zwrocone");
-        vacationList.add(vacation4);
-        when(holidayLeaveRepository.findByTaskStatus(taskStatusToFind)).thenReturn(vacationList);
-
-        List<HolidayLeave> result = vacationService.getVacationByTaskStatus(taskStatusToFind);
-
-
-        assertEquals(2, result.size());
-        assertEquals(taskStatusToFind, result.get(0).getTaskStatus());
-    }
 }

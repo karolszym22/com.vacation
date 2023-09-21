@@ -24,6 +24,7 @@ public class TaskServiceTest {
 
     @Test
     public void testProcessTaskForHRAndAccepted() {
+        // Given
         String taskStatus = "Pracodawca:Zaakceptowane";
         String userType = "HR";
 
@@ -31,9 +32,9 @@ public class TaskServiceTest {
         expectedTaskData.setTaskEnums(Arrays.asList(Tasks.ODRZUC, Tasks.ZWROC, Tasks.ZAAKCEPTUJ));
 
         when(taskService.processTask(taskStatus, userType)).thenReturn(expectedTaskData);
-
+        // When
         TaskData actualTaskData = taskService.processTask(taskStatus, userType);
-
+        // Then
         assertEquals(expectedTaskData.getTaskEnums(), actualTaskData.getTaskEnums());
     }
 

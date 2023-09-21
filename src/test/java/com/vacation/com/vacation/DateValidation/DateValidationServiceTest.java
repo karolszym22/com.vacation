@@ -32,7 +32,7 @@ public class DateValidationServiceTest {
 
     @Test
     public void testValidDateRange() {
-
+        // Given
         DateValidationRequest request = new DateValidationRequest();
         request.setPersonId(1);
         request.setStartDate(new Date(2023, 9, 1));
@@ -46,14 +46,15 @@ public class DateValidationServiceTest {
         overlappingLeaves.add(leave);
 
         Mockito.when(holidayLeaveRepository.findByPersonId(1)).thenReturn(overlappingLeaves);
-
+        // When
         boolean isDateValid = dateValidationService.isDateValid(request);
+        // Then
         assertTrue(isDateValid);
     }
 
     @Test
     public void testInvalidDateRange() {
-
+        // Given
         DateValidationRequest request = new DateValidationRequest();
         request.setPersonId(1);
         request.setStartDate(new Date(2023, 8, 1));
@@ -67,8 +68,9 @@ public class DateValidationServiceTest {
         overlappingLeaves.add(leave);
 
         Mockito.when(holidayLeaveRepository.findByPersonId(1)).thenReturn(overlappingLeaves);
-
+        // When
         boolean isDateValid = dateValidationService.isDateValid(request);
+        // Then
         assertFalse(isDateValid);
     }
 }

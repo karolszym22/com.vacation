@@ -27,7 +27,7 @@ public class UserRegisterTest {
 
     @Test
     public void testRegisterUser() {
-
+        // Given
         UserEntity newUser = new UserEntity();
         newUser.setEmail("test@example.com");
         newUser.setPassword("testPassword");
@@ -35,10 +35,10 @@ public class UserRegisterTest {
 
         when(userRepository.findByEmail(anyString())).thenReturn(null);
 
-
+        // When
         boolean isRegistered = userService.registerUser(newUser);
 
-
+        // Then
         assertTrue(isRegistered);
 
 
@@ -46,7 +46,7 @@ public class UserRegisterTest {
     }
     @Test
     public void testRegisterUserWhenUserExists() {
-
+        // Given
         UserEntity existingUser = new UserEntity();
         existingUser.setEmail("test@example.com");
         existingUser.setPassword("testPassword");
@@ -58,9 +58,9 @@ public class UserRegisterTest {
         newUser.setEmail("test@example.com");
         newUser.setPassword("newPassword");
 
-
+        // When
         boolean isRegistered = userService.registerUser(newUser);
-
+        // Then
         assertFalse(isRegistered);
         verify(userRepository, never()).save(newUser);
     }

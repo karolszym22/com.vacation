@@ -31,10 +31,11 @@ public class UserLoginTest {
         UserEntity user = new UserEntity();
         user.setEmail("test@example.com");
         user.setPassword("password123");
+        // Given
         when(userRepository.findByEmail("test@example.com")).thenReturn(user);
-
+        // When
         boolean result = userService.loginUser("test@example.com", "password123");
-
+        // Then
         assertTrue(result);
     }
 
