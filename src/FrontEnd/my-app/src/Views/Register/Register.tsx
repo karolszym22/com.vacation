@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import background from "../../resources/rm222batch3-mind-10.jpg"
-import Overlay from "../../Components/Overlay/Overlay"
-import Cookies from 'js-cookie';
+import background from "../../resources/rm222batch3-mind-10.jpg";
+import Overlay from "../../Components/Overlay/Overlay";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   text-align: center;
@@ -12,15 +13,15 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   background-image: url(${background});
-  background-size: cover; 
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  height: 100vh; 
+  height: 100vh;
 `;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  
+
   width: 250px;
 `;
 const Title = styled.h2`
@@ -63,7 +64,7 @@ const Button = styled.button`
 `;
 const BottomTitle = styled.h2`
   color: #646262;
-`
+`;
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -71,16 +72,13 @@ const Register: React.FC = () => {
   const [employerType, setEmployerType] = useState("");
   const [email, setEmail] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState(""); 
-  const [confirmPassword, setConfirmPassword] = useState(""); 
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); 
-  const [headers, setHeaders] = useState({});
- 
-
-
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,21 +105,20 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/NewUser",
-        {
-          username,
-          password,
-          employerType,
-          email,
-        },
-      );
+      const response = await axios.post("http://localhost:8080/newUser", {
+        username,
+        password,
+        employerType,
+        email,
+      });
 
-      console.log(response.data);
+      navigate("/signIn");
     } catch (error) {
       console.error("Błąd rejestracji:", error);
       setOverlayVisible(true);
-      setErrorMessage("Użytkownik o takim adresie email istnieje już w bazie danych");
+      setErrorMessage(
+        "Użytkownik o takim adresie email istnieje już w bazie danych"
+      );
     }
   };
 
@@ -131,7 +128,11 @@ const Register: React.FC = () => {
 
   return (
     <div>
-      <Overlay visible={overlayVisible} onClose={closeOverlay} errorMessage={errorMessage} />
+      <Overlay
+        visible={overlayVisible}
+        onClose={closeOverlay}
+        errorMessage={errorMessage}
+      />
       <Container>
         <BottomTitle>Zarejestruj się</BottomTitle>
         <Form onSubmit={handleSubmit}>
@@ -151,7 +152,7 @@ const Register: React.FC = () => {
           <ErrorText>{passwordError}</ErrorText>
           <Input
             type="password"
-            placeholder="Potwierdz hasło" 
+            placeholder="Potwierdz hasło"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
