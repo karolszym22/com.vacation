@@ -56,7 +56,7 @@ public class DocumentService {
         String endDateStr = dateFormat.format(endDate);
 
         String description = "Niniejszym składam wniosek o udzielenie w dniach od " + startDateStr + " do " + endDateStr +
-                "przysługującego za rok 2023 urlopu wypoczynkowego. Powód: " + document.getDescription();
+                " przysługującego za rok 2023 urlopu wypoczynkowego. Powód: " + document.getDescription();
         String taskStatus = document.getTaskStatus();
         String employerName = "Pracownik " + document.getEmployerName();
         String daysNum = "Liczba dni: " + document.getDaysNum();
