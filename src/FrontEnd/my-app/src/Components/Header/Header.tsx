@@ -1,12 +1,7 @@
 import styled from "styled-components";
 import img from "../../resources/pexels-karolina-grabowska-7876708.jpg";
-import userIcon from "../../resources/user.png";
-import { NavLink, useNavigate } from "react-router-dom";
-import { connect } from "react-redux";
 import { useSelector } from "react-redux";
-import RootState from "../../Reducers/Store/index";
-import { Store } from "redux";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { FiUser, FiAlignLeft } from "react-icons/fi";
 
@@ -15,21 +10,31 @@ interface UserState {
   name: string;
   email: string;
 }
+
 interface Vacation {
   id: number;
-  description: string;
-  employerName: string;
   daysNum: number;
-  personId: number;
+  done: boolean;
   taskStatus: string;
+  startDate: string;
+  endDate: string;
+  employerName: string;
+  personId: number;
+  descritpion: string;
 }
+
 interface AuthorizationState {
   user: UserState;
 }
 
 interface RootState {
   authorization: AuthorizationState;
+  vacations: {
+    list: Vacation[];
+    vacationsCount: number;
+  };
 }
+
 const SignIn = styled.div`
   color: #928d8d;
   display: flex;
@@ -140,12 +145,17 @@ const HeaderElementContainer = styled.div`
 `;
 
 const Header = () => {
+  const [realizedVacations, setRealizedVacations] = useState<Vacation[]>([]);
+  const [rejectedVacations, setRejectedVacations] = useState<Vacation[]>([]);
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
   );
-  const [realizedVacations, setRealizedVacations] = useState<Vacation[]>([]);
-  const [rejectedVacations, setRejectedVacations] = useState<Vacation[]>([]);
-
+  const vacationsCount = useSelector((state: RootState) => state.vacations.vacationsCount);
+  const vacationsContent = useSelector((state: RootState) => state.vacations);
+  console.log(vacationsCount)
+  console.log(vacationsContent)
+  const duringVacationCount = vacationsCount - realizedVacations.length - rejectedVacations.length;
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -171,7 +181,6 @@ const Header = () => {
         if (response.status === 200) {
           const data = response.data;
           setRejectedVacations(data);
-          console.log(data);
         } else {
           console.error("Failed to fetch realized vacations.");
         }
@@ -179,7 +188,7 @@ const Header = () => {
         console.error("Error fetching realized vacations:", error);
       }
     };
-
+    
     fetchData();
   }, []);
 
@@ -207,7 +216,7 @@ const Header = () => {
           </HeaderElement>
           <HeaderElement>
             {" "}
-            <HeaderElementValue color="#f2c121a4">3</HeaderElementValue>
+            <HeaderElementValue color="#f2c121a4">{duringVacationCount}</HeaderElementValue>
             <Value>W trakcie</Value>
           </HeaderElement>
           <HeaderElement>

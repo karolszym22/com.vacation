@@ -1,4 +1,14 @@
-
+interface Vacation {
+  id: number;
+  daysNum: number;
+  done: boolean;
+  taskStatus: string;
+  startDate: string;
+  endDate: string;
+  employerName: string;
+  personId: number;
+  descritpion: string;
+}
   export const user = (employerContent: object) => {
 
     return {
@@ -10,15 +20,10 @@
       },
     };
   };
-  export const vacationsList = (vacationsContent: []) => {
-
+  export const vacationsList = (vacationsContent: Vacation[]) => {
     return {
       type: "VACATIONS_LIST",
-      payload: {
-        vacationsListContent: [
-          ...vacationsContent,
-        ],
-      },
+      payload: vacationsContent, 
     };
   };
 

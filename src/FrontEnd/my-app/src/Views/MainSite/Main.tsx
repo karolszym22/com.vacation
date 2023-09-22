@@ -1,9 +1,9 @@
+import React, { useState } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import Header from "../../Components/Header/Header";
 import MainMenu from "../../Components/Main/Main";
-import { vacationsList } from "../../Components/Actions/actions"
-import { useEffect, useState } from "react";
+import { vacationsList } from "../../Components/Actions/actions";
 import { useDispatch } from "react-redux";
 
 export interface Vacation {
@@ -33,21 +33,23 @@ const Wrapper = styled.div`
 `;
 
 function Main() {
-
   const [vacations, setVacations] = useState<Vacation[]>([]);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetch("http://localhost:8080/vacations")
-      .then((response) => response.json())
-      .then((data) => {
-        setVacations(data);
-        dispatch(
-          vacationsList(data)
-        );
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/vacations");
+      const data = await response.json();
+      setVacations(data);
+      dispatch(vacationsList(data));
+      console.log("AAAAAAAAAAAAa")
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchData();
   }, []);
 
   return (
@@ -56,7 +58,7 @@ function Main() {
         <Menu />
         <Wrapper>
           <Header />
-          <MainMenu></MainMenu>
+          <MainMenu />
         </Wrapper>
       </MainWrapper>
     </div>

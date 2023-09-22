@@ -12,7 +12,7 @@ interface AppState {
 type AppAction =
    { type: "EMPLOYEE_AUTHORIZATION"; payload: { user: User } }
 
-export const initialState: AppState = {
+const initialState: AppState = {
   user: { id: 0, name: '', email: '', employerType: '' },
 };
 
