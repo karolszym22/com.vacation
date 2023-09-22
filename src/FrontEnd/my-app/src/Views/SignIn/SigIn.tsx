@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { user } from "../../Components/Actions/actions";
 import background from "../../resources/rm222batch3-mind-10.jpg";
 import styled from "styled-components";
 import Overlay from "../../Components/Overlay/Overlay";
@@ -62,32 +64,40 @@ const Login: React.FC = () => {
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); 
   const [loggedIn, setLoggedIn] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/login", {
-        email,
-        password,
-      });
+        const response = await axios.post("http://localhost:8080/login", {
+            email,
+            password,
+        });
+        dispatch(
+          user({
+            id: response.data.id,
+            name: response.data.username,
+            email: response.data.email,
+            employerType: response.data.employerType
+          })
+        );
 
-      navigate("/");
+        navigate("/");
 
-      localStorage.setItem('userToken', response.data.token);
-      setLoggedIn(true);
+        setLoggedIn(true);
 
-      console.log(
-        "Initial State after Login:",
-        response.data.id,
-        response.data.username,
-        response.data.email
-      );
+        console.log(
+            "Initial State after Login:",
+            response.data.id,
+            response.data.username,
+            response.data.email
+        );
     } catch (error) {
-      console.error("Login error:", error);
-      setOverlayVisible(true);
-      setErrorMessage("Logowanie nie udane. Zły email lub hasło"); 
+        console.error("Login error:", error);
+        setOverlayVisible(true);
+        setErrorMessage("Logowanie nie udane. Zły email lub hasło"); 
     }
-  };
+};
 
   const closeOverlay = () => {
     setOverlayVisible(false);
