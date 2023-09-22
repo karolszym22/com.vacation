@@ -171,7 +171,7 @@ const VacationPreview: React.FC = () => {
         if (vacationData) {
           const taskData = {
             taskStatus: vacationData.taskStatus,
-            userType: userType,
+            userType: userType
           };
           console.log(taskData);
           const response = await axios.post(
