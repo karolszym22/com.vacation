@@ -236,6 +236,9 @@ function NewVacation() {
       startDate,
       endDate: newEndDate,
     });
+
+   
+
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(newEndDate);
     try {
@@ -268,7 +271,13 @@ function NewVacation() {
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
+
     event.preventDefault();
+
+    if (!description || !startDate || !endDate) {
+      alert("Wypełnij wszystkie pola przed wysłaniem formularza.");
+      return; 
+    }
 
     const vacationData = {
       description,
