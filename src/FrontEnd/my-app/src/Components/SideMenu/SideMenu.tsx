@@ -68,7 +68,7 @@ const SideMenu = styled.div`
   background-color: #2e4051;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  height: 100vh;
 `;
 
 const Menu = () => {
@@ -86,19 +86,19 @@ const Menu = () => {
       </MenuNavLink>
       <MenuNavLink>
         <CustomRegisterIcon />
-        <NavLinkName as={NavLink} to="/Register">
+        <NavLinkName as={NavLink} to="/register">
           Rejestracja nowego pracownika
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
         <CustomLoginIcon />
-        <NavLinkName as={NavLink} to="/SignIn">
+        <NavLinkName as={NavLink} to="/signIn">
           Zaloguj się!
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
         <CustomNewVacationIcon />
-        <NavLinkName as={NavLink} to="/NewVacation">
+        <NavLinkName as={NavLink} to="/newVacation">
           Dodaj nowy urlop
         </NavLinkName>
       </MenuNavLink>
