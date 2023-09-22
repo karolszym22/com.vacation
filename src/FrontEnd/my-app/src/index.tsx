@@ -20,9 +20,9 @@ root.render(
     
       <Routes>
       <Route path="/" element={<App />} />
-              <Route path="/SignIn" element={<SignIn/>}/>
-              <Route path="/Register" element={<Register/>}/>
-              <Route path="/NewVacation" element={<NewVacation/>}/>
+              <Route path="/signIn" element={<SignIn/>}/>
+              <Route path="/register" element={<Register/>}/>
+              <Route path="/newVacation" element={<NewVacation/>}/>
               <Route path="/vacationId/:paramValue" element={<VacationPreview />} />
 
       </Routes>
