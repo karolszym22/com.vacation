@@ -1,7 +1,4 @@
 
-type AppAction = { type: "EMPLOYEE_AUTHORIZATION"; payload: object }
-
-
   export const user = (employerContent: object) => {
 
     return {
@@ -10,6 +7,17 @@ type AppAction = { type: "EMPLOYEE_AUTHORIZATION"; payload: object }
         user: {
           ...employerContent,
         },
+      },
+    };
+  };
+  export const vacationsList = (vacationsContent: []) => {
+
+    return {
+      type: "VACATIONS_LIST",
+      payload: {
+        vacationsListContent: [
+          ...vacationsContent,
+        ],
       },
     };
   };

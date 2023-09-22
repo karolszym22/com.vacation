@@ -1,12 +1,22 @@
-import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import Header from "../../Components/Header/Header";
 import MainMenu from "../../Components/Main/Main";
-import { fetchUserData, AppThunk } from "../../Components/Actions/actions";
+import { vacationsList } from "../../Components/Actions/actions"
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import axios from 'axios';
-import Cookies from 'js-cookie';
+
+export interface Vacation {
+  id?: number;
+  description?: string;
+  daysNum?: number;
+  done?: boolean;
+  taskStatus: string;
+  startDate?: string;
+  endDate?: string;
+  employerName: string;
+  personId: number;
+}
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -23,46 +33,22 @@ const Wrapper = styled.div`
 `;
 
 function Main() {
-  const [csrfToken, setCsrfToken] = useState("");
-  const [tokenFetched, setTokenFetched] = useState(false); 
+
+  const [vacations, setVacations] = useState<Vacation[]>([]);
   const dispatch = useDispatch();
 
-  const fetchData = async () => {
-    try {
-      await fetchUserData(csrfToken)(dispatch);
-    } catch (error) {
-      console.error("Błąd podczas pobierania danych użytkownika:", error);
-    }
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!tokenFetched) { 
-          const response = await axios.get("http://localhost:8080/csrf-token"); 
-          const csrfToken = response.data.token;
-          setCsrfToken(csrfToken);
-          console.log(csrfToken, "Moje ciasteczko");
-          Cookies.set('XSRF-TOKEN', csrfToken, { path: '/' });
-          setTokenFetched(true);
-
-          if (csrfToken) {
-            await fetchUserData(csrfToken)(dispatch);
-          }
-        }
-      } catch (error) {
-        console.error("Błąd podczas pobierania tokenu CSRF:", error);
-      }
-    };
-
-    fetchData();
-  }, [dispatch, tokenFetched]); 
-
-  useEffect(() => {
-    if (csrfToken) {
-      fetchData();
-    }
-  },);
+    fetch("http://localhost:8080/vacations")
+      .then((response) => response.json())
+      .then((data) => {
+        setVacations(data);
+        dispatch(
+          vacationsList(data)
+        );
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  
+  }, []);
 
   return (
     <div>
