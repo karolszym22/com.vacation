@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import HamburgerMenu from "../SideMenu/SideHaburgerMenu";
 
 interface OverlayWrapperProps {
   visible: boolean;
@@ -68,6 +69,7 @@ interface OverlayProps {
 const Overlay: React.FC<OverlayProps> = ({ visible, onClose, errorMessage }) => {
   return (
     <OverlayWrapper visible={visible}>
+     <HamburgerMenu></HamburgerMenu>
       <Modal>
         <ModalTitle>
           <TitleValue>Błąd</TitleValue>
