@@ -3,6 +3,11 @@ import styled from "styled-components";
 import { FiHome, FiGitBranch, FiPlusCircle, FiFile } from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
 
+interface HamburgerMenuProps {
+  visible: boolean;
+}
+
+
 const CustomHomeIcon = styled(FiHome)`
   width: 15px;
   height: 15px;
@@ -63,20 +68,20 @@ const MenuNavLink = styled.div`
   }
 `;
 
-const SideMenu = styled.div`
+const SideMenu = styled.div<HamburgerMenuProps>`
   position: absolute;
   z-index: 500;
   width: 280px;
   left: 0px;
   background-color: #2e4051;
-  display: none;
+ display: ${({ visible }) => (visible ? "flex" : "none")};
   flex-direction: column;
   height: 100vh;
 `;
 
-const HamburgerMenu = () => {
+const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible }) => {
   return (
-    <SideMenu>
+    <SideMenu visible={visible}>
       <MenuLogoContainer>
         <MenuNavLogo>Urlopy</MenuNavLogo>
       </MenuLogoContainer>
