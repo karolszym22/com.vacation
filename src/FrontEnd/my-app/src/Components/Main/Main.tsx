@@ -15,7 +15,6 @@ const MainMenu = styled.div`
   right: 0px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 `;
 
 const CustomersTitle = styled.div`
@@ -24,90 +23,6 @@ const CustomersTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
   color: #565454;
-`;
-const CustomersContainer = styled.div`
-  width: 100%;
-  padding: 15px;
-  display: flex;
-`;
-const CustomerElement = styled.div`
-  display: flex;
-  justify-content: start;
-  margin: 10px;
-  -webkit-box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
-  -moz-box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
-  box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
-`;
-const CustomerInitiated = styled.div`
-  box-sizing: border-box;
-  width: 90px;
-  height: 90px;
-  background-color: ${({ color }) => color};
-  color: white;
-  font-size: 35px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const CustomerName = styled.div`
-  box-sizing: border-box;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  color: #565454;
-  padding: 10px;
-`;
-const CustomerVacationsContainer = styled.div`
-  box-sizing: border-box;
-  padding: 10px;
-`;
-const CustomerVacationsAccepts = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
-const VacationsAcceptsColor = styled.div`
-  height: 10px;
-  width: 60px;
-  background-color: green;
-`;
-const VacationsAcceptsNumber = styled.div`
-  font-size: 16px;
-  font-weight: 400;
-`;
-
-const VacationsDuringColor = styled.div`
-  height: 10px;
-  width: 60px;
-  background-color: orange;
-`;
-const VacationsRejectedColor = styled.div`
-  height: 10px;
-  width: 60px;
-  background-color: brown;
-`;
-
-const CustomerVacationsDuring = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
-const CustomerVacationsRejected = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
-const CustomerVacationsState = styled.div`
-  font-size: 16px;
-  color: grey;
 `;
 const Table = styled.table`
   width: 100%;
@@ -187,7 +102,6 @@ const Menu = () => {
   return (
     <MainMenu>
       <CustomersTitle>Lista urlopów</CustomersTitle>
-      
       <Table>
         <TableHeader>
           <TableRow>
