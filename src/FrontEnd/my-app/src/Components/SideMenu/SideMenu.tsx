@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FiHome, FiGitBranch, FiPlusCircle, FiFile } from "react-icons/fi";
+import { FiHome, FiGitBranch, FiPlusCircle, FiFile, FiAlignJustify } from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const CustomHomeIcon = styled(FiHome)`
@@ -25,6 +25,7 @@ const CustomNewVacationIcon = styled(FiFile)`
   height: 15px;
   margin: 5px;
 `;
+
 
 const MenuLogoContainer = styled.div`
   width: 100%;
@@ -69,6 +70,9 @@ const SideMenu = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  @media (max-width: 976px) {
+    display: none; 
+  }
 `;
 
 const Menu = () => {
@@ -87,7 +91,7 @@ const Menu = () => {
       <MenuNavLink>
         <CustomRegisterIcon />
         <NavLinkName as={NavLink} to="/register">
-          Rejestracja nowego pracownika
+          Rejestracja nowego pracownikaaaaaaaaaaa
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
