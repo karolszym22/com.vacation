@@ -69,7 +69,6 @@ interface OverlayProps {
 const Overlay: React.FC<OverlayProps> = ({ visible, onClose, errorMessage }) => {
   return (
     <OverlayWrapper visible={visible}>
-     <HamburgerMenu></HamburgerMenu>
       <Modal>
         <ModalTitle>
           <TitleValue>Błąd</TitleValue>
