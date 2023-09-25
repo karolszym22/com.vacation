@@ -4,11 +4,12 @@ import { useSelector } from "react-redux";
 import RootState from "../../Reducers/Store/index";
 import { addDays, isSaturday, isSunday } from "date-fns";
 import Menu from "../../Components/SideMenu/SideMenu";
-import { NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import userIcon from "../../resources/user.png";
-import Overlay from "../../Components/Overlay/Overlay"
+import Overlay from "../../Components/Overlay/Overlay";
 import { Vacation } from "../../Types/Vacation";
 import { AuthorizationState } from "../../Types/AuthorizationState";
+import HeaderTop from "../../Components/Header/HeaderTop";
 
 const Table = styled.table`
   width: 100%;
@@ -49,25 +50,13 @@ const TableCell = styled.td`
   color: #565454;
 `;
 
-const HeaderTop = styled.div`
-  width: 100%;
-  height: 40px;
-  background-color: white;
-  top: 0px;
-  display: flex;
-  justify-content: end;
-`;
-const UserIcon = styled.div`
-  background-image: url(${userIcon});
-  color: white;
-  height: 24px;
-  width: 24px;
-  margin: 5px 20px;
-  background-color: white;
-`;
-
 const MainWrapper = styled.div`
-  display: flex;
+ height: 100vh;
+
+  width: 100%;
+    display: flex;
+  justify-content: space-between;
+ 
 `;
 const FormWrapper = styled.div`
   display: flex;
@@ -160,12 +149,12 @@ const BottomTitle = styled.h2`
   color: #646262;
 `;
 const NavLinkName = styled.a`
-   font-size: 15px;
+  font-size: 15px;
   margin: 5px;
   color: #a19b9b;
   font-weight: bold;
   text-decoration: none;
-`
+`;
 
 interface RootState {
   authorization: AuthorizationState;
@@ -192,9 +181,7 @@ function NewVacation() {
   const [endDate, setEndDate] = useState<string>("");
   const [daysNum, setDaysNum] = useState<number>(0);
   const [overlayVisible, setOverlayVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); 
-
-
+  const [errorMessage, setErrorMessage] = useState("");
 
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
@@ -237,8 +224,6 @@ function NewVacation() {
       endDate: newEndDate,
     });
 
-   
-
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(newEndDate);
     try {
@@ -266,17 +251,18 @@ function NewVacation() {
     } catch (error) {
       console.error("Error validating date:", error);
       setOverlayVisible(true);
-      setErrorMessage("Tworzony przez Ciebie urlop koliduje z innym urlopem dziejącym się w tym samym okresie"); 
+      setErrorMessage(
+        "Tworzony przez Ciebie urlop koliduje z innym urlopem dziejącym się w tym samym okresie"
+      );
     }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
-
     event.preventDefault();
 
     if (!description || !startDate || !endDate) {
       alert("Wypełnij wszystkie pola przed wysłaniem formularza.");
-      return; 
+      return;
     }
 
     const vacationData = {
@@ -315,93 +301,97 @@ function NewVacation() {
   };
   return (
     <div>
-<Overlay visible={overlayVisible} onClose={closeOverlay} errorMessage={errorMessage} />
-    <MainWrapper>
-      <Menu />
-      <FormWrapper>
-        <HeaderTop>
-          <UserIcon as={NavLink} to="/SignIn"></UserIcon>
-          <a>{userName}</a> {}
-        </HeaderTop>
-        <Header>
-          <HeaderTitle>Nowy urlop</HeaderTitle>
-        </Header>
+      <Overlay
+        visible={overlayVisible}
+        onClose={closeOverlay}
+        errorMessage={errorMessage}
+      />
+      <MainWrapper>
+        <Menu />
+        <FormWrapper>
+          <HeaderTop />
+          <Header>
+            <HeaderTitle>Nowy urlop</HeaderTitle>
+          </Header>
 
-        <StyledForm onSubmit={handleSubmit}>
-          <BottomTitle>Dodaj nowy urlop</BottomTitle>
-          <label htmlFor="endDate">Data rozpoczęcia urlopu:</label>
-          <Input
-            type="date"
-            id="startDate"
-            name="startDate"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-          <label htmlFor="endDate">Data zakończenia urlopu:</label>
-          <Input
-            type="date"
-            id="endDate"
-            name="endDate"
-            value={endDate}
-            onChange={(e) => handleEndDateChange(e.target.value)}
-          />
-          <Select>
-            <option value="">Typ urlopu</option>
-            <option value="HR">Wypoczynkowy</option>
-            <option value="PRACOWNIK">Pracownik</option>
-          </Select>
-          <label htmlFor="description">Przyczyna:</label>
-          <DescriptionInput
-            id="description"
-            name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <Button type="submit">Dodaj urlop</Button>
-        </StyledForm>
-        <TableTitle>
-          <h2>Twoje wcześniejsze urlopy</h2>
-        </TableTitle>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHeaderCell>ID</TableHeaderCell>
-              <TableHeaderCell>Opis</TableHeaderCell>
-              <TableHeaderCell>Dni</TableHeaderCell>
+          <StyledForm onSubmit={handleSubmit}>
+            <BottomTitle>Dodaj nowy urlop</BottomTitle>
+            <label htmlFor="endDate">Data rozpoczęcia urlopu:</label>
+            <Input
+              type="date"
+              id="startDate"
+              name="startDate"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+            <label htmlFor="endDate">Data zakończenia urlopu:</label>
+            <Input
+              type="date"
+              id="endDate"
+              name="endDate"
+              value={endDate}
+              onChange={(e) => handleEndDateChange(e.target.value)}
+            />
+            <Select>
+              <option value="">Typ urlopu</option>
+              <option value="HR">Wypoczynkowy</option>
+              <option value="PRACOWNIK">Pracownik</option>
+            </Select>
+            <label htmlFor="description">Przyczyna:</label>
+            <DescriptionInput
+              id="description"
+              name="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <Button type="submit">Dodaj urlop</Button>
+          </StyledForm>
+          <TableTitle>
+            <h2>Twoje wcześniejsze urlopy</h2>
+          </TableTitle>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderCell>ID</TableHeaderCell>
+                <TableHeaderCell>Opis</TableHeaderCell>
+                <TableHeaderCell>Dni</TableHeaderCell>
 
-              <TableHeaderCell>Data rozpoczęcia</TableHeaderCell>
-              <TableHeaderCell>Data zakończenia</TableHeaderCell>
-              <TableHeaderCell>Stan</TableHeaderCell>
-              <TableHeaderCell>Szczegóły</TableHeaderCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {personVacations.map((personVacation) => (
-              <TableRow key={personVacation.id}>
-                <TableCell>{personVacation.id}</TableCell>
-                <TableCell>{personVacation.description}</TableCell>
-                <TableCell>{personVacation.daysNum}</TableCell>
-                <TableCell>{personVacation.startDate}</TableCell>
-                <TableCell>{personVacation.endDate}</TableCell>
-                <TableCell
-                  style={{
-                    color: getColorByTaskStatus(personVacation.taskStatus),
-                    fontWeight: "bold",
-                  }}
-                >
-                  {personVacation.taskStatus}
-                </TableCell>
-                <TableCell>
-                  <NavLinkName as={NavLink} to={`/vacationId/${personVacation.id}`}>
-                    Podgląd
-                  </NavLinkName>
-                </TableCell>
+                <TableHeaderCell>Data rozpoczęcia</TableHeaderCell>
+                <TableHeaderCell>Data zakończenia</TableHeaderCell>
+                <TableHeaderCell>Stan</TableHeaderCell>
+                <TableHeaderCell>Szczegóły</TableHeaderCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </FormWrapper>
-    </MainWrapper>
+            </TableHeader>
+            <TableBody>
+              {personVacations.map((personVacation) => (
+                <TableRow key={personVacation.id}>
+                  <TableCell>{personVacation.id}</TableCell>
+                  <TableCell>{personVacation.description}</TableCell>
+                  <TableCell>{personVacation.daysNum}</TableCell>
+                  <TableCell>{personVacation.startDate}</TableCell>
+                  <TableCell>{personVacation.endDate}</TableCell>
+                  <TableCell
+                    style={{
+                      color: getColorByTaskStatus(personVacation.taskStatus),
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {personVacation.taskStatus}
+                  </TableCell>
+                  <TableCell>
+                    <NavLinkName
+                      as={NavLink}
+                      to={`/vacationId/${personVacation.id}`}
+                    >
+                      Podgląd
+                    </NavLinkName>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </FormWrapper>
+      </MainWrapper>
     </div>
   );
 }
