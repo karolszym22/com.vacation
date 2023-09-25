@@ -194,16 +194,6 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <HeaderTop>
-        <HeaderTopInformation>
-          <Information />
-          <a>Strona główna</a>
-        </HeaderTopInformation>
-        <SignIn>
-          <UserIcon />
-          <a>{userName}</a>
-        </SignIn>
-      </HeaderTop>
       <HeaderBackground>
         <HeaderTitle>Dodawaj i obserwuj swoje urlopy! </HeaderTitle>
         <HeaderElementContainer>
