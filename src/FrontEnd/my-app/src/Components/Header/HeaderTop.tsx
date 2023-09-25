@@ -1,39 +1,7 @@
 import styled from "styled-components";
-import img from "../../resources/pexels-karolina-grabowska-7876708.jpg";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { FiUser, FiAlignLeft } from "react-icons/fi";
-
-interface UserState {
-  id: number;
-  name: string;
-  email: string;
-}
-
-interface Vacation {
-  id: number;
-  daysNum: number;
-  done: boolean;
-  taskStatus: string;
-  startDate: string;
-  endDate: string;
-  employerName: string;
-  personId: number;
-  descritpion: string;
-}
-
-interface AuthorizationState {
-  user: UserState;
-}
-
-interface RootState {
-  authorization: AuthorizationState;
-  vacations: {
-    list: Vacation[];
-    vacationsCount: number;
-  };
-}
+import { FiAlignLeft, FiAlignJustify } from "react-icons/fi";
+import React, { useState } from "react";
+import Overlay from "../Overlay/Overlay";
 const HeaderTopInformation = styled.div`
   display: flex;
   height: 100%;
@@ -47,13 +15,19 @@ const Information = styled(FiAlignLeft)`
   margin: 5px;
   display: inline-block;
 `;
-
+const HamburgerLogo = styled(FiAlignJustify)`
+  width: 35px;
+  height: 35px;
+  margin: 5px 15px;
+  display: none;
+  @media (max-width: 976px) {
+    display: block;
+  }
+`;
 const Header = styled.div`
   width: 100%;
   height: 40px;
   background-color: white;
-  position: absolute;
-  top: 0px;
   display: flex;
   justify-content: space-between;
 `;
@@ -64,18 +38,30 @@ const SignIn = styled.div`
   align-items: center;
   margin: 0px 15px;
 `;
-const HeaderTop = () => {
-    
-    return (
-        <Header>
-          <HeaderTopInformation>
-            <Information />
-            <a>Strona główna</a>
-          </HeaderTopInformation>
-          <SignIn>
-            <a>asda</a>
-          </SignIn>
-        </Header>
-    );
+const HeaderTop: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  return (
+    <Header>
+      <HeaderTopInformation>
+        <Information />
+        <a>Strona główna</a>
+      </HeaderTopInformation>
+      <SignIn>
+        <a>asda</a>
+        <HamburgerLogo onClick={toggleMenu}></HamburgerLogo>
+      </SignIn>
+      <Overlay visible={isMenuOpen} onClose={closeMenu} errorMessage="" />
+    </Header>
+  );
+};
+
+export default HeaderTop;
