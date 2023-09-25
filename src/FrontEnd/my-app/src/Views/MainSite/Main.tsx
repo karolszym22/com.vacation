@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
+import HeaderTop from "../../Components/Header/HeaderTop";
 import Header from "../../Components/Header/Header";
 import MainMenu from "../../Components/Main/Main";
 import { vacationsList } from "../../Components/Actions/actions";
 import { useDispatch } from "react-redux";
+
 
 export interface Vacation {
   id?: number;
@@ -20,10 +22,8 @@ export interface Vacation {
 
 const MainWrapper = styled.div`
   width: 100%;
-  height: 100vh;
   display: flex;
   justify-content: space-between;
-  flex-grow: 1;
 `;
 
 const Wrapper = styled.div`
@@ -42,7 +42,7 @@ function Main() {
       const data = await response.json();
       setVacations(data);
       dispatch(vacationsList(data));
-      console.log("AAAAAAAAAAAAa")
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -57,6 +57,7 @@ function Main() {
       <MainWrapper>
         <Menu />
         <Wrapper>
+          <HeaderTop />
           <Header />
           <MainMenu />
         </Wrapper>
