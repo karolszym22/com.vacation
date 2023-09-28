@@ -35,33 +35,6 @@ interface RootState {
   };
 }
 
-const SignIn = styled.div`
-  color: #928d8d;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0px 15px;
-`;
-const HeaderTopInformation = styled.div`
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  color: #928d8d;
-`;
-const Information = styled(FiAlignLeft)`
-  width: 25px;
-  height: 25px;
-  margin: 5px;
-  display: inline-block;
-`;
-
-const UserIcon = styled(FiUser)`
-  width: 25px;
-  height: 25px;
-  margin: 5px;
-  display: inline-block;
-`;
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -84,17 +57,11 @@ const HeaderContainer = styled.div`
     opacity: 0.2;
     z-index: -1;
   }
+  @media (max-width: 530px) {
+    height: 750px
+  }
 `;
 
-const HeaderTop = styled.div`
-  width: 100%;
-  height: 40px;
-  background-color: white;
-  position: absolute;
-  top: 0px;
-  display: flex;
-  justify-content: space-between;
-`;
 const HeaderTitle = styled.h1`
   width: 100%;
   color: #928d8d;
@@ -102,12 +69,17 @@ const HeaderTitle = styled.h1`
 `;
 const HeaderBackground = styled.div`
   width: 70%;
-  height: 70%;
-  margin-right: 100px;
+  
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  @media (max-width: 976px) {
+    width: 90%;
+  }
+  @media (max-width: 530px) {
+    height: 100%;
+  }
 `;
 const HeaderElement = styled.div`
   height: 200px;
@@ -115,6 +87,9 @@ const HeaderElement = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: 530px) {
+    justify-content: space-evenly
+  }
 `;
 const Value = styled.div`
   font-size: 20px;
@@ -138,10 +113,12 @@ const HeaderElementValue = styled.div`
 
 const HeaderElementContainer = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  @media (max-width: 530px) {
+    flex-direction: column;
+  }
 `;
 
 const Header = () => {
