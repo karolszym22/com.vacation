@@ -4,7 +4,7 @@ import { FiHome, FiGitBranch, FiPlusCircle, FiFile } from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
 
 interface HamburgerMenuProps {
-  visible: boolean;
+  hamburgerVisible: boolean
 }
 
 
@@ -74,14 +74,14 @@ const SideMenu = styled.div<HamburgerMenuProps>`
   width: 280px;
   left: 0px;
   background-color: #2e4051;
- display: ${({ visible }) => (visible ? "flex" : "none")};
+ display: ${({ hamburgerVisible }) => (hamburgerVisible ? "flex" : "none")};
   flex-direction: column;
   height: 100vh;
 `;
 
-const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ visible }) => {
+const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
   return (
-    <SideMenu visible={visible}>
+    <SideMenu hamburgerVisible={hamburgerVisible}>
       <MenuLogoContainer>
         <MenuNavLogo>Urlopy</MenuNavLogo>
       </MenuLogoContainer>
