@@ -3,7 +3,10 @@ import styled from "styled-components";
 import HamburgerMenu from "../SideMenu/SideHaburgerMenu";
 
 interface OverlayWrapperProps {
-  visible: boolean;
+  overlayVisible: boolean;
+}
+interface ModalDescriptionProps{
+  modalVisible: boolean
 }
 
 const OverlayWrapper = styled.div<OverlayWrapperProps>`
@@ -13,16 +16,17 @@ const OverlayWrapper = styled.div<OverlayWrapperProps>`
   position: absolute;
   z-index: 500;
   background-color: #00000076;
-  display: ${({ visible }) => (visible ? "flex" : "none")};
+  display: ${({ overlayVisible }) => (overlayVisible ? "flex" : "none")};
   justify-content: center;
   align-items: center;
 `;
 
-const Modal = styled.div`
+const Modal = styled.div<ModalDescriptionProps>`
   width: 300px;
   height: 150px;
   background-color: white;
   display: flex;
+  display: ${({ modalVisible }) => (modalVisible ? "flex" : "none")};
   flex-direction: column;
 `;
 
@@ -61,19 +65,22 @@ const TitleValue = styled.a`
 `;
 
 interface OverlayProps {
-  visible: boolean;
+  overlayVisible: boolean;
+  modalVisible: boolean;
+  hamburgerVisible: boolean;
   onClose: () => void;
   errorMessage: string; 
 }
 
-const Overlay: React.FC<OverlayProps> = ({ visible, onClose, errorMessage }) => {
+const Overlay: React.FC<OverlayProps> = ({ overlayVisible, modalVisible, hamburgerVisible, onClose, errorMessage }) => {
   return (
-    <OverlayWrapper visible={visible}>
-      <Modal>
+    <OverlayWrapper overlayVisible={overlayVisible}>
+      <HamburgerMenu hamburgerVisible={hamburgerVisible}></HamburgerMenu>
+      <Modal modalVisible ={modalVisible}>
         <ModalTitle>
           <TitleValue>Błąd</TitleValue>
         </ModalTitle>
-        <ModalDescription>
+        <ModalDescription >
           {errorMessage} {}
         </ModalDescription>
         <ModalButton onClick={onClose}>ok</ModalButton>
