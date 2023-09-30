@@ -97,6 +97,7 @@ const SideMenu = styled.div<HamburgerMenuProps>`
   animation: ${({ hamburgerVisible }) => (hamburgerVisible ? "slideIn 0.5s" : "none")}; 
   flex-direction: column;
   height: 100vh;
+
   @keyframes slideIn {
   from {
     left: -280px;
@@ -115,9 +116,8 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    setOverlayVisible(isMenuOpen);
-    setModalVisible(false);
-    setHamburgerVisible(true);
+    setOverlayVisible(!isMenuOpen);;
+    setHamburgerVisible(!isMenuOpen);
   };
 
   return (
