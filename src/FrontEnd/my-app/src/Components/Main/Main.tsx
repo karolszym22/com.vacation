@@ -38,6 +38,9 @@ const TableHeaderCell = styled.th`
   padding: 10px;
   font-weight: bold;
   border-bottom: 1px solid #ddd;
+  @media (max-width: 530px) {
+    font-size: 13px;
+  }
 `;
 
 const TableBody = styled.tbody``;
@@ -55,6 +58,9 @@ const TableCell = styled.td`
   border-bottom: 1px solid #ddd;
   color: #565454;
   text-decoration: none;
+  @media (max-width: 530px) {
+    font-size: 13px;
+  }
 `;
 const NavLinkName = styled.a`
   font-size: 15px;
@@ -105,7 +111,6 @@ const Menu = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHeaderCell>ID</TableHeaderCell>
             <TableHeaderCell>Opis</TableHeaderCell>
             <TableHeaderCell>Dni</TableHeaderCell>
             <TableHeaderCell>Stan</TableHeaderCell>
@@ -115,7 +120,6 @@ const Menu = () => {
         <TableBody>
         {vacations.map((vacation) => (
           <TableRow key={vacation.id}>
-            <TableCell>{vacation.id}</TableCell>
             <TableCell>{vacation.description}</TableCell>
             <TableCell>{vacation.daysNum}</TableCell>
             <TableCell
