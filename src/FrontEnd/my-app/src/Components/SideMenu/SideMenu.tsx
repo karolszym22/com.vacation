@@ -91,7 +91,7 @@ const Menu = () => {
       <MenuNavLink>
         <CustomRegisterIcon />
         <NavLinkName as={NavLink} to="/register">
-          Rejestracja nowego pracownikaaaaaaaaaaa
+          Rejestracja nowego pracownika
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
