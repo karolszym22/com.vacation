@@ -1,7 +1,13 @@
 import styled from "styled-components";
-import { FiAlignLeft, FiAlignJustify } from "react-icons/fi";
-import React, { useState } from "react";
-import Overlay from "../Overlay/Overlay";
+import { FiCopy, FiAlignJustify } from "react-icons/fi";
+import React, { useState, useContext } from "react"
+import { OverlayVisibleContext } from "../Context/OverlayVisibleContext";
+
+interface Overlay {
+  overlayVisible: boolean;
+  setOverlayVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const HeaderTopInformation = styled.div`
   display: flex;
   height: 100%;
@@ -9,10 +15,10 @@ const HeaderTopInformation = styled.div`
   align-items: center;
   color: #928d8d;
 `;
-const Information = styled(FiAlignLeft)`
-  width: 25px;
-  height: 25px;
-  margin: 5px;
+const Information = styled(FiCopy)`
+  width: 20px;
+  height: 20px;
+  margin: 5px 10px;
   display: inline-block;
 `;
 const HamburgerLogo = styled(FiAlignJustify)`
@@ -20,6 +26,7 @@ const HamburgerLogo = styled(FiAlignJustify)`
   height: 35px;
   margin: 5px 15px;
   display: none;
+  cursor: pointer;
   @media (max-width: 976px) {
     display: block;
   }
@@ -40,13 +47,15 @@ const SignIn = styled.div`
 `;
 const HeaderTop: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { setOverlayVisible } = useContext(OverlayVisibleContext);
+  const { setModalVisible } = useContext(OverlayVisibleContext);
+  const {setHamburgerVisible} = useContext(OverlayVisibleContext);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+    setOverlayVisible(isMenuOpen);
+    setModalVisible(false);
+    setHamburgerVisible(true)
   };
 
   return (
@@ -59,7 +68,6 @@ const HeaderTop: React.FC = () => {
         <a>asda</a>
         <HamburgerLogo onClick={toggleMenu}></HamburgerLogo>
       </SignIn>
-      <Overlay visible={isMenuOpen} onClose={closeMenu} errorMessage="" />
     </Header>
   );
 };
