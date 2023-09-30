@@ -14,6 +14,21 @@ import HeaderTop from "../../Components/Header/HeaderTop";
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  @media (max-width: 800px) {
+    font-size: 12px;
+  }
+  @media (max-width: 525px) {
+    font-size: 10px;
+  }
+  @media (max-width: 460px) {
+    font-size: 8px;
+  }
+  @media (max-width: 350px) {
+    font-size: 7px;
+  }
+  @media (max-width: 310px) {
+    font-size: 6px;
+  }
 `;
 
 const TableHeader = styled.thead`
@@ -27,11 +42,26 @@ const TableTitle = styled.div`
   background-color: rgb(180, 175, 175);
   display: flex;
   align-items: center;
+  @media (max-width: 800px) {
+    font-size: 14px;
+  }
+  @media (max-width: 525px) {
+    font-size: 12px;
+  }
+  @media (max-width: 325px) {
+    font-size: 11px;
+  }
 `;
 const TableHeaderCell = styled.th`
   padding: 10px;
   font-weight: bold;
   border-bottom: 1px solid #ddd;
+  @media (max-width: 460px) {
+    padding: 5px;
+  }
+  @media (max-width: 350px) {
+    padding: 2%.5;
+  }
 `;
 
 const TableBody = styled.tbody``;
@@ -48,6 +78,12 @@ const TableCell = styled.td`
   font-weight: 500;
   border-bottom: 1px solid #ddd;
   color: #565454;
+  @media (max-width: 460px) {
+    padding: 5px;
+  }
+  @media (max-width: 350px) {
+    padding: 2%.5;
+  }
 `;
 
 const MainWrapper = styled.div`
@@ -94,7 +130,9 @@ const StyledForm = styled.form`
   margin-top: 50px;
   justify-content: center;
   width: 30%;
-
+  @media (max-width: 800px) {
+    width: 60%;
+  }
   label {
     margin-bottom: 4px;
   }
@@ -118,16 +156,20 @@ const Button = styled.button`
   background-color: orange;
   color: white;
   border: none;
-  padding: 12px;
+  padding: 10px;
   font-weight: bold;
   font-size: 15px;
   cursor: pointer;
   width: 110px;
+  border-radius: 5px;
 `;
 
 const DescriptionInput = styled.textarea`
   height: 130px;
   margin: 5px;
+  resize: horizontal;
+  resize: vertical;
+  border: 1px solid #64626268;
 `;
 
 const Input = styled.input`
@@ -154,6 +196,15 @@ const NavLinkName = styled.a`
   color: #a19b9b;
   font-weight: bold;
   text-decoration: none;
+  @media (max-width: 800px) {
+    font-size: 13px;
+  }
+  @media (max-width: 525px) {
+    font-size: 11px;
+  }
+  @media (max-width: 460px) {
+    font-size: 9px;
+  }
 `;
 
 interface RootState {
@@ -181,6 +232,8 @@ function NewVacation() {
   const [endDate, setEndDate] = useState<string>("");
   const [daysNum, setDaysNum] = useState<number>(0);
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [hamburgerVisible, setHamburgerVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const userName = useSelector(
@@ -251,6 +304,8 @@ function NewVacation() {
     } catch (error) {
       console.error("Error validating date:", error);
       setOverlayVisible(true);
+      setModalVisible(true)
+      setHamburgerVisible(false);
       setErrorMessage(
         "Tworzony przez Ciebie urlop koliduje z innym urlopem dziejącym się w tym samym okresie"
       );
@@ -298,11 +353,14 @@ function NewVacation() {
   };
   const closeOverlay = () => {
     setOverlayVisible(false);
+    setModalVisible(false)
   };
   return (
     <div>
       <Overlay
-        visible={overlayVisible}
+        overlayVisible={overlayVisible}
+        modalVisible={modalVisible}
+        hamburgerVisible={hamburgerVisible}
         onClose={closeOverlay}
         errorMessage={errorMessage}
       />
@@ -352,7 +410,6 @@ function NewVacation() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHeaderCell>ID</TableHeaderCell>
                 <TableHeaderCell>Opis</TableHeaderCell>
                 <TableHeaderCell>Dni</TableHeaderCell>
 
@@ -365,7 +422,6 @@ function NewVacation() {
             <TableBody>
               {personVacations.map((personVacation) => (
                 <TableRow key={personVacation.id}>
-                  <TableCell>{personVacation.id}</TableCell>
                   <TableCell>{personVacation.description}</TableCell>
                   <TableCell>{personVacation.daysNum}</TableCell>
                   <TableCell>{personVacation.startDate}</TableCell>
