@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import RootState from "../../Reducers/Store/index";
@@ -10,6 +10,14 @@ import Overlay from "../../Components/Overlay/Overlay";
 import { Vacation } from "../../Types/Vacation";
 import { AuthorizationState } from "../../Types/AuthorizationState";
 import HeaderTop from "../../Components/Header/HeaderTop";
+import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
+
+interface Overlay {
+  overlayVisible: boolean;
+  modalVisible: boolean;
+  hamburgerVisible: boolean
+}
+
 
 const Table = styled.table`
   width: 100%;
@@ -87,10 +95,8 @@ const TableCell = styled.td`
 `;
 
 const MainWrapper = styled.div`
- height: 100vh;
-
   width: 100%;
-    display: flex;
+  display: flex;
   justify-content: space-between;
  
 `;
@@ -231,9 +237,12 @@ function NewVacation() {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [daysNum, setDaysNum] = useState<number>(0);
-  const [overlayVisible, setOverlayVisible] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [hamburgerVisible, setHamburgerVisible] = useState(false);
+  const [, setIsMenuOpen] = useState(false);
+  const { overlayVisible } = useContext(OverlayVisibleContext);
+  const { modalVisible } = useContext(OverlayVisibleContext);
+  const { hamburgerVisible } = useContext(OverlayVisibleContext);
+  const { setOverlayVisible } = useContext(OverlayVisibleContext);
+  const { setModalVisible } = useContext(OverlayVisibleContext);
   const [errorMessage, setErrorMessage] = useState("");
 
   const userName = useSelector(
@@ -303,12 +312,11 @@ function NewVacation() {
       console.log(validationResult);
     } catch (error) {
       console.error("Error validating date:", error);
-      setOverlayVisible(true);
-      setModalVisible(true)
-      setHamburgerVisible(false);
       setErrorMessage(
         "Tworzony przez Ciebie urlop koliduje z innym urlopem dziejącym się w tym samym okresie"
       );
+      setModalVisible(true)
+      setOverlayVisible(true);
     }
   };
 
@@ -351,27 +359,23 @@ function NewVacation() {
       console.error("Error adding vacation:", error);
     }
   };
-  const closeOverlay = () => {
-    setOverlayVisible(false);
+
+  const closeMenu = () => {
+    setOverlayVisible(false)
     setModalVisible(false)
   };
+
   return (
     <div>
-      <Overlay
-        overlayVisible={overlayVisible}
-        modalVisible={modalVisible}
-        hamburgerVisible={hamburgerVisible}
-        onClose={closeOverlay}
-        errorMessage={errorMessage}
-      />
+
       <MainWrapper>
+      <Overlay overlayVisible={overlayVisible} modalVisible = {modalVisible} hamburgerVisible={hamburgerVisible} onClose={closeMenu} errorMessage={errorMessage} />
         <Menu />
         <FormWrapper>
-          <HeaderTop />
+          <HeaderTop userName = {userName} headerText="Generator urlopów" />
           <Header>
             <HeaderTitle>Nowy urlop</HeaderTitle>
           </Header>
-
           <StyledForm onSubmit={handleSubmit}>
             <BottomTitle>Dodaj nowy urlop</BottomTitle>
             <label htmlFor="endDate">Data rozpoczęcia urlopu:</label>
@@ -410,7 +414,6 @@ function NewVacation() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHeaderCell>Opis</TableHeaderCell>
                 <TableHeaderCell>Dni</TableHeaderCell>
 
                 <TableHeaderCell>Data rozpoczęcia</TableHeaderCell>
@@ -422,7 +425,6 @@ function NewVacation() {
             <TableBody>
               {personVacations.map((personVacation) => (
                 <TableRow key={personVacation.id}>
-                  <TableCell>{personVacation.description}</TableCell>
                   <TableCell>{personVacation.daysNum}</TableCell>
                   <TableCell>{personVacation.startDate}</TableCell>
                   <TableCell>{personVacation.endDate}</TableCell>
