@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { FiHome, FiGitBranch, FiPlusCircle, FiFile } from "react-icons/fi";
+import {
+  FiHome,
+  FiGitBranch,
+  FiPlusCircle,
+  FiFile,
+  FiChevronsLeft,
+} from "react-icons/fi";
 import { NavLink, useNavigate } from "react-router-dom";
+import { OverlayVisibleContext } from "../Context/OverlayVisibleContext";
 
 interface HamburgerMenuProps {
-  hamburgerVisible: boolean
+  hamburgerVisible: boolean;
 }
-
 
 const CustomHomeIcon = styled(FiHome)`
   width: 15px;
@@ -30,14 +36,27 @@ const CustomNewVacationIcon = styled(FiFile)`
   height: 15px;
   margin: 5px;
 `;
-
+const HideLogoButtonContainer = styled.div`
+  height: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+`;
+const HideLogoButton = styled(FiChevronsLeft)`
+  width: 35px;
+  height: 35px;
+  margin: 5px 15px;
+  color: white;
+  cursor: pointer;
+`;
 const MenuLogoContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 20px;
+  padding: 5px 0px;
   box-sizing: border-box;
+  background-color: #293744;
 `;
 
 const MenuNavLogo = styled.h1`
@@ -72,16 +91,40 @@ const SideMenu = styled.div<HamburgerMenuProps>`
   position: absolute;
   z-index: 500;
   width: 280px;
-  left: 0px;
+  left: ${({ hamburgerVisible }) => (hamburgerVisible ? "0" : "-280px")};
   background-color: #2e4051;
- display: ${({ hamburgerVisible }) => (hamburgerVisible ? "flex" : "none")};
+  display: ${({ hamburgerVisible }) => (hamburgerVisible ? "flex" : "none")};
+  animation: ${({ hamburgerVisible }) => (hamburgerVisible ? "slideIn 0.5s" : "none")}; 
   flex-direction: column;
   height: 100vh;
+  @keyframes slideIn {
+  from {
+    left: -280px;
+  }
+  to {
+    left: 0;
+  }
+}
 `;
 
 const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { setOverlayVisible } = useContext(OverlayVisibleContext);
+  const { setModalVisible } = useContext(OverlayVisibleContext);
+  const { setHamburgerVisible } = useContext(OverlayVisibleContext);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    setOverlayVisible(isMenuOpen);
+    setModalVisible(false);
+    setHamburgerVisible(true);
+  };
+
   return (
     <SideMenu hamburgerVisible={hamburgerVisible}>
+      <HideLogoButtonContainer>
+        <HideLogoButton onClick={toggleMenu}></HideLogoButton>
+      </HideLogoButtonContainer>
       <MenuLogoContainer>
         <MenuNavLogo>Urlopy</MenuNavLogo>
       </MenuLogoContainer>
