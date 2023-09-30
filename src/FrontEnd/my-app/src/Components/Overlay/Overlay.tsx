@@ -51,7 +51,7 @@ const ModalButton = styled.button`
   width: 20%;
   margin-left: 70%;
   margin-bottom: 10px;
-  background-color: #6b7782;
+  background-color: orange;
   color: white;
   font-weight: bold;
   border: none;
