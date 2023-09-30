@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -23,13 +23,18 @@ const Container = styled.div`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  width: 250px;
+  min-width: 250px;
+ justify-content: center;
+ align-items: center;
 `;
 
 const Input = styled.input`
   padding: 10px;
   margin: 5px 0;
   width: 100%;
+  @media (max-width: 360px) {
+    width: 80%
+  }
 `;
 
 const Button = styled.button`
@@ -62,6 +67,8 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [hamburgerVisible, setHamburgerVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); 
   const [loggedIn, setLoggedIn] = useState(false);
   const dispatch = useDispatch();
@@ -83,7 +90,7 @@ const Login: React.FC = () => {
         );
 
         navigate("/");
-
+        localStorage.setItem("user", JSON.stringify(response.data));
         setLoggedIn(true);
 
         console.log(
@@ -95,6 +102,8 @@ const Login: React.FC = () => {
     } catch (error) {
         console.error("Login error:", error);
         setOverlayVisible(true);
+        setModalVisible(true);
+        setHamburgerVisible(false);
         setErrorMessage("Logowanie nie udane. Zły email lub hasło"); 
     }
 };
@@ -105,7 +114,7 @@ const Login: React.FC = () => {
 
   return (
     <Container>
-      <Overlay visible={overlayVisible} onClose={closeOverlay} errorMessage={errorMessage} />
+      <Overlay overlayVisible={overlayVisible} modalVisible = {modalVisible} hamburgerVisible={hamburgerVisible}  onClose={closeOverlay} errorMessage={errorMessage} />
       <Title>Login</Title>
       <Form onSubmit={handleSubmit}>
         <Input
