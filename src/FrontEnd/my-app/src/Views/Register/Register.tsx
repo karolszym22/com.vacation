@@ -21,8 +21,10 @@ const Container = styled.div`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-
   width: 250px;
+  @media (max-width: 360px) {
+    width: 200px
+  }
 `;
 const Title = styled.h2`
   font-size: 1.5em;
@@ -77,6 +79,8 @@ const Register: React.FC = () => {
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [overlayVisible, setOverlayVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [hamburgerVisible, setHamburgerVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -116,6 +120,8 @@ const Register: React.FC = () => {
     } catch (error) {
       console.error("Błąd rejestracji:", error);
       setOverlayVisible(true);
+      setModalVisible(true)
+      setHamburgerVisible(false);
       setErrorMessage(
         "Użytkownik o takim adresie email istnieje już w bazie danych"
       );
@@ -124,12 +130,15 @@ const Register: React.FC = () => {
 
   const closeOverlay = () => {
     setOverlayVisible(false);
+    setModalVisible(false)
   };
 
   return (
     <div>
       <Overlay
-        visible={overlayVisible}
+        overlayVisible={overlayVisible}
+        modalVisible={modalVisible}
+        hamburgerVisible={hamburgerVisible}
         onClose={closeOverlay}
         errorMessage={errorMessage}
       />
