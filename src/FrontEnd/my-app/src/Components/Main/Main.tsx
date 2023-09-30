@@ -19,7 +19,7 @@ const MainMenu = styled.div`
 
 const CustomersTitle = styled.div`
   width: 100%;
-  padding: 15px;
+  padding: 15px 0px;
   font-size: 20px;
   font-weight: bold;
   color: #565454;

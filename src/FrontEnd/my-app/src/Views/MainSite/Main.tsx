@@ -4,10 +4,12 @@ import Menu from "../../Components/SideMenu/SideMenu";
 import Header from "../../Components/Header/Header";
 import MainMenu from "../../Components/Main/Main";
 import { vacationsList } from "../../Components/Actions/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import Overlay from "../../Components/Overlay/Overlay";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext"
+import { RootState } from "../../Types/RootState";
+
 
 interface Overlay {
   overlayVisible: boolean;
@@ -16,6 +18,7 @@ interface Overlay {
   setOverlayVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 
 export interface Vacation {
   id?: number;
@@ -45,11 +48,14 @@ const Wrapper = styled.div`
 
 function Main() {
   const [, setVacations] = useState<Vacation[]>([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const { overlayVisible } = useContext(OverlayVisibleContext);
   const { modalVisible } = useContext(OverlayVisibleContext);
   const { hamburgerVisible } = useContext(OverlayVisibleContext);
+  const userName = useSelector(
+    (state: RootState) => state.authorization.user.name
+  );
 
   const fetchData = async () => {
     try {
@@ -76,7 +82,7 @@ function Main() {
       <Overlay overlayVisible={overlayVisible} modalVisible = {modalVisible} hamburgerVisible={hamburgerVisible} onClose={closeMenu} errorMessage="" />
         <Menu />
         <Wrapper>
-          <HeaderTop></HeaderTop>
+          <HeaderTop userName = {userName} headerText="Strona główna"></HeaderTop>
           <Header />
           <MainMenu />
         </Wrapper>
