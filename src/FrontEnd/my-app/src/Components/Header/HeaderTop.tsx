@@ -7,7 +7,10 @@ interface Overlay {
   overlayVisible: boolean;
   setOverlayVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
+interface VacationPreviewProps {
+  userName: string;
+  headerText: string;
+}
 const HeaderTopInformation = styled.div`
   display: flex;
   height: 100%;
@@ -33,7 +36,7 @@ const HamburgerLogo = styled(FiAlignJustify)`
 `;
 const Header = styled.div`
   width: 100%;
-  height: 40px;
+  min-height: 40px;
   background-color: white;
   display: flex;
   justify-content: space-between;
@@ -45,16 +48,12 @@ const SignIn = styled.div`
   align-items: center;
   margin: 0px 15px;
 `;
-const HeaderTop: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const HeaderTop: React.FC<VacationPreviewProps> = ({userName, headerText}) => {
   const { setOverlayVisible } = useContext(OverlayVisibleContext);
-  const { setModalVisible } = useContext(OverlayVisibleContext);
-  const {setHamburgerVisible} = useContext(OverlayVisibleContext);
+  const { setHamburgerVisible } = useContext(OverlayVisibleContext);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    setOverlayVisible(isMenuOpen);
-    setModalVisible(false);
+    setOverlayVisible(true);
     setHamburgerVisible(true)
   };
 
@@ -62,10 +61,10 @@ const HeaderTop: React.FC = () => {
     <Header>
       <HeaderTopInformation>
         <Information />
-        <a>Strona główna</a>
+        <a>{headerText}</a>
       </HeaderTopInformation>
       <SignIn>
-        <a>asda</a>
+        <a>{userName}</a>
         <HamburgerLogo onClick={toggleMenu}></HamburgerLogo>
       </SignIn>
     </Header>
