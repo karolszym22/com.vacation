@@ -7,38 +7,54 @@ import Menu from "../SideMenu/SideMenu";
 import wordIcon from "../../resources/word.png";
 import { Vacation } from "../../Types/Vacation";
 import { RootState } from "../../Types/RootState";
+import { FiEdit3 } from "react-icons/fi";
+import HeaderTop from "../Header/HeaderTop";
+
 const MainWrapper = styled.div`
   display: flex;
+  width: 100%;
 `;
 
 const PreviewWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  font-size: 15px;
 `;
 const DocumentDownloadContainer = styled.div`
   width: 200px;
   height: 50px;
   border-top: 10px solid #0000;
-  margin-bottom: 150px;
+
+  color: #928d8d;
+  @media (max-width: 800px) {
+    margin-bottom: 10px;
+  }
 `;
 const DocumentDownload = styled.div`
   width: 180px;
   height: 50px;
+  margin-top: 10px;
   display: flex;
   cursor: pointer;
 `;
 const WordIcon = styled.div`
   background-image: url(${wordIcon});
   color: white;
-  height: 34px;
+  height: 32px;
   width: 34px;
   margin: 5px 20px;
   background-color: white;
 `;
 const ButtonContainer = styled.div`
   display: flex;
+
+  justify-content: start;
   gap: 10px;
   margin-top: 20px;
+  @media (max-width: 800px) {
+    justify-content: center;
+  }
 `;
 
 const TaskButton = styled.button`
@@ -49,6 +65,11 @@ const TaskButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  @media (max-width: 400px) {
+    margin-bottom: 10px;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
 `;
 
 const WrapperContainer = styled.div`
@@ -58,13 +79,16 @@ const WrapperContainer = styled.div`
   border-radius: 4px;
   display: flex;
   flex-direction: column;
+  @media (max-width: 800px) {
+    margin: 5px;
+    margin-top: 100px;
+  }
 `;
 const VacationDetails = styled.div`
   display: flex;
-`;
-const AdditionalDetails = styled.div`
-  display: flex;
-  flex-direction: column;
+  @media (max-width: 800px) {
+    flex-direction: column;
+  }
 `;
 const DetailsContainer = styled.div`
   display: flex;
@@ -72,19 +96,60 @@ const DetailsContainer = styled.div`
   justify-content: space-between;
   padding: 0px 50px;
 `;
+const AdditionalDetailsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-content: center;
+  padding: 0px 50px;
+  margin-top: 100px;
+  @media (max-width: 800px) {
+    margin: 5px;
+    margin-top: 10px;
+  }
+`;
 
 const CommentTitle = styled.div`
   font-size: 15px;
+  border-bottom: 1px solid #928d8d;
 `;
-
+const DownloadTitle = styled.div`
+  font-size: 15px;
+`;
 const CommentContainer = styled.div`
   width: 200px;
   height: 90px;
-  margin: 100px 0px;
+  margin: 10px 0px;
+  color: #928d8d;
+`;
+const CommentContainerArea = styled.div`
+  display: flex;
+  width: 300px;
+`;
+const CommentIcon = styled(FiEdit3)`
+  width: 45px;
+  height: 45px;
+  margin: 5px;
+  color: white;
+  padding: 10px;
+  background-color: green;
 `;
 const CommentArea = styled.textarea`
-  width: 100%;
-  height: 100%;
+  width: 200px;
+  height: 40px;
+  margin-top: 10px;
+  resize: vertical;
+  border: 1px solid #928d8d;
+  @media (max-width: 400px) {
+    width: 120px;
+    height: 50px;
+  }
+`;
+const DonwloadContainerArea = styled.textarea`
+  width: 200px;
+  height: 90px;
+  margin: 10px 0px;
+  color: #928d8d;
 `;
 const ButtonsContainer = styled.div`
   display: flex;
@@ -92,6 +157,9 @@ const ButtonsContainer = styled.div`
 `;
 const Text = styled.p`
   font-size: 16px;
+  @media (max-width: 400px) {
+    font-size: 12px;
+  }
 `;
 
 const DateInput = styled.input`
@@ -108,6 +176,11 @@ const TextArea = styled.textarea`
   padding: 4px;
   resize: none;
   width: 90%;
+  @media (max-width: 400px) {
+    margin-bottom: 10px;
+    padding: 4px 8px;
+    font-size: 12px;
+  }
 `;
 
 const VacationPreview: React.FC = () => {
@@ -126,7 +199,7 @@ const VacationPreview: React.FC = () => {
         const response = await axios.get(
           `http://localhost:8080/vacations/${paramValue}`
         );
-        const data: Vacation = response.data; 
+        const data: Vacation = response.data;
         setVacationData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -171,7 +244,7 @@ const VacationPreview: React.FC = () => {
         if (vacationData) {
           const taskData = {
             taskStatus: vacationData.taskStatus,
-            userType: userType
+            userType: userType,
           };
           console.log(taskData);
           const response = await axios.post(
@@ -347,6 +420,7 @@ const VacationPreview: React.FC = () => {
     <MainWrapper>
       <Menu></Menu>
       <PreviewWrapper>
+        <HeaderTop />
         {vacationData ? (
           <WrapperContainer>
             <VacationDetails>
@@ -363,18 +437,22 @@ const VacationPreview: React.FC = () => {
                 <Text>Data zakończenia:</Text>
                 <DateInput type="date" value={vacationData.endDate} readOnly />
                 <Text>Opis:</Text>
-                <TextArea
-                  rows={4}
-                  value={vacationData.description}
-                  readOnly
-                />
+                <TextArea rows={4} value={vacationData.description} readOnly />
               </DetailsContainer>
-              <DetailsContainer>
+              <AdditionalDetailsContainer>
                 <CommentContainer>
                   <CommentTitle>Komentarz:</CommentTitle>
-                  <CommentArea readOnly={userType !== "PRACODAWCA" && userType !== "TESTER"}></CommentArea>
+                  <CommentContainerArea>
+                    <CommentIcon></CommentIcon>
+                    <CommentArea
+                      readOnly={
+                        userType !== "PRACODAWCA" && userType !== "TESTER"
+                      }
+                    ></CommentArea>
+                  </CommentContainerArea>
                 </CommentContainer>
                 <DocumentDownloadContainer>
+                  <DownloadTitle>Dokumenty:</DownloadTitle>
                   {documentExistence === "exist" && (
                     <DocumentDownload onClick={downloadDocument}>
                       <WordIcon></WordIcon>
@@ -382,7 +460,7 @@ const VacationPreview: React.FC = () => {
                     </DocumentDownload>
                   )}
                 </DocumentDownloadContainer>
-              </DetailsContainer>
+              </AdditionalDetailsContainer>
             </VacationDetails>
 
             <p></p>
