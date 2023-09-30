@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext, createContext } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
-import HeaderTop from "../../Components/Header/HeaderTop";
 import Header from "../../Components/Header/Header";
 import MainMenu from "../../Components/Main/Main";
 import { vacationsList } from "../../Components/Actions/actions";
 import { useDispatch } from "react-redux";
+import HeaderTop from "../../Components/Header/HeaderTop";
+import Overlay from "../../Components/Overlay/Overlay";
+import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext"
 
+interface Overlay {
+  overlayVisible: boolean;
+  modalVisible: boolean;
+  hamburgerVisible: boolean
+  setOverlayVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 export interface Vacation {
   id?: number;
@@ -22,8 +31,10 @@ export interface Vacation {
 
 const MainWrapper = styled.div`
   width: 100%;
+  height: 100vh;
   display: flex;
   justify-content: space-between;
+  flex-grow: 1;
 `;
 
 const Wrapper = styled.div`
@@ -33,8 +44,12 @@ const Wrapper = styled.div`
 `;
 
 function Main() {
-  const [vacations, setVacations] = useState<Vacation[]>([]);
+  const [, setVacations] = useState<Vacation[]>([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
+  const { overlayVisible } = useContext(OverlayVisibleContext);
+  const { modalVisible } = useContext(OverlayVisibleContext);
+  const { hamburgerVisible } = useContext(OverlayVisibleContext);
 
   const fetchData = async () => {
     try {
@@ -42,7 +57,6 @@ function Main() {
       const data = await response.json();
       setVacations(data);
       dispatch(vacationsList(data));
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -52,16 +66,22 @@ function Main() {
     fetchData();
   }, []);
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <div>
       <MainWrapper>
+      <Overlay overlayVisible={overlayVisible} modalVisible = {modalVisible} hamburgerVisible={hamburgerVisible} onClose={closeMenu} errorMessage="" />
         <Menu />
         <Wrapper>
-          <HeaderTop />
+          <HeaderTop></HeaderTop>
           <Header />
           <MainMenu />
         </Wrapper>
       </MainWrapper>
+      
     </div>
   );
 }
