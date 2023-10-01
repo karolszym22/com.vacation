@@ -24,7 +24,6 @@ public class VacationController {
     }
     @GetMapping("/vacations/personVacations/{personId}")
     public ResponseEntity<List<HolidayLeave>> readCurrentPersonVacations(@PathVariable Integer personId) {
-        System.out.println("Co leci"+ personId);
         List<HolidayLeave> vacations = vacationService.getAllPersonVacations(personId);
         return ResponseEntity.ok(vacations);
     }
@@ -36,7 +35,6 @@ public class VacationController {
     @GetMapping("vacations/status/{taskStatus}")
     public ResponseEntity<List<HolidayLeave>> getVacationsByTaskStatus(@PathVariable String taskStatus) {
         List<HolidayLeave> vacations = vacationService.getVacationByTaskStatus(taskStatus);
-        System.out.println(vacations);
         return ResponseEntity.ok(vacations);
     }
     @GetMapping("/vacations/{id}")

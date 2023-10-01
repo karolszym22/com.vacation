@@ -1,20 +1,17 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route,  useNavigate } from "react-router-dom";
 import SignIn from "../../Views/SignIn/SigIn";
 import "../../index.css"
 import Register from "../../Views/Register/Register";
-import { Provider, useDispatch } from "react-redux";
+import { Provider } from "react-redux";
 import store from "../../Reducers/Store/index";
 import NewVacation from "../../Views/NewVacation/NewVacation";
 import VacationPreview from "../../Components/VacationPreview/VacationPreview";
 import MainTemplate from "../MainTemplate/MainTemplate";
 import Main from "../MainSite/Main";
 import OverlayVisibleProvider from "../../Components/Context/OverlayVisibleContext";
-import { user } from "../../Components/Actions/actions";
 
 const Root = () => {
-
-
-
+ 
   return (
     <Provider store={store}>
       <BrowserRouter>
