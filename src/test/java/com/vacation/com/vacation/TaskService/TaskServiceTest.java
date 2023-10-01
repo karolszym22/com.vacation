@@ -1,26 +1,24 @@
-package com.vacation.com.vacation.Service;
+package com.vacation.com.vacation.TaskService;
 
 import com.vacation.com.vacation.Model.TaskData;
 import com.vacation.com.vacation.Model.Task.Tasks;
-import org.junit.jupiter.api.BeforeEach;
+import com.vacation.com.vacation.Service.TaskService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class TaskServiceTest {
 
-    @Mock
+    @InjectMocks
     private TaskService taskService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testProcessTaskForHRAndAccepted() {
@@ -32,8 +30,10 @@ public class TaskServiceTest {
         expectedTaskData.setTaskEnums(Arrays.asList(Tasks.ODRZUC, Tasks.ZWROC, Tasks.ZAAKCEPTUJ));
 
         when(taskService.processTask(taskStatus, userType)).thenReturn(expectedTaskData);
+
         // When
         TaskData actualTaskData = taskService.processTask(taskStatus, userType);
+
         // Then
         assertEquals(expectedTaskData.getTaskEnums(), actualTaskData.getTaskEnums());
     }

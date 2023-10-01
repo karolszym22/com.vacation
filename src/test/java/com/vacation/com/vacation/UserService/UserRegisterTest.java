@@ -1,8 +1,5 @@
 package com.vacation.com.vacation.UserService;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import com.vacation.com.vacation.Model.UserEntity;
 import com.vacation.com.vacation.Repository.UserRepository;
 import com.vacation.com.vacation.Service.UserService;
@@ -11,6 +8,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 public class UserRegisterTest {
 
@@ -32,7 +33,6 @@ public class UserRegisterTest {
         newUser.setEmail("test@example.com");
         newUser.setPassword("testPassword");
 
-
         when(userRepository.findByEmail(anyString())).thenReturn(null);
 
         // When
@@ -41,9 +41,9 @@ public class UserRegisterTest {
         // Then
         assertTrue(isRegistered);
 
-
         verify(userRepository, times(1)).save(newUser);
     }
+
     @Test
     public void testRegisterUserWhenUserExists() {
         // Given
@@ -53,13 +53,13 @@ public class UserRegisterTest {
 
         when(userRepository.findByEmail(anyString())).thenReturn(existingUser);
 
-
         UserEntity newUser = new UserEntity();
         newUser.setEmail("test@example.com");
         newUser.setPassword("newPassword");
 
         // When
         boolean isRegistered = userService.registerUser(newUser);
+
         // Then
         assertFalse(isRegistered);
         verify(userRepository, never()).save(newUser);

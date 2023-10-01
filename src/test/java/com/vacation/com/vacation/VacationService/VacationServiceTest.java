@@ -3,11 +3,12 @@ package com.vacation.com.vacation.VacationService;
 import com.vacation.com.vacation.Repository.HolidayLeaveRepository;
 import com.vacation.com.vacation.Model.HolidayLeave;
 import com.vacation.com.vacation.Service.VacationService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class VacationServiceTest {
 
     @InjectMocks
@@ -22,10 +24,7 @@ public class VacationServiceTest {
 
     @Mock
     private HolidayLeaveRepository holidayLeaveRepository;
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
+
     @Test
     public void testGetVacationByTaskStatus() {
         // Given
@@ -35,8 +34,10 @@ public class VacationServiceTest {
         vacation1.setTaskStatus("SomeTaskStatus");
         vacationList.add(vacation1);
         when(holidayLeaveRepository.findByTaskStatus(taskStatusToFind)).thenReturn(vacationList);
+
         // When
         List<HolidayLeave> result = vacationService.getVacationByTaskStatus(taskStatusToFind);
+
         // Then
         assertEquals(1, result.size());
         assertEquals(taskStatusToFind, result.get(0).getTaskStatus());
@@ -47,10 +48,11 @@ public class VacationServiceTest {
         // Given
         String taskStatusToFind = "NonExistentTaskStatus";
         when(holidayLeaveRepository.findByTaskStatus(taskStatusToFind)).thenReturn(new ArrayList<>());
+
         // When
         List<HolidayLeave> result = vacationService.getVacationByTaskStatus(taskStatusToFind);
+
         // Then
         assertEquals(0, result.size());
     }
-
 }

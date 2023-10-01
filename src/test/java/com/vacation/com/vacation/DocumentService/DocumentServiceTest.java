@@ -3,26 +3,23 @@ package com.vacation.com.vacation.DocumentService;
 import com.vacation.com.vacation.Model.Document;
 import com.vacation.com.vacation.Repository.DocumentRepository;
 import com.vacation.com.vacation.Service.DocumentService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class DocumentServiceTest {
 
     @InjectMocks
     private DocumentService documentService;
+
     @Mock
     private DocumentRepository documentRepository;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testUserDocumentWhenDocumentExists() {
@@ -35,8 +32,11 @@ public class DocumentServiceTest {
 
         when(documentRepository.findByPersonIdAndVacationId(personId, vacationId))
                 .thenReturn(existingDocument);
+
+        // (when)
         String result = documentService.userDocument(personId, vacationId);
 
+        // (then)
         assertEquals("exist", result);
     }
 
@@ -45,12 +45,14 @@ public class DocumentServiceTest {
         //(given)
         int personId = 1;
         int vacationId = 2;
-        //(given)
+
         when(documentRepository.findByPersonIdAndVacationId(personId, vacationId))
                 .thenReturn(null);
-        //(when)
+
+        // (when)
         String result = documentService.userDocument(personId, vacationId);
-        //(then)
+
+        // (then)
         assertEquals("notExist", result);
     }
 }

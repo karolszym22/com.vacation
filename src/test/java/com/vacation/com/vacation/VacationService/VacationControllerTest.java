@@ -2,11 +2,11 @@ package com.vacation.com.vacation.VacationService;
 import com.vacation.com.vacation.Controller.VacationController;
 import com.vacation.com.vacation.Model.HolidayLeave;
 import com.vacation.com.vacation.Service.VacationService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class VacationControllerTest {
 
     @InjectMocks
@@ -23,11 +24,6 @@ public class VacationControllerTest {
 
     @Mock
     private VacationService vacationService;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void testGetVacationsByTaskStatus() {
@@ -51,7 +47,6 @@ public class VacationControllerTest {
         vacations.add(vacation2);
         vacations.add(vacation3);
 
-
         when(vacationService.getVacationByTaskStatus(taskStatus)).thenReturn(vacations);
 
         // When
@@ -60,13 +55,11 @@ public class VacationControllerTest {
         // Then
         assertEquals(200, responseEntity.getStatusCodeValue()); // Oczekiwany status kodu 200
 
-
         List<HolidayLeave> expectedVacations = vacations.stream()
                 .filter(vacation -> vacation.getTaskStatus().equals("completed"))
                 .collect(Collectors.toList());
 
         assertEquals(expectedVacations, responseEntity.getBody()); // Oczekiwana lista vacations w ciele odpowiedzi
-
 
         verify(vacationService, times(1)).getVacationByTaskStatus(taskStatus);
     }

@@ -19,7 +19,6 @@ public class TaskController {
     @PostMapping("/tasksToDo")
     public ResponseEntity<TaskData> processTask(@RequestBody TaskData taskData) {
         TaskData result = taskService.processTask(taskData.getTaskStatus(), taskData.getUserType());
-        System.out.println(result);
         return ResponseEntity.ok(result);
     }
 
