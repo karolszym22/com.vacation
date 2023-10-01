@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import {
   FiHome,
@@ -7,11 +7,15 @@ import {
   FiFile,
   FiChevronsLeft,
 } from "react-icons/fi";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { OverlayVisibleContext } from "../Context/OverlayVisibleContext";
 
 interface HamburgerMenuProps {
   hamburgerVisible: boolean;
+}
+
+interface SideMenuProps {
+  isLogged: boolean
 }
 
 const CustomHomeIcon = styled(FiHome)`
@@ -70,15 +74,19 @@ const MenuNavLogo = styled.h1`
 `;
 
 const NavLinkName = styled.a`
-  font-size: 15px;
-  margin: 5px;
+  font-size: 14px;
   color: white;
   font-weight: bold;
   text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 8px 5px;
+  display: flex;
+  align-items: center;
 `;
 const MenuNavLink = styled.div`
   color: white;
-  padding: 8px 5px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -86,11 +94,34 @@ const MenuNavLink = styled.div`
     background-color: #293744;
   }
 `;
-
+const MenuNavLinkSpecial = styled.div<SideMenuProps>`
+  color: white;
+  display: ${({ isLogged }) => (isLogged ? "flex" : "none")};
+  width: 100%;
+  cursor: pointer;
+  &:hover {
+    background-color: #293744;
+  }
+  position: absolute;
+  bottom: 0;
+`;
+const NavLinkNameSpecial = styled.a`
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 16px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const SideMenu = styled.div<HamburgerMenuProps>`
   position: absolute;
   z-index: 500;
-  width: 280px;
+  max-width: 280px;
   left: ${({ hamburgerVisible }) => (hamburgerVisible ? "0" : "-280px")};
   background-color: #2e4051;
   display: ${({ hamburgerVisible }) => (hamburgerVisible ? "flex" : "none")};
@@ -111,14 +142,26 @@ const SideMenu = styled.div<HamburgerMenuProps>`
 const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setOverlayVisible } = useContext(OverlayVisibleContext);
-  const { setModalVisible } = useContext(OverlayVisibleContext);
   const { setHamburgerVisible } = useContext(OverlayVisibleContext);
+  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      setIsLogged(true);
+    }
+  }, []);
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     setOverlayVisible(!isMenuOpen);;
     setHamburgerVisible(!isMenuOpen);
   };
+
+  const LogOut = () =>{
+    localStorage.clear();
+ }
 
   return (
     <SideMenu hamburgerVisible={hamburgerVisible}>
@@ -153,6 +196,11 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
           Dodaj nowy urlop
         </NavLinkName>
       </MenuNavLink>
+      <MenuNavLinkSpecial isLogged = {isLogged}>
+        <NavLinkNameSpecial onClick={LogOut} as={NavLink} to="/signIn">
+          Wyloguj się
+        </NavLinkNameSpecial>
+      </MenuNavLinkSpecial>
     </SideMenu>
   );
 };

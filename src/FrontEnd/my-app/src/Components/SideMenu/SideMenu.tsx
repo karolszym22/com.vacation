@@ -1,32 +1,49 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { FiHome, FiGitBranch, FiPlusCircle, FiFile, FiAlignJustify } from "react-icons/fi";
-import { NavLink, useNavigate } from "react-router-dom";
+import {
+  FiHome,
+  FiGitBranch,
+  FiPlusCircle,
+  FiFile,
+} from "react-icons/fi";
+import { NavLink } from "react-router-dom";
+
+
+interface SideMenuProps {
+  isLogged: boolean
+}
+
 
 const CustomHomeIcon = styled(FiHome)`
   width: 15px;
   height: 15px;
   margin: 5px;
+  display: block;
+  padding: 8px 5px;
 `;
 
 const CustomLoginIcon = styled(FiGitBranch)`
   width: 15px;
   height: 15px;
   margin: 5px;
+  display: block;
+  padding: 8px 5px;
 `;
 const CustomRegisterIcon = styled(FiPlusCircle)`
   width: 15px;
   height: 15px;
   margin: 5px;
+  display: block;
+  padding: 8px 5px;
 `;
 
 const CustomNewVacationIcon = styled(FiFile)`
   width: 15px;
   height: 15px;
   margin: 5px;
+  display: block;
+  padding: 8px 5px;
 `;
-
-
 const MenuLogoContainer = styled.div`
   width: 100%;
   display: flex;
@@ -47,15 +64,19 @@ const MenuNavLogo = styled.h1`
 `;
 
 const NavLinkName = styled.a`
-  font-size: 15px;
-  margin: 5px;
+  font-size: 14px;
   color: white;
   font-weight: bold;
   text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 8px 5px;
+  display: flex;
+  align-items: center;
 `;
 const MenuNavLink = styled.div`
   color: white;
-  padding: 8px 5px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -64,24 +85,65 @@ const MenuNavLink = styled.div`
   }
 `;
 
+const MenuNavLinkSpecial = styled.div<SideMenuProps>`
+  color: white;
+  display: flex;
+  display: ${({ isLogged }) => (isLogged ? "flex" : "none")};
+  width: 100%;
+  cursor: pointer;
+  &:hover {
+    background-color: #293744;
+  }
+  position: absolute;
+  bottom: 0;
+`;
+const NavLinkNameSpecial = styled.a`
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 16px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const SideMenu = styled.div`
   width: 280px;
   background-color: #2e4051;
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100vh;
   @media (max-width: 976px) {
-    display: none; 
+    display: none;
   }
 `;
 
 const Menu = () => {
+  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      setIsLogged(true);
+    }
+  }, []);
+
+
+  const LogOut = () => {
+    localStorage.clear();
+  };
+
+
   return (
     <SideMenu>
       <MenuLogoContainer>
         <MenuNavLogo>Urlopy</MenuNavLogo>
       </MenuLogoContainer>
-
       <MenuNavLink>
         <CustomHomeIcon />
         <NavLinkName as={NavLink} to="/">
@@ -106,6 +168,11 @@ const Menu = () => {
           Dodaj nowy urlop
         </NavLinkName>
       </MenuNavLink>
+      <MenuNavLinkSpecial isLogged = {isLogged}>
+        <NavLinkNameSpecial onClick={LogOut} as={NavLink} to="/signIn">
+          Wyloguj się
+        </NavLinkNameSpecial>
+      </MenuNavLinkSpecial>
     </SideMenu>
   );
 };
