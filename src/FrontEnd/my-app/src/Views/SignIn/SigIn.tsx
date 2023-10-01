@@ -6,6 +6,7 @@ import { user } from "../../Components/Actions/actions";
 import background from "../../resources/rm222batch3-mind-10.jpg";
 import styled from "styled-components";
 import Overlay from "../../Components/Overlay/Overlay";
+import { NavLink } from "react-router-dom";
 
 const Container = styled.div`
   text-align: center;
@@ -54,13 +55,15 @@ const Title = styled.h2`
   color: #646262;
 `;
 
-const BottomTitle = styled.h4`
+const BottomTitle = styled.h3`
   color: black;
   cursor: pointer;
-  &:hover {
-    color: #777575;
-  }
 `;
+
+const JoinLink = styled.a`
+  color: #31a6e5;
+  text-decoration: none;
+`
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -131,7 +134,7 @@ const Login: React.FC = () => {
         />
         <Button type="submit">Login</Button>
       </Form>
-      <BottomTitle>Nie masz konta? Dołącz do nas jeszcze dzis!</BottomTitle>
+      <BottomTitle>Nie masz konta? <JoinLink as={NavLink} to="/register">Dołącz do nas jeszcze dzis!</JoinLink></BottomTitle>
     </Container>
   );
 };

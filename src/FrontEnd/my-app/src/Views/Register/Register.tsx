@@ -5,6 +5,7 @@ import background from "../../resources/rm222batch3-mind-10.jpg";
 import Overlay from "../../Components/Overlay/Overlay";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Container = styled.div`
   text-align: center;
@@ -67,6 +68,10 @@ const Button = styled.button`
 const BottomTitle = styled.h2`
   color: #646262;
 `;
+const JoinLink = styled.a`
+  color: #31a6e5;
+  text-decoration: none;
+`
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -185,7 +190,7 @@ const Register: React.FC = () => {
           </Select>
           <Button type="submit">Dołącz</Button>
         </Form>
-        <h3>Masz już konto? Zaloguj się!</h3>
+        <h3>Masz już konto? <JoinLink  as={NavLink} to="/signIn">Zaloguj się!</JoinLink></h3>
       </Container>
     </div>
   );
