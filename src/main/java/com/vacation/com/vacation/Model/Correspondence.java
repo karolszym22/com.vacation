@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.util.Date;
+
 @Entity
 public class Correspondence {
     @Id
@@ -13,7 +15,15 @@ public class Correspondence {
 
     private String title;
     private int personOneId;
+    private Date date;
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
     public int getPersonOneId() {
         return personOneId;
     }
@@ -31,6 +41,16 @@ public class Correspondence {
     }
 
     private int personTwoId;
+
+    private String authorName;
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
 
     public String getTitle() {
         return title;
