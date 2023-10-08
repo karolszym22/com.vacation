@@ -1,4 +1,16 @@
 
+
+Update 1.0.2 has been released!
+
+
+Now the user can exchange messages between employees by creating appropriate correspondence.
+
+![urlopy](https://github.com/karolszym22/com.vacation/assets/32464644/0f9507c2-160e-493f-9b44-d487e3e8de6b)
+
+
+
+
+
 Home
 
 ![Glowna](https://github.com/karolszym22/com.vacation/assets/32464644/e08f7f1e-d23b-44a7-8058-91b5abb3688b)
