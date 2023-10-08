@@ -1,14 +1,19 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
-import MainMenu from "../../Components/Main/Main";
-import { vacationsList } from "../../Components/Actions/actions";
-import { useDispatch, useSelector } from "react-redux";
+import {useSelector } from "react-redux";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import Overlay from "../../Components/Overlay/Overlay";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
 import { RootState } from "../../Types/RootState";
 import InputEmoji from "react-input-emoji";
+import axios from "axios";
+import { Message } from "../../Types/Message";
+import { ChatElementI } from "../../Types/ChatElementI";
+import { ChatElementDescriptionI } from "../../Types/ChatElementDescription";
+import { Correspondences } from "../../Types/Correspondences";
+import { ChangeBoxMessageStatusI } from "../../Types/ChangeBoxMessageStatusI";
+import { ChatElementAuthorI } from "../../Types/ChatElementAuthorI";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -17,12 +22,13 @@ interface Overlay {
   setOverlayVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export interface UserState {
+interface UserState {
   id: number;
   username: string;
   email: string;
   employerType: string;
 }
+
 const MainWrapper = styled.div`
   width: 100%;
   height: 100vh;
@@ -102,7 +108,7 @@ const SearchMessage = styled.div`
 const MessagesListElements = styled.div`
   height: 420px;
   width: 100%;
-  background: #f5f5f5;
+  background: #ffffff;
   overflow-y: scroll;
 `;
 const MessageElement = styled.div`
@@ -116,13 +122,15 @@ const MessageElement = styled.div`
   margin: 12px 10%;
   background-color: white;
   position: relative;
+  border: 1px solid #0000002c;
+  border-radius: 10px;
 `;
 const MessageOverlay = styled.div`
   width: 100%;
   height: 80px;
   position: absolute;
   cursor: pointer;
-  &:hover{
+  &:hover {
     background-color: #00000026;
   }
 `;
@@ -130,12 +138,16 @@ const MessageOverlay = styled.div`
 const MessageElementHeader = styled.div`
   width: 100%;
   height: 15px;
-  border-bottom: 1px solid #00000031;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 10px;
-`
+  font-size: 12px;
+  background-color: #63c8c89b;
+  color: white;
+  font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+`;
 const MessageElementTitle = styled.div`
   width: 100%;
   height: 22px;
@@ -145,25 +157,27 @@ const MessageElementTitle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 const MessageElementFooter = styled.div`
   height: 35px;
   display: flex;
   justify-content: space-between;
   align-items: end;
-`
+`;
 const MessageElementAuthor = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 10px;
+  font-size: 9px;
   margin-left: 5px;
-`
+  font-weight: bold;
+`;
 const MessageElementData = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 10px;
+  font-size: 9px;
   margin-right: 5px;
-`
+  font-weight: bold;
+`;
 
 const ListHeaderButton = styled.div`
   color: orange;
@@ -182,12 +196,12 @@ const CreatorPanel = styled.div`
   width: 95%;
   margin-left: 10px;
   font-size: 12px;
- 
+
   display: flex;
   flex-direction: column;
 `;
-const CreatorPanelHeader = styled.div`
-  display: flex;
+const CreatorPanelHeader = styled.div<ChangeBoxMessageStatusI>`
+  display: ${({ visible }) => (visible ? "none" : "flex")};
   flex-direction: column;
   justify-content: space-evenly;
   background-color: rgb(249, 247, 247);
@@ -201,27 +215,50 @@ const TitleValue = styled.input`
   margin-left: 3px;
   width: 90%;
 `;
-const SearchMessageValue = styled.input`
-  border: 1px solid #4c49496f;
-  margin-left: 3px;
-  width: 80%;
-  background-color: #f9f6f6;
-  padding: 3px;
-  border-radius: 10px;
-  color: #0707076e;
-`;
+
 const TextAreaContainer = styled.div`
   height: 70px;
   background-color: #f9f6f6;
 `;
-const ChatArea =  styled.div`
+const ChatArea = styled.div`
   width: 100%;
-  height: 350px;
-  background-color: #ffffff;
-`
-const EmployeesListContainer = styled.div`
-  width: 100%;
+
+  overflow-y: scroll;
+  background-color: #e5f0ef;
+  height: 375px;
+`;
+
+const ChatElement = styled.div<ChatElementI>`
+  max-width: 100%;
+  margin: 25px;
   display: flex;
+  flex-direction: column;
+  align-items: ${(props) => props.alignItems};
+`;
+const ChatElementContainer = styled.div`
+  max-width: 220px;
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+`;
+const ChatElementDescription = styled.div<ChatElementDescriptionI>`
+  background-color: ${(props) => props.color};
+  padding: 4px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #4c4747;
+  font-weight: bold;
+`;
+const ChatElementAuthor = styled.div<ChatElementAuthorI>`
+  text-align: ${(props) => props.textAlign};
+  font-size: 11px;
+  font-weight: bold;
+`;
+
+const EmployeesListContainer = styled.div<ChangeBoxMessageStatusI>`
+  width: 100%;
+  display: ${({ visible }) => (visible ? "none" : "flex")};
 `;
 const EmployeesListTitle = styled.div`
   width: 100px;
@@ -248,18 +285,7 @@ const EmployeeElementOverlay = styled.div`
   height: 25px;
   cursor: pointer;
 `;
-const EmployeeInitialsContainer = styled.div`
-  width: 30px;
-  background-color: ${({ color }) => color};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const EmployeeInitials = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-`;
+
 const EmployeeNameContainer = styled.div`
   width: 100%;
   display: flex;
@@ -272,18 +298,28 @@ const EmployeeName = styled.div`
   margin-left: 7px;
 `;
 
-
 function Messages() {
+  const [allCoresspondences, setAllCoresspondences] = useState<
+    Correspondences[]
+  >([]);
   const [userList, setUsersList] = useState<UserState[]>([]);
-  const [message, setMessage] = useState<String>();
+  const [description, setMessage] = useState("");
+  const [currentCoresspondence, setCurrentCoresspondence] = useState(false);
+  const [corresspondenceMessagesList, setCorresspondenceMessagesList] =
+    useState<Message[]>([]);
   const [, setIsMenuOpen] = useState(false);
-  const [recipient, setRecipient] = useState<String>();
+  const [recipientName, setRecipientName] = useState<String>();
+  const [recipientId, setRecipientId] = useState<number>();
+  const [correspondenceId, setCorrespondenceId] = useState<number>();
   const { overlayVisible } = useContext(OverlayVisibleContext);
   const { modalVisible } = useContext(OverlayVisibleContext);
   const { hamburgerVisible } = useContext(OverlayVisibleContext);
   const [title, setTitle] = useState("");
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
+  );
+  const authorId = useSelector(
+    (state: RootState) => state.authorization.user.id
   );
   const [text, setText] = useState("");
 
@@ -309,19 +345,127 @@ function Messages() {
     setIsMenuOpen(false);
   };
 
-  const initialsColorGenerator = () => {
-    const minColorValue = 100;
+  const openCorrespondence = async (corespondenceId: number) => {
+    setCurrentCoresspondence(true);
+    setCorrespondenceId(corespondenceId);
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/coresspondenceMessages",
+        {
+          corespondenceId: corespondenceId,
+        }
+      );
+      console.log(response.data);
+      setCorresspondenceMessagesList(response.data);
+      
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
 
-    const randomColorComponent = () => {
-      return Math.floor(Math.random() * (256 - minColorValue)) + minColorValue;
+
+  const addNewCorrespondence = () =>{
+    setCurrentCoresspondence(false);
+  }
+
+  useEffect(() => {
+    if (correspondenceId) {
+      const fetchCorrespondenceMessages = async () => {
+        try {
+          const response = await axios.post(
+            "http://localhost:8080/coresspondenceMessages",
+            {
+              corespondenceId: correspondenceId,
+            }
+          );
+          console.log(response.data);
+          setCorresspondenceMessagesList(response.data);
+        } catch (error) {
+          console.error("Error fetching correspondence messages:", error);
+        }
+      };
+  
+      fetchCorrespondenceMessages();
+    }
+  }, [corresspondenceMessagesList]);
+  
+ 
+  function formatDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  const handleSubmit = async (description: string, title: string) => {
+    const message = {
+      title,
+      description,
+      authorId,
+      userName,
+      recipientId,
+      recipientName,
+      correspondenceId,
+      date: formatDate(),
+      authorName: userName,
+    };
+    const correspondence = {
+      title,
+      personOneId: authorId,
+      personTwoId: recipientId,
+      authorName: userName,
+      date: new Date(),
     };
 
-    const red = randomColorComponent().toString(16);
-    const green = randomColorComponent().toString(16);
-    const blue = randomColorComponent().toString(16);
+    const dataToSend = {
+      correspondence,
+      message,
+    };
 
-    return `#${red}${green}${blue}`;
+    if (!currentCoresspondence) {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/newCorrespondenceAndMessage",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+          }
+        );
+      } catch (error) {
+        console.error("Error adding vacation:", error);
+      }
+    } else {
+      try {
+        const response = await fetch("http://localhost:8080/newMessage", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(message),
+        });
+      } catch (error) {
+        console.error("Error adding vacation:", error);
+      }
+    }
   };
+
+  const setRecipientData = (recipientName: string, recipientId: number) => {
+    setRecipientName(recipientName);
+    setRecipientId(recipientId);
+  };
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/correspondences`)
+      .then((response) => response.json())
+      .then((data) => {
+        setAllCoresspondences(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [allCoresspondences]);
 
   return (
     <div>
@@ -350,76 +494,63 @@ function Messages() {
               <BoxAreaElements>
                 <MessagesListContainer>
                   <MessagesListHeader>
-                    <ListHeaderButton>Wszystkie</ListHeaderButton>
-                    <ListHeaderButton>Od Ciebie</ListHeaderButton>
+                    <ListHeaderButton onClick={addNewCorrespondence}>Dodaj korespondencje
+
+                    </ListHeaderButton>
                   </MessagesListHeader>
                   <SearchMessage>
-                    <SearchMessageValue
-                      type="text"
-                      value={title}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Szukaj wiadomośći"
-                    />
                   </SearchMessage>
                   <MessagesListElements>
-                    <MessageElement>
-                      <MessageOverlay/>
-                      <MessageElementHeader>Temat</MessageElementHeader>
-                      <MessageElementTitle>Pytanie o Jave</MessageElementTitle>
-                      <MessageElementFooter>
-                        <MessageElementAuthor>Autor: <a>Karol Szymański</a></MessageElementAuthor>
-                        <MessageElementData>Data: <a>20.09.2023</a></MessageElementData>
-                      </MessageElementFooter>
-                    </MessageElement>
-                    <MessageElement>   <MessageElementHeader>Temat</MessageElementHeader>
-                      <MessageElementTitle>Co z klientami z Włoch?</MessageElementTitle>
-                      <MessageElementFooter>
-                        <MessageElementAuthor>Autor: <a>Karol Szymański</a></MessageElementAuthor>
-                        <MessageElementData>Data: <a>20.09.2023</a></MessageElementData>
-                      </MessageElementFooter></MessageElement>
-                    <MessageElement> <MessageElementHeader>Temat</MessageElementHeader>
-                      <MessageElementTitle>Będę jechał po kebaba, chcesz coś?</MessageElementTitle>
-                      <MessageElementFooter>
-                        <MessageElementAuthor>Autor: <a>Karol Szymański</a></MessageElementAuthor>
-                        <MessageElementData>Data: <a>20.09.2023</a></MessageElementData>
-                      </MessageElementFooter></MessageElement>
-                    <MessageElement> <MessageElementHeader>Temat</MessageElementHeader>
-                      <MessageElementTitle>Co z klientami z Włoch?</MessageElementTitle>
-                      <MessageElementFooter>
-                        <MessageElementAuthor>Autor: <a>Karol Szymański</a></MessageElementAuthor>
-                        <MessageElementData>Data: <a>20.09.2023</a></MessageElementData>
-                      </MessageElementFooter></MessageElement>
-                      <MessageElement> <MessageElementHeader>Temat</MessageElementHeader>
-                      <MessageElementTitle>Co z klientami z Włoch?</MessageElementTitle>
-                      <MessageElementFooter>
-                        <MessageElementAuthor>Autor: <a>Karol Szymański</a></MessageElementAuthor>
-                        <MessageElementData>Data: <a>20.09.2023</a></MessageElementData>
-                      </MessageElementFooter></MessageElement>
+                    {allCoresspondences.map((coresspondences) => (
+                      <React.Fragment key={coresspondences.id}>
+                        <MessageElement>
+                          <MessageOverlay
+                            onClick={() =>
+                              openCorrespondence(coresspondences.id)
+                            }
+                          />
+                          <MessageElementHeader>Temat</MessageElementHeader>
+                          <MessageElementTitle>
+                            {coresspondences.title}
+                          </MessageElementTitle>
+                          <MessageElementFooter>
+                            <MessageElementAuthor>
+                              Autor: {coresspondences.authorName}
+                            </MessageElementAuthor>
+                            <MessageElementData>
+                              Data: {coresspondences.date.split("T")[0]}
+                            </MessageElementData>
+                          </MessageElementFooter>
+                        </MessageElement>
+                      </React.Fragment>
+                    ))}
                   </MessagesListElements>
                 </MessagesListContainer>
                 <MessagesCreatorContainer>
                   <CreatorPanel>
-                  <EmployeesListContainer>
-                    <EmployeesListTitle>Pracownicy:</EmployeesListTitle>
-                    <EmployeesListElements>
-                      {userList.map((user, index) => (
-                        <React.Fragment key={user.id}>
-                          <EmployeeElement
-                            onClick={() => setRecipient(user.username)}
-                          >
-                            <EmployeeElementOverlay></EmployeeElementOverlay>
-                            <EmployeeNameContainer>
-                              <EmployeeName>{user.username}</EmployeeName>
-                            </EmployeeNameContainer>
-                          </EmployeeElement>
-                          {index !== userList.length - 1 && ", "}
-                        </React.Fragment>
-                      ))}
-                    </EmployeesListElements>
-                  </EmployeesListContainer>
-                    <CreatorPanelHeader>
+                    <EmployeesListContainer visible={currentCoresspondence}>
+                      <EmployeesListTitle>Pracownicy:</EmployeesListTitle>
+                      <EmployeesListElements>
+                        {userList.map((user, index) => (
+                          <React.Fragment key={user.id}>
+                            <EmployeeElement
+                              onClick={() =>
+                                setRecipientData(user.username, user.id)
+                              }
+                            >
+                              <EmployeeElementOverlay></EmployeeElementOverlay>
+                              <EmployeeNameContainer>
+                                <EmployeeName>{user.username}</EmployeeName>
+                              </EmployeeNameContainer>
+                            </EmployeeElement>
+                            {index !== userList.length - 1 && ", "}
+                          </React.Fragment>
+                        ))}
+                      </EmployeesListElements>
+                    </EmployeesListContainer>
+                    <CreatorPanelHeader visible={currentCoresspondence}>
                       <RecipientArea>
-                        Do: <a>{recipient}</a>
+                        Do: <a>{recipientName}</a>
                       </RecipientArea>
                       <TitleArea>
                         Tytuł:
@@ -433,15 +564,42 @@ function Messages() {
                     </CreatorPanelHeader>
                   </CreatorPanel>
                   <ChatArea>
-
+                    {corresspondenceMessagesList.map((message) => (
+                      <React.Fragment key={message.id}>
+                        <ChatElement
+                          alignItems={
+                            message.authorId === authorId ? "end" : "start"
+                          }
+                        >
+                          <ChatElementContainer>
+                            <ChatElementAuthor
+                              textAlign={
+                                message.authorId === authorId ? "end" : "start"
+                              }
+                            >
+                              {message.authorName}
+                            </ChatElementAuthor>
+                            <ChatElementDescription
+                              color={
+                                message.authorId === authorId
+                                  ? "#74a4f29f"
+                                  : "#68e89ba4"
+                              }
+                            >
+                              {message.description}
+                            </ChatElementDescription>
+                          </ChatElementContainer>
+                        </ChatElement>
+                      </React.Fragment>
+                    ))}
                   </ChatArea>
                   <TextAreaContainer>
-                  <InputEmoji
-                      value={text}
-                      onChange={setText}
+                    <InputEmoji
+                      value={description}
+                      onChange={setMessage}
                       cleanOnEnter
-                      onEnter={handleOnEnter}
-                      placeholder="Type a message"
+                      onEnter={() => handleSubmit(description, title)}
+                      placeholder="Type a description"
                     />
                   </TextAreaContainer>
                 </MessagesCreatorContainer>
