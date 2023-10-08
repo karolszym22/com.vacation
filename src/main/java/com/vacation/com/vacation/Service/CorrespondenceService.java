@@ -19,7 +19,7 @@ public class CorrespondenceService {
         correspondenceRepository.save(correspondence);
 
     };
-    public List<Correspondence> getAllVacations() {;
+    public List<Correspondence> getAllCorrespondence() {;
         return correspondenceRepository.findAll();
     }
 }
