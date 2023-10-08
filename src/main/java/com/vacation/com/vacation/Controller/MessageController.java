@@ -2,13 +2,18 @@ package com.vacation.com.vacation.Controller;
 import com.vacation.com.vacation.Model.Correspondence;
 import com.vacation.com.vacation.Model.HolidayLeave;
 import com.vacation.com.vacation.Model.Message;
+import com.vacation.com.vacation.Model.UserEntity;
 import com.vacation.com.vacation.Service.CorrespondenceService;
 import com.vacation.com.vacation.Service.MessageService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class MessageController {
@@ -27,5 +32,17 @@ public class MessageController {
     ResponseEntity<List<Message>> readAllVacations(){
         List<Message> messages = messageService.getAllVacations();
         return ResponseEntity.ok(messages);
+    }
+
+
+    @PostMapping("/coresspondenceMessages")
+    ResponseEntity<List<Message>> getCorrespondenceMessages(@RequestBody Map<String, Integer> requestBody) {
+        int corespondenceId = requestBody.get("corespondenceId");
+        List<Message> correspondenceMessages = messageService.getCorrespondenceMessages(corespondenceId);
+        if (correspondenceMessages.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(correspondenceMessages);
+        }
     }
 }
