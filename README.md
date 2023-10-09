@@ -42,6 +42,13 @@ Now the user can exchange messages between employees by creating appropriate cor
 
 
 
+
+
+
+
+
+
+
 # Update 1.0.1 has been released!
 
 - better website responsiveness
@@ -50,6 +57,16 @@ Now the user can exchange messages between employees by creating appropriate cor
 - improved logging
 - improved word document
 - improved tests (using InjectMocks)
+
+
+
+
+
+
+
+
+
+
 
 
 # 1.0 has been released!
