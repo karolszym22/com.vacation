@@ -1,4 +1,4 @@
-package com.vacation.com.vacation.VacationService;
+package com.vacation.com.vacation.VacationController;
 import com.vacation.com.vacation.Controller.VacationController;
 import com.vacation.com.vacation.Model.HolidayLeave;
 import com.vacation.com.vacation.Service.VacationService;
@@ -53,13 +53,13 @@ public class VacationControllerTest {
         ResponseEntity<List<HolidayLeave>> responseEntity = vacationController.getVacationsByTaskStatus(taskStatus);
 
         // Then
-        assertEquals(200, responseEntity.getStatusCodeValue()); // Oczekiwany status kodu 200
+        assertEquals(200, responseEntity.getStatusCodeValue());
 
         List<HolidayLeave> expectedVacations = vacations.stream()
                 .filter(vacation -> vacation.getTaskStatus().equals("completed"))
                 .collect(Collectors.toList());
 
-        assertEquals(expectedVacations, responseEntity.getBody()); // Oczekiwana lista vacations w ciele odpowiedzi
+        assertEquals(expectedVacations, responseEntity.getBody());
 
         verify(vacationService, times(1)).getVacationByTaskStatus(taskStatus);
     }
