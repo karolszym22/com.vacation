@@ -165,7 +165,7 @@ const Menu = () => {
       <MenuNavLink>
         <CustomHomeIcon />
         <NavLinkName as={NavLink} to="/messages">
-          Wiadomośći
+          Wiadomości
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>

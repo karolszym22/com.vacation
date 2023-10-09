@@ -191,6 +191,12 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/messages">
+          Wiadomości
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
         <CustomNewVacationIcon />
         <NavLinkName as={NavLink} to="/newVacation">
           Dodaj nowy urlop

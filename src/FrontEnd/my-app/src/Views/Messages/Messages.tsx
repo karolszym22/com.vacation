@@ -599,7 +599,7 @@ function Messages() {
                       onChange={setMessage}
                       cleanOnEnter
                       onEnter={() => handleSubmit(description, title)}
-                      placeholder="Type a description"
+                      placeholder="..."
                     />
                   </TextAreaContainer>
                 </MessagesCreatorContainer>
