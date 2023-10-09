@@ -1,15 +1,66 @@
+## Installation
+
+Clone this repository
+
+```bash
+  git clone https://github.com/karolszym22/com.vacation
+```
+ 
+Go to the folder with front-end files
+
+```bash
+  cd com.vacation/src/FrontEnd/my-app
+```
+Install a package
+```bash
+  npm install
+```
+Install a package
+```bash
+  npm install
+```
+Open the web application
+```bash
+  npm start
+```
+Open intelliJ IDEA and 
+compile application.java in
+```bash
+  ...com.vacation\src\main\java\com\vacation\com\vacation> 
+
+```
 
 
-Update 1.0.2 has been released!
 
+# Update 1.0.2 has been released!
 
-Now the user can exchange messages between employees by creating appropriate correspondence.
+Now the user can exchange messages between employees by creating appropriate correspondence
+
 
 ![urlopy](https://github.com/karolszym22/com.vacation/assets/32464644/0f9507c2-160e-493f-9b44-d487e3e8de6b)
 
 
 
+# Update 1.0.1 has been released!
 
+- better website responsiveness
+ - visual improvement of some components (buttons, table - appearance)
+- adding a new menu for phones
+- improved logging
+- improved word document
+- improved tests (using InjectMocks)
+
+
+# 1.0 has been released!
+
+ - Possibility to register specific users: Employee, Employer, HR, Test
+- Possibility to create leaves
+- Each logged in user is entitled to specific steps depending on their type
+- Validating whether the created leave does not collide with other leaves of thesame user
+- Depending on the status of a given leave, a Word file with a leave application is
+generated at the end of the proces
+
+# Photos:
 
 Home
 
@@ -40,6 +91,21 @@ User login
 User registration:
 
 ![Rejestracja](https://github.com/karolszym22/com.vacation/assets/32464644/5e2f3726-ee61-4727-8845-cdf3264eff5d)
+
+
+## Author
+
+- [@karolszym22](https://github.com/karolszym22)
+
+
+
+
+
+
+
+
+
+
 
 
 
