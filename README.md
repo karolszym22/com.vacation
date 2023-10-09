@@ -37,7 +37,8 @@ compile application.java in
 Now the user can exchange messages between employees by creating appropriate correspondence
 
 
-![urlopy](https://github.com/karolszym22/com.vacation/assets/32464644/0f9507c2-160e-493f-9b44-d487e3e8de6b)
+![urlopy](https://github.com/karolszym22/com.vacation/assets/32464644/22b962e4-6ec7-452b-8e2d-71e6fae4e878)
+
 
 
 
