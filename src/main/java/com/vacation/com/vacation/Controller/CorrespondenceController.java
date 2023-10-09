@@ -1,6 +1,7 @@
 package com.vacation.com.vacation.Controller;
 
 import com.vacation.com.vacation.Model.Correspondence;
+import com.vacation.com.vacation.Model.CorrespondenceAndMessageDTO;
 import com.vacation.com.vacation.Model.Message;
 import com.vacation.com.vacation.Service.CorrespondenceService;
 import com.vacation.com.vacation.Service.MessageService;
@@ -24,15 +25,19 @@ public class CorrespondenceController {
     }
 
     @PostMapping("/newCorrespondenceAndMessage")
-    ResponseEntity<Correspondence> addCorrespondenceAndMessage(@RequestBody Correspondence correspondence, @RequestBody Message message) {
+    ResponseEntity<CorrespondenceAndMessageDTO> addCorrespondenceAndMessage(@RequestBody CorrespondenceAndMessageDTO dto) {
+        Correspondence correspondence = dto.getCorrespondence();
+        Message message = dto.getMessage();
+
         correspondenceService.addingCorrespondence(correspondence);
         message.setCorrespondenceId(correspondence.getId());
         messageService.addingMessage(message);
-        return ResponseEntity.created(URI.create("/" + correspondence.getId())).body(correspondence);
+
+        return ResponseEntity.created(URI.create("/" + correspondence.getId())).body(dto);
     }
     @GetMapping(value = "/correspondences", params = {"!sort", "!page", "!size"})
     ResponseEntity<List<Correspondence>> readAllVacations(){
-        List<Correspondence> correspondences = correspondenceService.getAllVacations();
+        List<Correspondence> correspondences = correspondenceService.getAllCorrespondence();
         return ResponseEntity.ok(correspondences);
     }
 
