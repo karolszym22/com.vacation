@@ -237,7 +237,6 @@ function NewVacation() {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [daysNum, setDaysNum] = useState<number>(0);
-  const [, setIsMenuOpen] = useState(false);
   const { overlayVisible } = useContext(OverlayVisibleContext);
   const { modalVisible } = useContext(OverlayVisibleContext);
   const { hamburgerVisible } = useContext(OverlayVisibleContext);
@@ -397,7 +396,6 @@ function NewVacation() {
             <Select>
               <option value="">Typ urlopu</option>
               <option value="HR">Wypoczynkowy</option>
-              <option value="PRACOWNIK">Pracownik</option>
             </Select>
             <label htmlFor="description">Przyczyna:</label>
             <DescriptionInput
@@ -415,7 +413,6 @@ function NewVacation() {
             <TableHeader>
               <TableRow>
                 <TableHeaderCell>Dni</TableHeaderCell>
-
                 <TableHeaderCell>Data rozpoczęcia</TableHeaderCell>
                 <TableHeaderCell>Data zakończenia</TableHeaderCell>
                 <TableHeaderCell>Stan</TableHeaderCell>

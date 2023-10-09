@@ -3,7 +3,6 @@ import axios from "axios";
 import styled from "styled-components";
 import background from "../../resources/rm222batch3-mind-10.jpg";
 import Overlay from "../../Components/Overlay/Overlay";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 

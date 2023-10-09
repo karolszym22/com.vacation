@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import Header from "../../Components/Header/Header";
@@ -53,6 +53,7 @@ function Main() {
   const { overlayVisible } = useContext(OverlayVisibleContext);
   const { modalVisible } = useContext(OverlayVisibleContext);
   const { hamburgerVisible } = useContext(OverlayVisibleContext);
+  
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
   );

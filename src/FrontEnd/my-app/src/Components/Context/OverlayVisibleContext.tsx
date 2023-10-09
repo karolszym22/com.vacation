@@ -14,21 +14,30 @@ export interface Vacation {
   personId: number;
 }
 interface OverlayVisibleProviderProps {
-    children: ReactNode;
-  }
+  children: ReactNode;
+}
 
-const OverlayVisibleProvider: React.FC<OverlayVisibleProviderProps> = ({ children }) => {
-    const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [hamburgerVisible, setHamburgerVisible] = useState<boolean>(false);
+const OverlayVisibleProvider: React.FC<OverlayVisibleProviderProps> = ({
+  children,
+}) => {
+  const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [hamburgerVisible, setHamburgerVisible] = useState<boolean>(false);
 
-    return (
-      <OverlayVisibleContext.Provider
-        value={{ overlayVisible, setOverlayVisible, modalVisible, setModalVisible, hamburgerVisible, setHamburgerVisible }}
-      >
-        {children}
-      </OverlayVisibleContext.Provider>
-    );
-  };
+  return (
+    <OverlayVisibleContext.Provider
+      value={{
+        overlayVisible,
+        setOverlayVisible,
+        modalVisible,
+        setModalVisible,
+        hamburgerVisible,
+        setHamburgerVisible,
+      }}
+    >
+      {children}
+    </OverlayVisibleContext.Provider>
+  );
+};
 
 export default OverlayVisibleProvider;

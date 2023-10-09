@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
@@ -9,6 +9,14 @@ import { Vacation } from "../../Types/Vacation";
 import { RootState } from "../../Types/RootState";
 import { FiEdit3 } from "react-icons/fi";
 import HeaderTop from "../Header/HeaderTop";
+import { OverlayVisibleContext } from "../Context/OverlayVisibleContext";
+import Overlay from "../Overlay/Overlay";
+
+interface Overlay {
+  overlayVisible: boolean;
+  modalVisible: boolean;
+  hamburgerVisible: boolean;
+}
 
 const MainWrapper = styled.div`
   display: flex;
@@ -145,12 +153,17 @@ const CommentArea = styled.textarea`
     height: 50px;
   }
 `;
-const DonwloadContainerArea = styled.textarea`
-  width: 200px;
-  height: 90px;
-  margin: 10px 0px;
-  color: #928d8d;
+const Header = styled.div`
+  width: 100%;
+  height: 70px;
+  background-color: rgb(248, 244, 244);
 `;
+const HeaderTitle = styled.h1`
+  margin: 10px;
+  color: #696666;
+`;
+
+
 const ButtonsContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -188,7 +201,17 @@ const VacationPreview: React.FC = () => {
   const [vacationData, setVacationData] = useState<Vacation | null>(null);
   const [taskEnums, setTaskEnums] = useState<string[]>([]);
   const userId = useSelector((state: RootState) => state.authorization.user.id);
+  const userName = useSelector(
+    (state: RootState) => state.authorization.user.name
+  );
   const [documentExistence, setDocumentExistence] = useState<string>("");
+  const [, setIsMenuOpen] = useState(false);
+  const { overlayVisible } = useContext(OverlayVisibleContext);
+  const { modalVisible } = useContext(OverlayVisibleContext);
+  const { hamburgerVisible } = useContext(OverlayVisibleContext);
+  const { setOverlayVisible } = useContext(OverlayVisibleContext);
+  const { setModalVisible } = useContext(OverlayVisibleContext);
+  const [errorMessage, setErrorMessage] = useState("");
   const userType = useSelector(
     (state: RootState) => state.authorization.user.employerType
   );
@@ -276,8 +299,6 @@ const VacationPreview: React.FC = () => {
   const handleTaskButtonClick = (action: string) => {};
   useEffect(() => {
     const checkDocumentExistence = async () => {
-      console.log("istnieje1?", userId);
-      console.log("istnieje2?", vacationData?.id);
       try {
         const response = await axios.get(
           `http://localhost:8080/document/word/exist?personId=${userId}&vacationId=${vacationData?.id}`
@@ -322,12 +343,6 @@ const VacationPreview: React.FC = () => {
             },
           }
         );
-
-        if (documentResponse.status === 200) {
-          console.log("Document data sent successfully.");
-        } else {
-          console.error("Failed to send document data.");
-        }
       } else if (taskEnum === "ZWROC") {
         updatedVacationData = { ...vacationData, taskStatus: "Zwrócono" };
       } else if (taskEnum === "ODRZUC") {
@@ -416,11 +431,31 @@ const VacationPreview: React.FC = () => {
     });
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <MainWrapper>
+      <Overlay
+        overlayVisible={overlayVisible}
+        modalVisible={modalVisible}
+        hamburgerVisible={hamburgerVisible}
+        onClose={closeMenu}
+        errorMessage={errorMessage}
+      />
+
       <Menu></Menu>
       <PreviewWrapper>
-        <HeaderTop />
+        <HeaderTop
+          userName={userName}
+          headerText="Szczegółowy podgląd urlopu"
+        />
+        <Header>
+          {" "}
+          <HeaderTitle>Informacje o urlopie</HeaderTitle>
+        </Header>
+
         {vacationData ? (
           <WrapperContainer>
             <VacationDetails>
