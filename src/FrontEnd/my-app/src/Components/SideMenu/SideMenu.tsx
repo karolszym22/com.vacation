@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useMenuData } from "../../Hooks/useMenu"
 import styled from "styled-components";
 import {
   FiHome,
@@ -124,20 +124,7 @@ const SideMenu = styled.div`
 `;
 
 const Menu = () => {
-  const [isLogged, setIsLogged] = useState(false);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setIsLogged(true);
-    }
-  }, []);
-
-
-  const LogOut = () => {
-    localStorage.clear();
-  };
-
+  const { isLogged, LogOut } = useMenuData();
 
   return (
     <SideMenu>
@@ -174,7 +161,7 @@ const Menu = () => {
           Dodaj nowy urlop
         </NavLinkName>
       </MenuNavLink>
-      <MenuNavLinkSpecial isLogged = {isLogged}>
+      <MenuNavLinkSpecial isLogged={isLogged}>
         <NavLinkNameSpecial onClick={LogOut} as={NavLink} to="/signIn">
           Wyloguj się
         </NavLinkNameSpecial>

@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import { FiCopy, FiAlignJustify } from "react-icons/fi";
-import React, { useState, useContext } from "react"
-import { OverlayVisibleContext } from "../Context/OverlayVisibleContext";
+import {useHeaderTopData} from "../../Hooks/useHeaderTop";
+import {FiCopy, FiAlignJustify} from "react-icons/fi";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -49,14 +48,8 @@ const SignIn = styled.div`
   margin: 0px 15px;
 `;
 const HeaderTop: React.FC<VacationPreviewProps> = ({userName, headerText}) => {
-  const { setOverlayVisible } = useContext(OverlayVisibleContext);
-  const { setHamburgerVisible } = useContext(OverlayVisibleContext);
-
-  const toggleMenu = () => {
-    setOverlayVisible(true);
-    setHamburgerVisible(true)
-  };
-
+ 
+ const { toggleMenu } = useHeaderTopData();
   return (
     <Header>
       <HeaderTopInformation>

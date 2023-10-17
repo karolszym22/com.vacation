@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FiUser, FiAlignLeft } from "react-icons/fi";
+import { useHeaderData } from "../../Hooks/useHeader";
 
 interface UserState {
   id: number;
@@ -35,7 +36,6 @@ interface RootState {
   };
 }
 
-
 const HeaderContainer = styled.div`
   width: 100%;
   height: 500px;
@@ -58,7 +58,7 @@ const HeaderContainer = styled.div`
     z-index: -1;
   }
   @media (max-width: 530px) {
-    height: 750px
+    height: 750px;
   }
 `;
 
@@ -69,7 +69,7 @@ const HeaderTitle = styled.h1`
 `;
 const HeaderBackground = styled.div`
   width: 70%;
-  
+
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -88,7 +88,7 @@ const HeaderElement = styled.div`
   justify-content: space-between;
   align-items: center;
   @media (max-width: 530px) {
-    justify-content: space-evenly
+    justify-content: space-evenly;
   }
 `;
 const Value = styled.div`
@@ -122,52 +122,12 @@ const HeaderElementContainer = styled.div`
 `;
 
 const Header = () => {
-  const [realizedVacations, setRealizedVacations] = useState<Vacation[]>([]);
-  const [rejectedVacations, setRejectedVacations] = useState<Vacation[]>([]);
-  const userName = useSelector(
-    (state: RootState) => state.authorization.user.name
-  );
-  const vacationsCount = useSelector((state: RootState) => state.vacations.vacationsCount);
-  const vacationsContent = useSelector((state: RootState) => state.vacations);
-  console.log(vacationsCount)
-  console.log(vacationsContent)
-  const duringVacationCount = vacationsCount - realizedVacations.length - rejectedVacations.length;
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/vacations/status/Zrealizowano"
-        );
-
-        if (response.status === 200) {
-          const data = response.data;
-          setRealizedVacations(data);
-          console.log(data);
-        } else {
-          console.error("Failed to fetch realized vacations.");
-        }
-      } catch (error) {
-        console.error("Error fetching realized vacations:", error);
-      }
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/vacations/status/Odrzucono"
-        );
-
-        if (response.status === 200) {
-          const data = response.data;
-          setRejectedVacations(data);
-        } else {
-          console.error("Failed to fetch realized vacations.");
-        }
-      } catch (error) {
-        console.error("Error fetching realized vacations:", error);
-      }
-    };
-    
-    fetchData();
-  }, []);
+  const {
+    userName,
+    realizedVacations,
+    rejectedVacations,
+    duringVacationCount,
+  } = useHeaderData();
 
   return (
     <HeaderContainer>
@@ -183,7 +143,9 @@ const Header = () => {
           </HeaderElement>
           <HeaderElement>
             {" "}
-            <HeaderElementValue color="#f2c121a4">{duringVacationCount}</HeaderElementValue>
+            <HeaderElementValue color="#f2c121a4">
+              {duringVacationCount}
+            </HeaderElementValue>
             <Value>W trakcie</Value>
           </HeaderElement>
           <HeaderElement>

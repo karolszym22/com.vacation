@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import {useHamburgerMenuData} from "../../Hooks/useHamburgerMenu"
 import styled from "styled-components";
 import {
   FiHome,
@@ -140,28 +141,7 @@ const SideMenu = styled.div<HamburgerMenuProps>`
 `;
 
 const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { setOverlayVisible } = useContext(OverlayVisibleContext);
-  const { setHamburgerVisible } = useContext(OverlayVisibleContext);
-  const [isLogged, setIsLogged] = useState(false);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setIsLogged(true);
-    }
-  }, []);
-
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    setOverlayVisible(!isMenuOpen);;
-    setHamburgerVisible(!isMenuOpen);
-  };
-
-  const LogOut = () =>{
-    localStorage.clear();
- }
+  const { isMenuOpen, toggleMenu, isLogged, LogOut } = useHamburgerMenuData();
 
   return (
     <SideMenu hamburgerVisible={hamburgerVisible}>
@@ -202,7 +182,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
           Dodaj nowy urlop
         </NavLinkName>
       </MenuNavLink>
-      <MenuNavLinkSpecial isLogged = {isLogged}>
+      <MenuNavLinkSpecial isLogged={isLogged}>
         <NavLinkNameSpecial onClick={LogOut} as={NavLink} to="/signIn">
           Wyloguj się
         </NavLinkNameSpecial>

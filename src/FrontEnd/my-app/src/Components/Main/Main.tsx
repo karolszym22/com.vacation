@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import { useVacations, usePreviewClick } from "../../Hooks/useVacationsHooks";
 interface Vacation {
   id: number;
   description: string;
@@ -81,30 +81,8 @@ const getColorByTaskStatus = (taskStatus: string) => {
 };
 
 const Menu = () => {
-  const [vacations, setVacations] = useState<Vacation[]>([]);
- 
+  const { vacations } = useVacations();
 
-  useEffect(() => {
-    fetch("http://localhost:8080/vacations")
-      .then((response) => response.json())
-      .then((data) => {
-        setVacations(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  
-  }, []);
-
-  const handlePreviewClick = (vacationId: number) => {
-    fetch(`http://localhost:8080/vacationsPreview`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ vacationId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {});
-  };
   return (
     <MainMenu>
       <CustomersTitle>Lista urlopów</CustomersTitle>
