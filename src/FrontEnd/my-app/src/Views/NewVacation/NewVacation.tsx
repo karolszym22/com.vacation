@@ -5,19 +5,18 @@ import RootState from "../../Reducers/Store/index";
 import { addDays, isSaturday, isSunday } from "date-fns";
 import Menu from "../../Components/SideMenu/SideMenu";
 import { NavLink } from "react-router-dom";
-import userIcon from "../../resources/user.png";
 import Overlay from "../../Components/Overlay/Overlay";
 import { Vacation } from "../../Types/Vacation";
 import { AuthorizationState } from "../../Types/AuthorizationState";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
+import { useCloseOverlay } from "../../Hooks/useCloseOveraly";
 
 interface Overlay {
   overlayVisible: boolean;
   modalVisible: boolean;
-  hamburgerVisible: boolean
+  hamburgerVisible: boolean;
 }
-
 
 const Table = styled.table`
   width: 100%;
@@ -98,7 +97,6 @@ const MainWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
- 
 `;
 const FormWrapper = styled.div`
   display: flex;
@@ -168,6 +166,12 @@ const Button = styled.button`
   cursor: pointer;
   width: 110px;
   border-radius: 5px;
+`;
+
+const DescriptionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 const DescriptionInput = styled.textarea`
@@ -243,6 +247,7 @@ function NewVacation() {
   const { setOverlayVisible } = useContext(OverlayVisibleContext);
   const { setModalVisible } = useContext(OverlayVisibleContext);
   const [errorMessage, setErrorMessage] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
 
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
@@ -314,7 +319,7 @@ function NewVacation() {
       setErrorMessage(
         "Tworzony przez Ciebie urlop koliduje z innym urlopem dziejącym się w tym samym okresie"
       );
-      setModalVisible(true)
+      setModalVisible(true);
       setOverlayVisible(true);
     }
   };
@@ -359,19 +364,19 @@ function NewVacation() {
     }
   };
 
-  const closeMenu = () => {
-    setOverlayVisible(false)
-    setModalVisible(false)
-  };
-
   return (
     <div>
-
       <MainWrapper>
-      <Overlay overlayVisible={overlayVisible} modalVisible = {modalVisible} hamburgerVisible={hamburgerVisible} onClose={closeMenu} errorMessage={errorMessage} />
+        <Overlay
+          overlayVisible={overlayVisible}
+          modalVisible={modalVisible}
+          hamburgerVisible={hamburgerVisible}
+          onClose={useCloseOverlay}
+          errorMessage={errorMessage}
+        />
         <Menu />
         <FormWrapper>
-          <HeaderTop userName = {userName} headerText="Generator urlopów" />
+          <HeaderTop userName={userName} headerText="Generator urlopów" />
           <Header>
             <HeaderTitle>Nowy urlop</HeaderTitle>
           </Header>
@@ -393,17 +398,28 @@ function NewVacation() {
               value={endDate}
               onChange={(e) => handleEndDateChange(e.target.value)}
             />
-            <Select>
+            <Select
+              value={selectedOption}
+              onChange={(e) => setSelectedOption(e.target.value)}
+            >
               <option value="">Typ urlopu</option>
-              <option value="HR">Wypoczynkowy</option>
+              <option value="Wypoczynkowy">Wypoczynkowy</option>
+              <option value="Macierzyński">Macierzyński</option>
+              <option value="Okolicznościowy">Okolicznościowy</option>
             </Select>
-            <label htmlFor="description">Przyczyna:</label>
-            <DescriptionInput
-              id="description"
-              name="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+            <DescriptionContainer
+              style={{
+                display: selectedOption === "Okolicznościowy" ? "flex" : "none",
+              }}
+            >
+              <label htmlFor="description">Przyczyna:</label>
+              <DescriptionInput
+                id="description"
+                name="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </DescriptionContainer>
             <Button type="submit">Dodaj urlop</Button>
           </StyledForm>
           <TableTitle>
