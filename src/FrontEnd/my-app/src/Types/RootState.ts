@@ -1,5 +1,10 @@
 import { AuthorizationState } from "./AuthorizationState";
-export {}
+import { Vacation } from "./Vacation";
+
 export interface RootState {
-    authorization: AuthorizationState;
-  }
+  authorization: AuthorizationState;
+  vacations: {
+    list: Vacation[];
+    vacationsCount: number;
+  };
+}
