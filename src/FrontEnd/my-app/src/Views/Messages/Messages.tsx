@@ -489,7 +489,7 @@ function Messages() {
           <MainContainer>
             <BoxContainer>
               <BoxContainerHeader>
-                <BoxContainerTitle>Skrzynka z wiadomośćiami</BoxContainerTitle>
+                <BoxContainerTitle>Skrzynka z wiadomościami</BoxContainerTitle>
               </BoxContainerHeader>
               <BoxAreaElements>
                 <MessagesListContainer>
