@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, FormEvent } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import background from "../../resources/rm222batch3-mind-10.jpg";
 import Overlay from "../../Components/Overlay/Overlay";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { useCloseOverlay } from "../../Hooks/useCloseOveraly";
+import useHandleRegister from "../../Hooks/useHandleRegister";
 
 const Container = styled.div`
   text-align: center;
@@ -23,7 +25,7 @@ const Form = styled.form`
   flex-direction: column;
   width: 250px;
   @media (max-width: 360px) {
-    width: 200px
+    width: 200px;
   }
 `;
 const Title = styled.h2`
@@ -70,67 +72,29 @@ const BottomTitle = styled.h2`
 const JoinLink = styled.a`
   color: #31a6e5;
   text-decoration: none;
-`
+`;
 
 const Register: React.FC = () => {
+  const {
+    handleSubmit,
+    usernameError,
+    passwordError,
+    confirmPasswordError,
+    emailError,
+  } = useHandleRegister();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [employerType, setEmployerType] = useState("");
   const [email, setEmail] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [emailError, setEmailError] = useState("");
+
+  const [hamburgerVisible,] = useState(false);
+  const [errorMessage,] = useState("");
+
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [hamburgerVisible, setHamburgerVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (username.length < 3) {
-      setUsernameError("Nazwa użytkownika musi mieć co najmniej 3 znaki.");
-      return;
-    }
-
-    if (password.length < 8) {
-      setPasswordError("Hasło musi mieć co najmniej 8 znaków.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setConfirmPasswordError("Hasła nie pasują do siebie.");
-      return;
-    }
-
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!email.match(emailPattern)) {
-      setEmailError("Nieprawidłowy adres email.");
-      return;
-    }
-
-    try {
-      const response = await axios.post("http://localhost:8080/newUser", {
-        username,
-        password,
-        employerType,
-        email,
-      });
-
-      navigate("/signIn");
-    } catch (error) {
-      console.error("Błąd rejestracji:", error);
-      setOverlayVisible(true);
-      setModalVisible(true)
-      setHamburgerVisible(false);
-      setErrorMessage(
-        "Użytkownik o takim adresie email istnieje już w bazie danych"
-      );
-    }
-  };
 
   const closeOverlay = () => {
     setOverlayVisible(false);
@@ -148,7 +112,11 @@ const Register: React.FC = () => {
       />
       <Container>
         <BottomTitle>Zarejestruj się</BottomTitle>
-        <Form onSubmit={handleSubmit}>
+        <Form
+          onSubmit={(e: FormEvent) =>
+            handleSubmit(e, username, password, confirmPassword, email, employerType)
+          }
+        >
           <Input
             type="text"
             placeholder="Nazwa użytkownika"
@@ -189,7 +157,12 @@ const Register: React.FC = () => {
           </Select>
           <Button type="submit">Dołącz</Button>
         </Form>
-        <h3>Masz już konto? <JoinLink  as={NavLink} to="/signIn">Zaloguj się!</JoinLink></h3>
+        <h3>
+          Masz już konto?{" "}
+          <JoinLink as={NavLink} to="/signIn">
+            Zaloguj się!
+          </JoinLink>
+        </h3>
       </Container>
     </div>
   );
