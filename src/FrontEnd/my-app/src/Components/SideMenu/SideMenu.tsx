@@ -138,6 +138,12 @@ const Menu = () => {
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/calendar">
+          Kalendarz
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
         <CustomRegisterIcon />
         <NavLinkName as={NavLink} to="/register">
           Rejestracja nowego pracownika
