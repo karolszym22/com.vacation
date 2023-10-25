@@ -11,11 +11,16 @@ import { AuthorizationState } from "../../Types/AuthorizationState";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
 import { useCloseOverlay } from "../../Hooks/useCloseOveraly";
+import { Interface } from "readline";
 
 interface Overlay {
   overlayVisible: boolean;
   modalVisible: boolean;
   hamburgerVisible: boolean;
+}
+
+interface VacationDescriptionI {
+  selectedOption: string;
 }
 
 const Table = styled.table`
@@ -168,10 +173,14 @@ const Button = styled.button`
   border-radius: 5px;
 `;
 
-const DescriptionContainer = styled.div`
+const DescriptionContainer = styled.div<VacationDescriptionI>`
   display: flex;
   flex-direction: column;
   width: 100%;
+  display: ${({ selectedOption }) =>
+    selectedOption === "Okolicznościowy" ? "flex" : "none"};
+  position: ${({ selectedOption }) =>
+    selectedOption === "Okolicznościowy" ? "static" : "absolute"};
 `;
 
 const DescriptionInput = styled.textarea`
@@ -247,7 +256,7 @@ function NewVacation() {
   const { setOverlayVisible } = useContext(OverlayVisibleContext);
   const { setModalVisible } = useContext(OverlayVisibleContext);
   const [errorMessage, setErrorMessage] = useState("");
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("Okolicznościowy");
 
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
@@ -327,10 +336,7 @@ function NewVacation() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!description || !startDate || !endDate) {
-      alert("Wypełnij wszystkie pola przed wysłaniem formularza.");
-      return;
-    }
+
 
     const vacationData = {
       description,
@@ -364,6 +370,11 @@ function NewVacation() {
     }
   };
 
+  const closeOverlay = () => {
+    setOverlayVisible(false);
+    setModalVisible(false);
+  };
+
   return (
     <div>
       <MainWrapper>
@@ -371,7 +382,7 @@ function NewVacation() {
           overlayVisible={overlayVisible}
           modalVisible={modalVisible}
           hamburgerVisible={hamburgerVisible}
-          onClose={useCloseOverlay}
+          onClose={closeOverlay}
           errorMessage={errorMessage}
         />
         <Menu />
@@ -407,17 +418,14 @@ function NewVacation() {
               <option value="Macierzyński">Macierzyński</option>
               <option value="Okolicznościowy">Okolicznościowy</option>
             </Select>
-            <DescriptionContainer
-              style={{
-                display: selectedOption === "Okolicznościowy" ? "flex" : "none",
-              }}
-            >
+            <DescriptionContainer selectedOption={selectedOption}>
               <label htmlFor="description">Przyczyna:</label>
               <DescriptionInput
                 id="description"
                 name="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                required={selectedOption === "Okolicznościowy"}
               />
             </DescriptionContainer>
             <Button type="submit">Dodaj urlop</Button>
