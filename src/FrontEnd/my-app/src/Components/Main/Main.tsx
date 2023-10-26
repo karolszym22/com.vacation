@@ -2,13 +2,9 @@ import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useVacations, usePreviewClick } from "../../Hooks/useVacationsHooks";
-interface Vacation {
-  id: number;
-  description: string;
-  daysNum: number;
-  done: boolean;
-  taskStatus: string
-}
+import useEmployeeList from "../../Hooks/useAllUsers";
+import { getInitials } from "../../Functions/getInitials.";
+
 
 const MainMenu = styled.div`
   width: 100%;
@@ -24,6 +20,92 @@ const CustomersTitle = styled.div`
   font-weight: bold;
   color: #565454;
 `;
+
+const CustomersContainer = styled.div`
+  width: 100%;
+  padding: 15px;
+  display: flex;
+`;
+const CustomerElement = styled.div`
+  display: flex;
+  justify-content: start;
+  margin: 10px;
+  -webkit-box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
+  box-shadow: 0px 0px 40px -29px rgba(66, 68, 90, 1);
+`;
+const CustomerInitiated = styled.div`
+  box-sizing: border-box;
+  width: 90px;
+  height: 90px;
+  background-color: ${props => props.color}; 
+  color: white;
+  font-size: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const CustomerName = styled.div`
+  box-sizing: border-box;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: #565454;
+  padding: 10px;
+`;
+const CustomerVacationsContainer = styled.div`
+  box-sizing: border-box;
+  padding: 10px;
+`;
+const CustomerVacationsAccepts = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+const VacationsAcceptsColor = styled.div`
+  height: 10px;
+  width: 60px;
+  background-color: green;
+`;
+const VacationsAcceptsNumber = styled.div`
+  font-size: 16px;
+  font-weight: 400;
+`;
+
+const VacationsDuringColor = styled.div`
+  height: 10px;
+  width: 60px;
+  background-color: orange;
+`;
+const VacationsRejectedColor = styled.div`
+  height: 10px;
+  width: 60px;
+  background-color: brown;
+`;
+
+const CustomerVacationsDuring = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+const CustomerVacationsRejected = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+const CustomerVacationsState = styled.div`
+  font-size: 16px;
+  color: grey;
+`;
+
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -82,9 +164,41 @@ const getColorByTaskStatus = (taskStatus: string) => {
 
 const Menu = () => {
   const { vacations } = useVacations();
+  const  employeeList  = useEmployeeList();
 
   return (
     <MainMenu>
+      <CustomersTitle>Pracownicy</CustomersTitle>
+      <CustomersContainer>
+      {employeeList.map((employee) => (
+        <CustomerElement>
+          <CustomerInitiated color={employee.initialsColor}>{getInitials(employee.username)}</CustomerInitiated>
+
+          <CustomerName>{employee.username}</CustomerName>
+          <CustomerVacationsContainer>
+            <CustomerVacationsAccepts>
+              <VacationsAcceptsColor></VacationsAcceptsColor>
+              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
+              <CustomerVacationsState></CustomerVacationsState>
+            </CustomerVacationsAccepts>
+          </CustomerVacationsContainer>
+          <CustomerVacationsContainer>
+            <CustomerVacationsDuring>
+              <VacationsDuringColor></VacationsDuringColor>
+              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
+              <CustomerVacationsState></CustomerVacationsState>
+            </CustomerVacationsDuring>
+          </CustomerVacationsContainer>
+          <CustomerVacationsContainer>
+            <CustomerVacationsRejected>
+              <VacationsRejectedColor></VacationsRejectedColor>
+              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
+              <CustomerVacationsState></CustomerVacationsState>
+            </CustomerVacationsRejected>
+          </CustomerVacationsContainer>
+        </CustomerElement>
+        ))}
+      </CustomersContainer>
       <CustomersTitle>Lista urlopów</CustomersTitle>
       <Table>
         <TableHeader>
@@ -96,25 +210,26 @@ const Menu = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-        {vacations.map((vacation) => (
-          <TableRow key={vacation.id}>
-            <TableCell>{vacation.description}</TableCell>
-            <TableCell>{vacation.daysNum}</TableCell>
-            <TableCell
-              style={{
-                color: getColorByTaskStatus(vacation.taskStatus), 
-                fontWeight: "bold",
-              }}
-            >
-              {vacation.taskStatus}
-            </TableCell>
-            <TableCell>
-              <NavLinkName as={NavLink} to={`/vacationId/${vacation.id}`}>Podgląd</NavLinkName>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-
+          {vacations.map((vacation) => (
+            <TableRow key={vacation.id}>
+              <TableCell>{vacation.description}</TableCell>
+              <TableCell>{vacation.daysNum}</TableCell>
+              <TableCell
+                style={{
+                  color: getColorByTaskStatus(vacation.taskStatus),
+                  fontWeight: "bold",
+                }}
+              >
+                {vacation.taskStatus}
+              </TableCell>
+              <TableCell>
+                <NavLinkName as={NavLink} to={`/vacationId/${vacation.id}`}>
+                  Podgląd
+                </NavLinkName>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
     </MainMenu>
   );
