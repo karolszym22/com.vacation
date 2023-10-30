@@ -133,6 +133,23 @@ const DateElement = styled.div`
   justify-content: flex-start; 
     position: relative; 
 `;
+const DateElementInformation = styled.div`
+  position: absolute;
+  width: 90%;
+  height: 80px;
+  background-color: #00000092;
+  color: white;
+  top: 10px;
+  left: 10px;
+  display: none;
+`;
+const DateInformationValue = styled.p`
+      width: 100%;
+      font-size: 10px;
+      margin: 0px 5px;
+      font-weight: bold;
+`;
+
 const EventModal = styled.div`
   position: fixed;
   left: 0;
@@ -294,6 +311,10 @@ const Calendar: React.FC = () => {
                   }}
                 >
                   {day !== 0 ? day : null}
+                  <DateElementInformation>
+                       <DateInformationValue>Karol Szymański</DateInformationValue>
+                       <DateInformationValue>Marzena Kamińska</DateInformationValue>
+                  </DateElementInformation>
                 </DateElement>
               ))}
             </Dates>
