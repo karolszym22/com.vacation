@@ -45,7 +45,7 @@ const Wrapper = styled.div`
 const Header = styled.div`
   width: 100%;
   height: 70px;
-  background-color: rgb(248, 244, 244);
+  background-color: rgb(201, 194, 194);
 `;
 const HeaderTitle = styled.h1`
   margin: 10px;
@@ -55,11 +55,13 @@ const MainContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  background-color: #eceaea;
+  height: 100%;
 `;
 const BoxContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 100%;
   max-width: 1200px;
   height: 600px;
   margin-top: 20px;
@@ -67,6 +69,9 @@ const BoxContainer = styled.div`
   -webkit-box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
   box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
+  -webkit-box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
+-moz-box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
+box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
 `;
 
 const BoxContainerHeader = styled.div`
