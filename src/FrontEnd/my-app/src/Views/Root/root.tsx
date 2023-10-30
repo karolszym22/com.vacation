@@ -10,6 +10,7 @@ import MainTemplate from "../MainTemplate/MainTemplate";
 import Main from "../MainSite/Main";
 import OverlayVisibleProvider from "../../Components/Context/OverlayVisibleContext";
 import Messages from "../Messages/Messages"
+import Calendar from "../Calendar/Calendar";
 
 const Root = () => {
  
@@ -21,6 +22,7 @@ const Root = () => {
             <Routes>
               <Route path="/" element={<Main />} />
               <Route path="/signIn" element={<SignIn />} />
+              <Route path="/calendar" element={<Calendar />} />
               <Route path="/register" element={<Register />} />
               <Route path="/newVacation" element={<NewVacation />} />
               <Route path="/messages" element={<Messages />} />
