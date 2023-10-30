@@ -4,7 +4,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useVacations, usePreviewClick } from "../../Hooks/useVacationsHooks";
 import useEmployeeList from "../../Hooks/useAllUsers";
 import { getInitials } from "../../Functions/getInitials.";
-
+import { countAcceptedVacations } from "../../Functions/getAcceptedNumber";
+import { countRejectedVacations } from "../../Functions/getRejectedNumber";
+import { countDuringVacations } from "../../Functions/getDuringNumber";
 
 const MainMenu = styled.div`
   width: 100%;
@@ -178,21 +180,21 @@ const Menu = () => {
           <CustomerVacationsContainer>
             <CustomerVacationsAccepts>
               <VacationsAcceptsColor></VacationsAcceptsColor>
-              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
+              <VacationsAcceptsNumber>{countAcceptedVacations(vacations, employee.id)}</VacationsAcceptsNumber>
               <CustomerVacationsState></CustomerVacationsState>
             </CustomerVacationsAccepts>
           </CustomerVacationsContainer>
           <CustomerVacationsContainer>
             <CustomerVacationsDuring>
               <VacationsDuringColor></VacationsDuringColor>
-              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
+              <VacationsAcceptsNumber>{countDuringVacations(vacations, employee.id)}</VacationsAcceptsNumber>
               <CustomerVacationsState></CustomerVacationsState>
             </CustomerVacationsDuring>
           </CustomerVacationsContainer>
           <CustomerVacationsContainer>
             <CustomerVacationsRejected>
               <VacationsRejectedColor></VacationsRejectedColor>
-              <VacationsAcceptsNumber>4</VacationsAcceptsNumber>
+              <VacationsAcceptsNumber>{countRejectedVacations(vacations, employee.id)}</VacationsAcceptsNumber>
               <CustomerVacationsState></CustomerVacationsState>
             </CustomerVacationsRejected>
           </CustomerVacationsContainer>
@@ -203,7 +205,7 @@ const Menu = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHeaderCell>Opis</TableHeaderCell>
+            <TableHeaderCell>Pracownik</TableHeaderCell>
             <TableHeaderCell>Dni</TableHeaderCell>
             <TableHeaderCell>Stan</TableHeaderCell>
             <TableHeaderCell>Szczegóły</TableHeaderCell>
@@ -212,7 +214,7 @@ const Menu = () => {
         <TableBody>
           {vacations.map((vacation) => (
             <TableRow key={vacation.id}>
-              <TableCell>{vacation.description}</TableCell>
+              <TableCell>{vacation.employerName}</TableCell>
               <TableCell>{vacation.daysNum}</TableCell>
               <TableCell
                 style={{
