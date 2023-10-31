@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,9 @@ public class VacationService {
     public VacationService(HolidayLeaveRepository holidayLeaveRepository) {
         this.holidayLeaveRepository = holidayLeaveRepository;
     }
-
+    public List<HolidayLeave> getVacationsByMonth(int monthNumber) {
+        return holidayLeaveRepository.findByStartDateMonth(monthNumber);
+    }
     public List<HolidayLeave> getAllVacations() {;
         return holidayLeaveRepository.findAll();
     }
