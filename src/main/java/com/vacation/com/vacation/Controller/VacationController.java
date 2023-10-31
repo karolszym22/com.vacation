@@ -27,6 +27,16 @@ public class VacationController {
         List<HolidayLeave> vacations = vacationService.getAllPersonVacations(personId);
         return ResponseEntity.ok(vacations);
     }
+    @GetMapping("/vacations/calendarVacations/{monthNumber}")
+    public ResponseEntity<List<HolidayLeave>> getVacationsByMonth(@PathVariable int monthNumber) {
+        List<HolidayLeave> vacations = vacationService.getVacationsByMonth(monthNumber);
+
+        if (vacations.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(vacations);
+        }
+    }
     @GetMapping(value = "/vacations", params = {"!sort", "!page", "!size"})
     ResponseEntity<List<HolidayLeave>> readAllVacations(){
         List<HolidayLeave> vacations = vacationService.getAllVacations();
