@@ -1,12 +1,14 @@
 import { useState, FormEvent } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { initialsColorGenerator } from '../Functions/InitialsColorGenerator';
 
 const useHandleRegister = () => {
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [initialsColor, setInitialsColor] = useState(initialsColorGenerator());
 
   const navigate = useNavigate();
 
@@ -32,13 +34,14 @@ const useHandleRegister = () => {
       setEmailError('Nieprawidłowy adres email.');
       return;
     }
-
+    alert(initialsColor)
     try {
       const response = await axios.post('http://localhost:8080/newUser', {
         username,
         password,
         employerType,
         email,
+        initialsColor,
       });
 
       navigate('/signIn');
