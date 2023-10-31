@@ -18,6 +18,19 @@ interface VacationDescriptionI {
   selectedOption: string;
 }
 
+
+interface VacationData {
+  id: number;
+  startDate: string;
+  endDate: string;
+  employerName: string;
+}
+
+interface TransformedData {
+  dayNumber: number;
+  employeesList: string[];
+}
+
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -63,9 +76,7 @@ const HeaderTitle = styled.h1`
 
 const CalendarContainer = styled.div`
   width: 90%;
-  max-height: auto;
-  margin: 0 auto;
-  border: 1px solid #ccc;
+  margin: 80px 0px;
   border-radius: 5px;
   padding: 0px;
 `;
@@ -113,6 +124,7 @@ const DaysContainer = styled.div`
 
 const Day = styled.div`
   padding: 5px;
+  text-align: center;
   font-weight: bold;
 `;
 
@@ -122,16 +134,15 @@ const Dates = styled.div`
   grid-template-rows: 100px 100px 100px 100px 100px 100px;
 `;
 const DateElement = styled.div`
- padding: 60px;
   cursor: pointer;
-    border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc; 
-  border-bottom: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-      display: flex; 
-  align-items: flex-start; 
-  justify-content: flex-start; 
-    position: relative; 
+
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-weight: bold;
+  color: #00000061;
 `;
 const DateElementInformation = styled.div`
   position: absolute;
@@ -144,10 +155,10 @@ const DateElementInformation = styled.div`
   display: none;
 `;
 const DateInformationValue = styled.p`
-      width: 100%;
-      font-size: 10px;
-      margin: 0px 5px;
-      font-weight: bold;
+  width: 100%;
+  font-size: 10px;
+  margin: 0px 5px;
+  font-weight: bold;
 `;
 
 const EventModal = styled.div`
@@ -208,6 +219,9 @@ const Calendar: React.FC = () => {
   const [eventModalVisible, setEventModalVisible] = useState<boolean>(false);
   const [eventModalDate, setEventModalDate] = useState<Date | null>(null);
   const [eventDescription, setEventDescription] = useState<string>("");
+  const [monthNumber, setMonthNumber] = useState<Number>()
+  const [vacationDays, setVacationDays] = useState<TransformedData[]>([]);
+
 
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
@@ -258,6 +272,30 @@ const Calendar: React.FC = () => {
     }
   };
 
+  const getPolishMonthName = (englishMonthName: string): string => {
+    const monthNames: { [key: string]: string } = {
+      January: "Styczeń",
+      February: "Luty",
+      March: "Marzec",
+      April: "Kwiecień",
+      May: "Maj",
+      June: "Czerwiec",
+      July: "Lipiec",
+      August: "Sierpień",
+      September: "Wrzesień",
+      October: "Październik",
+      November: "Listopad",
+      December: "Grudzień",
+    };
+
+    const date = new Date(Date.parse(`1 ${englishMonthName} 2000`));
+    const monthNumber = date.getMonth() + 1;
+    console.log(`Numer miesiąca ${englishMonthName}: ${monthNumber}`);
+
+    return monthNames[englishMonthName] || englishMonthName;
+  };
+
+
   const getEventDescription = (date: Date): string | undefined => {
     const key = date.toDateString();
     const eventDescriptions: EventDescriptionMap = JSON.parse(
@@ -266,9 +304,52 @@ const Calendar: React.FC = () => {
     return eventDescriptions[key];
   };
 
-  useEffect(() => {
+
     generateCalendar(currentMonth, currentYear);
-  }, [currentMonth, currentYear]);
+
+    const transformData = (data: VacationData[], setVacationDays: React.Dispatch<React.SetStateAction<TransformedData[]>>) => {
+      const transformedData: TransformedData[] = [];
+    
+      data.forEach((item) => {
+        const startDate = new Date(item.startDate);
+        const endDate = new Date(item.endDate);
+        const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+        for (let i = 0; i <= daysDiff; i++) {
+          const currentDate = new Date(startDate);
+          currentDate.setDate(startDate.getDate() + i);
+          const dayNumber = currentDate.getDate();
+    
+          let entry = transformedData.find((entry) => entry.dayNumber === dayNumber);
+          if (!entry) {
+            entry = { dayNumber, employeesList: [] };
+            transformedData.push(entry);
+          }
+    
+          entry.employeesList.push(item.employerName);
+        }
+    
+        setVacationDays(transformedData);
+      });
+    };
+
+
+
+    useEffect(() => {
+      const date = new Date(Date.parse(`1 ${new Date(currentYear, currentMonth).toLocaleString("default", { month: "long" })} 2000`));
+      const calculatedMonthNumber = date.getMonth() + 1;
+      setMonthNumber(calculatedMonthNumber);
+      console.log(`Numer miesiąca: ${calculatedMonthNumber}`);
+      fetch(`http://localhost:8080/vacations/calendarVacations/${calculatedMonthNumber}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("MOJA DATA: ", data)
+          transformData(data, setVacationDays);
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    }, []);
+
+
 
   return (
     <MainWrapper>
@@ -282,9 +363,11 @@ const Calendar: React.FC = () => {
           <CalendarHeader>
             <PrevButton id="prevBtn">Poprzedni</PrevButton>
             <MonthYear id="monthYear">
-              {new Date(currentYear, currentMonth).toLocaleString("default", {
-                month: "long",
-              }) +
+              {getPolishMonthName(
+                new Date(currentYear, currentMonth).toLocaleString("default", {
+                  month: "long",
+                })
+              ) +
                 " " +
                 currentYear}
             </MonthYear>
@@ -299,26 +382,26 @@ const Calendar: React.FC = () => {
             <Day>Sobota</Day>
             <Day>Niedziela</Day>
           </DaysContainer>
+
           <Dates>
-            <Dates>
-              {generateCalendar(currentMonth, currentYear).map((day, index) => (
-                <DateElement
-                  key={index}
-                  onClick={() => {
-                    if (day !== 0) {
-                      openEventModal(currentYear, currentMonth, day);
-                    }
-                  }}
-                >
-                  {day !== 0 ? day : null}
-                  <DateElementInformation>
-                       <DateInformationValue>Karol Szymański</DateInformationValue>
-                       <DateInformationValue>Marzena Kamińska</DateInformationValue>
-                  </DateElementInformation>
-                </DateElement>
-              ))}
-            </Dates>
+            {generateCalendar(currentMonth, currentYear).map((day, index) => (
+              <DateElement
+                key={index}
+                onClick={() => {
+                  if (day !== 0) {
+                    openEventModal(currentYear, currentMonth, day);
+                  }
+                }}
+              >
+                {day !== 0 ? day : null}
+                <DateElementInformation>
+                  <DateInformationValue>Karol Szymański</DateInformationValue>
+                  <DateInformationValue>Marzena Kamińska</DateInformationValue>
+                </DateElementInformation>
+              </DateElement>
+            ))}
           </Dates>
+
           {eventModalVisible && (
             <EventModal>
               <EventModalContent>
