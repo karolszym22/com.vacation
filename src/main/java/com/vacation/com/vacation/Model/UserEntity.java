@@ -16,6 +16,15 @@ public class UserEntity {
     private String email;
     private String token;
     private String employerType;
+    private String initialsColor;
+
+    public void setInitialsColor(String initialsColor) {
+        this.initialsColor = initialsColor;
+    }
+
+    public String getInitialsColor() {
+        return initialsColor;
+    }
 
     public int getId() {
         return id;
