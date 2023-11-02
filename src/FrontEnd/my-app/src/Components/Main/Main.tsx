@@ -27,6 +27,7 @@ const CustomersContainer = styled.div`
   width: 100%;
   padding: 15px;
   display: flex;
+  flex-wrap: wrap;
 `;
 const CustomerElement = styled.div`
   display: flex;
@@ -40,7 +41,7 @@ const CustomerInitiated = styled.div`
   box-sizing: border-box;
   width: 90px;
   height: 90px;
-  background-color: ${props => props.color}; 
+  background-color: ${(props) => props.color};
   color: white;
   font-size: 35px;
   display: flex;
@@ -166,39 +167,46 @@ const getColorByTaskStatus = (taskStatus: string) => {
 
 const Menu = () => {
   const { vacations } = useVacations();
-  const  employeeList  = useEmployeeList();
+  const employeeList = useEmployeeList();
 
   return (
     <MainMenu>
       <CustomersTitle>Pracownicy</CustomersTitle>
       <CustomersContainer>
-      {employeeList.map((employee) => (
-        <CustomerElement>
-          <CustomerInitiated color={employee.initialsColor}>{getInitials(employee.username)}</CustomerInitiated>
-
-          <CustomerName>{employee.username}</CustomerName>
-          <CustomerVacationsContainer>
-            <CustomerVacationsAccepts>
-              <VacationsAcceptsColor></VacationsAcceptsColor>
-              <VacationsAcceptsNumber>{countAcceptedVacations(vacations, employee.id)}</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsAccepts>
-          </CustomerVacationsContainer>
-          <CustomerVacationsContainer>
-            <CustomerVacationsDuring>
-              <VacationsDuringColor></VacationsDuringColor>
-              <VacationsAcceptsNumber>{countDuringVacations(vacations, employee.id)}</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsDuring>
-          </CustomerVacationsContainer>
-          <CustomerVacationsContainer>
-            <CustomerVacationsRejected>
-              <VacationsRejectedColor></VacationsRejectedColor>
-              <VacationsAcceptsNumber>{countRejectedVacations(vacations, employee.id)}</VacationsAcceptsNumber>
-              <CustomerVacationsState></CustomerVacationsState>
-            </CustomerVacationsRejected>
-          </CustomerVacationsContainer>
-        </CustomerElement>
+        {employeeList.map((employee) => (
+          <CustomerElement>
+            <CustomerInitiated color={employee.initialsColor}>
+              {getInitials(employee.username)}
+            </CustomerInitiated>
+            <CustomerName>{employee.username}</CustomerName>
+            <CustomerVacationsContainer>
+              <CustomerVacationsAccepts>
+                <VacationsAcceptsColor></VacationsAcceptsColor>
+                <VacationsAcceptsNumber>
+                  {countAcceptedVacations(vacations, employee.id)}
+                </VacationsAcceptsNumber>
+                <CustomerVacationsState></CustomerVacationsState>
+              </CustomerVacationsAccepts>
+            </CustomerVacationsContainer>
+            <CustomerVacationsContainer>
+              <CustomerVacationsDuring>
+                <VacationsDuringColor></VacationsDuringColor>
+                <VacationsAcceptsNumber>
+                  {countDuringVacations(vacations, employee.id)}
+                </VacationsAcceptsNumber>
+                <CustomerVacationsState></CustomerVacationsState>
+              </CustomerVacationsDuring>
+            </CustomerVacationsContainer>
+            <CustomerVacationsContainer>
+              <CustomerVacationsRejected>
+                <VacationsRejectedColor></VacationsRejectedColor>
+                <VacationsAcceptsNumber>
+                  {countRejectedVacations(vacations, employee.id)}
+                </VacationsAcceptsNumber>
+                <CustomerVacationsState></CustomerVacationsState>
+              </CustomerVacationsRejected>
+            </CustomerVacationsContainer>
+          </CustomerElement>
         ))}
       </CustomersContainer>
       <CustomersTitle>Lista urlopów</CustomersTitle>
