@@ -14,10 +14,17 @@ interface Overlay {
   hamburgerVisible: boolean;
 }
 
+interface CalendarStatusColor {
+  backgroundColor: string;
+}
+
 interface VacationDescriptionI {
   selectedOption: string;
 }
 
+interface DateElementProps {
+  backgroundColor: "green" | "yellow" | "red" | "transparent";
+}
 
 interface VacationData {
   id: number;
@@ -76,9 +83,41 @@ const HeaderTitle = styled.h1`
 
 const CalendarContainer = styled.div`
   width: 90%;
-  margin: 80px 0px;
+  margin-top: 80px 0px;
   border-radius: 5px;
   padding: 0px;
+`;
+
+const CalendarHelperContainer = styled.div`
+  width: 90%;
+  padding: 0px;
+  display: flex;
+  justify-content: space-between;
+`;
+const CalendarLegendContainer = styled.div`
+  width: 90%;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const StatusContainer = styled.div`
+  display: flex;
+  max-width: 320px;
+  margin: 10px 0px;
+`;
+
+const StatusColor = styled.div<CalendarStatusColor>`
+  width: 20px;
+  height: 20px;
+  background-color: ${(props) => props.backgroundColor};
+  border-radius: 15px;
+  margin: 0px 10px;
+`;
+
+const StatusInformation = styled.div`
+  font-size: 16px;
+  font-weight: bold;
 `;
 
 const CalendarHeader = styled.div`
@@ -131,28 +170,33 @@ const Day = styled.div`
 const Dates = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: 100px 100px 100px 100px 100px 100px;
+  grid-template-rows: 100px 100px 100px 100px 100px;
 `;
-const DateElement = styled.div`
+const DateElement = styled.div<DateElementProps>`
   cursor: pointer;
-
-  font-size: 18px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   font-weight: bold;
-  color: #00000061;
+  color: #00000094;
+  border-radius: 15px;
+  background-color: ${(props) => props.backgroundColor};
 `;
 const DateElementInformation = styled.div`
   position: absolute;
-  width: 90%;
-  height: 80px;
+  width: 100%;
+  height: 100px;
   background-color: #00000092;
   color: white;
-  top: 10px;
-  left: 10px;
+  border-radius: 15px;
   display: none;
+  padding: 15px;
+  box-sizing: border-box;
+  ${DateElement}:hover & {
+    display: block; 
+  }
 `;
 const DateInformationValue = styled.p`
   width: 100%;
@@ -215,13 +259,17 @@ const Calendar: React.FC = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     currentDate.getFullYear()
   );
+
+  const [isHovered, setIsHovered] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [eventModalVisible, setEventModalVisible] = useState<boolean>(false);
   const [eventModalDate, setEventModalDate] = useState<Date | null>(null);
   const [eventDescription, setEventDescription] = useState<string>("");
-  const [monthNumber, setMonthNumber] = useState<Number>()
+  const [monthNumber, setMonthNumber] = useState<Number>();
   const [vacationDays, setVacationDays] = useState<TransformedData[]>([]);
-
+  const [calendar, setCalendar] = useState<number[]>([]);
+  const [dateElementBackgroundColors, setDateElementBackgroundColors] =
+    useState<Array<"red" | "yellow" | "green" | "transparent">>([]);
 
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
@@ -241,8 +289,7 @@ const Calendar: React.FC = () => {
     for (let day = 1; day <= daysInMonth; day++) {
       calendar.push(day);
     }
-
-    return calendar;
+    setCalendar(calendar);
   };
 
   const openEventModal = (year: number, month: number, day: number) => {
@@ -290,11 +337,9 @@ const Calendar: React.FC = () => {
 
     const date = new Date(Date.parse(`1 ${englishMonthName} 2000`));
     const monthNumber = date.getMonth() + 1;
-    console.log(`Numer miesiąca ${englishMonthName}: ${monthNumber}`);
 
     return monthNames[englishMonthName] || englishMonthName;
   };
-
 
   const getEventDescription = (date: Date): string | undefined => {
     const key = date.toDateString();
@@ -304,52 +349,86 @@ const Calendar: React.FC = () => {
     return eventDescriptions[key];
   };
 
-
+  useEffect(() => {
     generateCalendar(currentMonth, currentYear);
+  }, []);
 
-    const transformData = (data: VacationData[], setVacationDays: React.Dispatch<React.SetStateAction<TransformedData[]>>) => {
-      const transformedData: TransformedData[] = [];
-    
-      data.forEach((item) => {
-        const startDate = new Date(item.startDate);
-        const endDate = new Date(item.endDate);
-        const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    
-        for (let i = 0; i <= daysDiff; i++) {
-          const currentDate = new Date(startDate);
-          currentDate.setDate(startDate.getDate() + i);
-          const dayNumber = currentDate.getDate();
-    
-          let entry = transformedData.find((entry) => entry.dayNumber === dayNumber);
-          if (!entry) {
-            entry = { dayNumber, employeesList: [] };
-            transformedData.push(entry);
-          }
-    
-          entry.employeesList.push(item.employerName);
+  const transformData = (
+    data: VacationData[],
+    setVacationDays: React.Dispatch<React.SetStateAction<TransformedData[]>>
+  ) => {
+    const transformedData: TransformedData[] = [];
+
+    data.forEach((item) => {
+      const startDate = new Date(item.startDate);
+      const endDate = new Date(item.endDate);
+      const daysDiff = Math.ceil(
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+
+      for (let i = 0; i <= daysDiff; i++) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(startDate.getDate() + i);
+        const dayNumber = currentDate.getDate();
+
+        let entry = transformedData.find(
+          (entry) => entry.dayNumber === dayNumber
+        );
+        if (!entry) {
+          entry = { dayNumber, employeesList: [] };
+          transformedData.push(entry);
         }
-    
-        setVacationDays(transformedData);
+
+        entry.employeesList.push(item.employerName);
+      }
+    });
+    console.log("WYKONUJE SIE TERAZ JUZ");
+    setVacationDays(transformedData);
+  };
+
+  useEffect(() => {
+    const date = new Date(
+      Date.parse(
+        `1 ${new Date(currentYear, currentMonth).toLocaleString("default", {
+          month: "long",
+        })} 2000`
+      )
+    );
+    const calculatedMonthNumber = date.getMonth() + 1;
+    setMonthNumber(calculatedMonthNumber);
+    fetch(
+      `http://localhost:8080/vacations/calendarVacations/${calculatedMonthNumber}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        transformData(data, setVacationDays);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
+  const stateVacationNumber = (day: number) => {
+    let backgroundColor:
+      | "#f3201d57"
+      | "#edf10f4c"
+      | "#2dfc0349"
+      | "transparent" = "transparent";
+
+    if (vacationDays.length > 0) {
+      vacationDays.forEach((currentDay) => {
+        if (currentDay.dayNumber === day) {
+          if (currentDay.employeesList.length === 1) {
+            backgroundColor = "#2dfc0349";
+          } else if (currentDay.employeesList.length === 2) {
+            backgroundColor = "#edf10f4c";
+          } else if (currentDay.employeesList.length > 2) {
+            backgroundColor = "#f3201d57";
+          }
+        }
       });
-    };
+    }
 
-
-
-    useEffect(() => {
-      const date = new Date(Date.parse(`1 ${new Date(currentYear, currentMonth).toLocaleString("default", { month: "long" })} 2000`));
-      const calculatedMonthNumber = date.getMonth() + 1;
-      setMonthNumber(calculatedMonthNumber);
-      console.log(`Numer miesiąca: ${calculatedMonthNumber}`);
-      fetch(`http://localhost:8080/vacations/calendarVacations/${calculatedMonthNumber}`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("MOJA DATA: ", data)
-          transformData(data, setVacationDays);
-        })
-        .catch((error) => console.error("Error fetching data:", error));
-    }, []);
-
-
+    return backgroundColor;
+  };
 
   return (
     <MainWrapper>
@@ -384,14 +463,12 @@ const Calendar: React.FC = () => {
           </DaysContainer>
 
           <Dates>
-            {generateCalendar(currentMonth, currentYear).map((day, index) => (
+            {calendar.map((day, index) => (
               <DateElement
                 key={index}
-                onClick={() => {
-                  if (day !== 0) {
-                    openEventModal(currentYear, currentMonth, day);
-                  }
-                }}
+                backgroundColor={stateVacationNumber(day)}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
               >
                 {day !== 0 ? day : null}
                 <DateElementInformation>
@@ -424,6 +501,26 @@ const Calendar: React.FC = () => {
             </EventModal>
           )}
         </CalendarContainer>
+
+        <CalendarHelperContainer>
+          <CalendarLegendContainer>
+            <h1>FAQ</h1>
+            <StatusContainer>
+              <StatusColor backgroundColor={"#2dfc0367"} />
+              <StatusInformation>Jedna osoba ma urlop</StatusInformation>
+            </StatusContainer>
+            <StatusContainer>
+              <StatusColor backgroundColor={"#eef10fa3"} />
+              <StatusInformation>Dwie osoby mają urlop</StatusInformation>
+            </StatusContainer>
+            <StatusContainer>
+              <StatusColor backgroundColor={"#f3211d93"} />
+              <StatusInformation>
+                Wiecej niż dwie osoby mają urlop
+              </StatusInformation>
+            </StatusContainer>
+          </CalendarLegendContainer>
+        </CalendarHelperContainer>
       </FormWrapper>
     </MainWrapper>
   );
