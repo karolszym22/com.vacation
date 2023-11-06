@@ -26,6 +26,10 @@ interface DateElementProps {
   backgroundColor: "green" | "yellow" | "red" | "transparent";
 }
 
+interface ElementInformationDisplay {
+  display: "block" | "none"
+}
+
 interface VacationData {
   id: number;
   startDate: string;
@@ -165,6 +169,7 @@ const Day = styled.div`
   padding: 5px;
   text-align: center;
   font-weight: bold;
+  max-width: 200px;
 `;
 
 const Dates = styled.div`
@@ -183,8 +188,9 @@ const DateElement = styled.div<DateElementProps>`
   color: #00000094;
   border-radius: 15px;
   background-color: ${(props) => props.backgroundColor};
+
 `;
-const DateElementInformation = styled.div`
+const DateElementInformation = styled.div<ElementInformationDisplay>`
   position: absolute;
   width: 100%;
   height: 100px;
@@ -195,7 +201,7 @@ const DateElementInformation = styled.div`
   padding: 15px;
   box-sizing: border-box;
   ${DateElement}:hover & {
-    display: block; 
+    display: ${(props) => props.display}
   }
 `;
 const DateInformationValue = styled.p`
@@ -260,6 +266,8 @@ const Calendar: React.FC = () => {
     currentDate.getFullYear()
   );
 
+  const [hoveredDay, setHoveredDay] = useState<number | null>(null);
+
   const [isHovered, setIsHovered] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [eventModalVisible, setEventModalVisible] = useState<boolean>(false);
@@ -268,6 +276,8 @@ const Calendar: React.FC = () => {
   const [monthNumber, setMonthNumber] = useState<Number>();
   const [vacationDays, setVacationDays] = useState<TransformedData[]>([]);
   const [calendar, setCalendar] = useState<number[]>([]);
+  const [currentEmployees, setCurrentEmployees] = useState<String[]>([]);
+
   const [dateElementBackgroundColors, setDateElementBackgroundColors] =
     useState<Array<"red" | "yellow" | "green" | "transparent">>([]);
 
@@ -430,6 +440,30 @@ const Calendar: React.FC = () => {
     return backgroundColor;
   };
 
+
+  const stateElementInformation = (day: number) => {
+    let display: "block" | "none" = "none" 
+    vacationDays.forEach((currentDay) => {
+      if (currentDay.dayNumber === day) {
+         display = "block";
+         return display ;
+      }
+    })
+ 
+    return display;
+  };
+
+
+  const fetchCurrentEmployees = (day: number) => {
+    vacationDays.forEach((currentDay) => {
+      if (currentDay.dayNumber === day) {
+        console.log(currentDay.dayNumber, day);
+        setCurrentEmployees(currentDay.employeesList);
+        setIsHovered(false);
+      }
+    });
+  };
+
   return (
     <MainWrapper>
       <Menu />
@@ -467,13 +501,22 @@ const Calendar: React.FC = () => {
               <DateElement
                 key={index}
                 backgroundColor={stateVacationNumber(day)}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseEnter={() => fetchCurrentEmployees(day)}
+                onMouseLeave={() => setIsHovered(true)}
               >
                 {day !== 0 ? day : null}
-                <DateElementInformation>
-                  <DateInformationValue>Karol Szymański</DateInformationValue>
-                  <DateInformationValue>Marzena Kamińska</DateInformationValue>
+                <DateElementInformation
+                key={index}
+                display={stateElementInformation(day)}
+                >
+                 {vacationDays.map((dayEmployees, employeeIndex)=>(
+                  <DateInformationValue
+                   key={employeeIndex}
+
+                  >
+
+                  </DateInformationValue>
+                 ))}
                 </DateElementInformation>
               </DateElement>
             ))}

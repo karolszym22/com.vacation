@@ -28,6 +28,7 @@ const PreviewWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   font-size: 15px;
+  background-color: #eceaea;
 `;
 const DocumentDownloadContainer = styled.div`
   width: 200px;
@@ -83,7 +84,6 @@ const TaskButton = styled.button`
 const WrapperContainer = styled.div`
   margin: 100px;
   padding: 10px;
-  border-top: 1px solid black;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -91,12 +91,18 @@ const WrapperContainer = styled.div`
     margin: 5px;
     margin-top: 100px;
   }
+  background-color: white;
+  -webkit-box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
+-moz-box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
+box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
 `;
 const VacationDetails = styled.div`
   display: flex;
   @media (max-width: 800px) {
     flex-direction: column;
   }
+  background-color: white;
+  
 `;
 const DetailsContainer = styled.div`
   display: flex;
@@ -140,7 +146,7 @@ const CommentIcon = styled(FiEdit3)`
   margin: 5px;
   color: white;
   padding: 10px;
-  background-color: green;
+  background-color: #3fe43f;
 `;
 const CommentArea = styled.textarea`
   width: 200px;
@@ -156,11 +162,12 @@ const CommentArea = styled.textarea`
 const Header = styled.div`
   width: 100%;
   height: 70px;
-  background-color: rgb(248, 244, 244);
+  background-color: rgb(201, 194, 194);
 `;
 const HeaderTitle = styled.h1`
   margin: 10px;
   color: #696666;
+  
 `;
 
 
