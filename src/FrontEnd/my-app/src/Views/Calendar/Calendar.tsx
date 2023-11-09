@@ -8,6 +8,12 @@ import { RootState } from "../../Types/RootState";
 interface EventDescriptionMap {
   [date: string]: string;
 }
+
+interface CalendarDay {
+  day: number;
+  month: number;
+}
+
 interface Overlay {
   overlayVisible: boolean;
   modalVisible: boolean;
@@ -27,7 +33,7 @@ interface DateElementProps {
 }
 
 interface ElementInformationDisplay {
-  display: "block" | "none"
+  display: "block" | "none";
 }
 
 interface VacationData {
@@ -188,7 +194,6 @@ const DateElement = styled.div<DateElementProps>`
   color: #00000094;
   border-radius: 15px;
   background-color: ${(props) => props.backgroundColor};
-
 `;
 const DateElementInformation = styled.div<ElementInformationDisplay>`
   position: absolute;
@@ -201,7 +206,7 @@ const DateElementInformation = styled.div<ElementInformationDisplay>`
   padding: 15px;
   box-sizing: border-box;
   ${DateElement}:hover & {
-    display: ${(props) => props.display}
+    display: ${(props) => props.display};
   }
 `;
 const DateInformationValue = styled.p`
@@ -275,7 +280,7 @@ const Calendar: React.FC = () => {
   const [eventDescription, setEventDescription] = useState<string>("");
   const [monthNumber, setMonthNumber] = useState<Number>();
   const [vacationDays, setVacationDays] = useState<TransformedData[]>([]);
-  const [calendar, setCalendar] = useState<number[]>([]);
+  const [calendar, setCalendar] = useState<CalendarDay[]>([]);
   const [currentEmployees, setCurrentEmployees] = useState<String[]>([]);
 
   const [dateElementBackgroundColors, setDateElementBackgroundColors] =
@@ -287,19 +292,19 @@ const Calendar: React.FC = () => {
 
   const generateCalendar = (month: number, year: number) => {
     const firstDay = new Date(year, month, 1).getDay();
-
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    const calendar: number[] = [];
+    const calendar: CalendarDay[] = [];
 
     for (let i = 0; i < firstDay; i++) {
-      calendar.push(0);
+      calendar.push({ day: 0, month });
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
-      calendar.push(day);
+      calendar.push({ day, month });
     }
     setCalendar(calendar);
+    console.log("MOJ KALENDARZ: ", calendar);
   };
 
   const openEventModal = (year: number, month: number, day: number) => {
@@ -359,16 +364,31 @@ const Calendar: React.FC = () => {
     return eventDescriptions[key];
   };
 
+  const changeMonth = (amount: number) => {
+    const newDate = new Date(currentYear, currentMonth + amount, 1);
+
+    setCurrentYear(newDate.getFullYear());
+    setCurrentMonth(newDate.getMonth());
+  };
+
+  const handlePrevMonthClick = () => {
+    changeMonth(-1);
+  };
+
+  const handleNextMonthClick = () => {
+    changeMonth(1);
+  };
+
   useEffect(() => {
     generateCalendar(currentMonth, currentYear);
-  }, []);
+  }, [currentMonth, currentYear]);
 
   const transformData = (
     data: VacationData[],
     setVacationDays: React.Dispatch<React.SetStateAction<TransformedData[]>>
   ) => {
     const transformedData: TransformedData[] = [];
-
+    console.log(data);
     data.forEach((item) => {
       const startDate = new Date(item.startDate);
       const endDate = new Date(item.endDate);
@@ -392,7 +412,6 @@ const Calendar: React.FC = () => {
         entry.employeesList.push(item.employerName);
       }
     });
-    console.log("WYKONUJE SIE TERAZ JUZ");
     setVacationDays(transformedData);
   };
 
@@ -404,6 +423,7 @@ const Calendar: React.FC = () => {
         })} 2000`
       )
     );
+    alert(date);
     const calculatedMonthNumber = date.getMonth() + 1;
     setMonthNumber(calculatedMonthNumber);
     fetch(
@@ -416,16 +436,16 @@ const Calendar: React.FC = () => {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  const stateVacationNumber = (day: number) => {
+  const stateVacationNumber = (day: number, month: number) => {
     let backgroundColor:
       | "#f3201d57"
       | "#edf10f4c"
       | "#2dfc0349"
       | "transparent" = "transparent";
-
+     console.log("Moje miesiące: ", currentMonth, month)
     if (vacationDays.length > 0) {
       vacationDays.forEach((currentDay) => {
-        if (currentDay.dayNumber === day) {
+        if (currentDay.dayNumber === day && currentMonth === month + 1) {
           if (currentDay.employeesList.length === 1) {
             backgroundColor = "#2dfc0349";
           } else if (currentDay.employeesList.length === 2) {
@@ -440,19 +460,17 @@ const Calendar: React.FC = () => {
     return backgroundColor;
   };
 
-
   const stateElementInformation = (day: number) => {
-    let display: "block" | "none" = "none" 
+    let display: "block" | "none" = "none";
     vacationDays.forEach((currentDay) => {
       if (currentDay.dayNumber === day) {
-         display = "block";
-         return display ;
+        display = "block";
+        return display;
       }
-    })
- 
+    });
+
     return display;
   };
-
 
   const fetchCurrentEmployees = (day: number) => {
     vacationDays.forEach((currentDay) => {
@@ -474,7 +492,9 @@ const Calendar: React.FC = () => {
         </Header>
         <CalendarContainer>
           <CalendarHeader>
-            <PrevButton id="prevBtn">Poprzedni</PrevButton>
+            <PrevButton id="prevBtn" onClick={handlePrevMonthClick}>
+              Poprzedni
+            </PrevButton>
             <MonthYear id="monthYear">
               {getPolishMonthName(
                 new Date(currentYear, currentMonth).toLocaleString("default", {
@@ -484,7 +504,9 @@ const Calendar: React.FC = () => {
                 " " +
                 currentYear}
             </MonthYear>
-            <NextButton id="nextBtn">Następny</NextButton>
+            <NextButton id="nextBtn" onClick={handleNextMonthClick}>
+              Następny
+            </NextButton>
           </CalendarHeader>
           <DaysContainer>
             <Day>Poniedziałek</Day>
@@ -497,26 +519,18 @@ const Calendar: React.FC = () => {
           </DaysContainer>
 
           <Dates>
-            {calendar.map((day, index) => (
+            {calendar.map((calendarDay, index) => (
               <DateElement
                 key={index}
-                backgroundColor={stateVacationNumber(day)}
-                onMouseEnter={() => fetchCurrentEmployees(day)}
+                backgroundColor={stateVacationNumber(calendarDay?.day, calendarDay.month)}
+                onMouseEnter={() => fetchCurrentEmployees(calendarDay?.day)}
                 onMouseLeave={() => setIsHovered(true)}
               >
-                {day !== 0 ? day : null}
+                {calendarDay?.day !== 0 ? calendarDay.day : null}
                 <DateElementInformation
-                key={index}
-                display={stateElementInformation(day)}
+                  display={stateElementInformation(calendarDay?.day)}
                 >
-                 {vacationDays.map((dayEmployees, employeeIndex)=>(
-                  <DateInformationValue
-                   key={employeeIndex}
-
-                  >
-
-                  </DateInformationValue>
-                 ))}
+                  <DateInformationValue></DateInformationValue>
                 </DateElementInformation>
               </DateElement>
             ))}
