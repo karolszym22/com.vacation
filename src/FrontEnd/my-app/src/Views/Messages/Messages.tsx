@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
-import {useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import Overlay from "../../Components/Overlay/Overlay";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
@@ -14,6 +14,7 @@ import { ChatElementDescriptionI } from "../../Types/ChatElementDescription";
 import { Correspondences } from "../../Types/Correspondences";
 import { ChangeBoxMessageStatusI } from "../../Types/ChangeBoxMessageStatusI";
 import { ChatElementAuthorI } from "../../Types/ChatElementAuthorI";
+import { getInitials } from "../../Functions/getInitials.";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -54,7 +55,6 @@ const HeaderTitle = styled.h1`
 const MainContainer = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
   background-color: #eceaea;
   height: 100%;
 `;
@@ -62,16 +62,16 @@ const BoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1200px;
-  height: 600px;
+  height: 90%;
   margin-top: 20px;
   margin-left: 20px;
+  margin-right: 20px;
   -webkit-box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
   box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
   -webkit-box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
--moz-box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
-box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
+  box-shadow: 0px 2px 17px -7px rgba(66, 68, 90, 1);
 `;
 
 const BoxContainerHeader = styled.div`
@@ -90,7 +90,9 @@ const BoxAreaElements = styled.div`
 `;
 
 const MessagesListContainer = styled.div`
-  width: 270px;
+  width: 370px;
+  max-width: 370px;
+  min-width: 370px;
   height: 100%;
   border-right: 1px solid #0000003f;
 `;
@@ -117,22 +119,19 @@ const MessagesListElements = styled.div`
   overflow-y: scroll;
 `;
 const MessageElement = styled.div`
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  height: 80px;
-  -webkit-box-shadow: 0px 0px 1px 0px rgba(66, 68, 90, 1);
-  -moz-box-shadow: 0px 0px 1px 0px rgba(66, 68, 90, 1);
-  box-shadow: 0px 0px 1px 0px rgba(66, 68, 90, 1);
-  margin: 12px 10%;
+  height: 90px;
+  -webkit-box-shadow: 0px 4px 3px -5px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 0px 4px 3px -5px rgba(66, 68, 90, 1);
+  box-shadow: 0px 4px 3px -5px rgba(66, 68, 90, 1);
   background-color: white;
   position: relative;
-  border: 1px solid #0000002c;
-  border-radius: 10px;
 `;
 const MessageOverlay = styled.div`
   width: 100%;
-  height: 80px;
+  height: 90px;
   position: absolute;
   cursor: pointer;
   &:hover {
@@ -156,12 +155,10 @@ const MessageElementHeader = styled.div`
 const MessageElementTitle = styled.div`
   width: 100%;
   height: 22px;
-  font-size: 11px;
-  padding: 3px;
+  font-size: 12px;
+  padding: 0px 5px;
   font-weight: bold;
   display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 const MessageElementFooter = styled.div`
   height: 35px;
@@ -172,16 +169,19 @@ const MessageElementFooter = styled.div`
 const MessageElementAuthor = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 9px;
+  font-size: 14px;
   margin-left: 5px;
+  margin-top: 10px;
   font-weight: bold;
+  color: black;
 `;
 const MessageElementData = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 9px;
+  font-size: 12px;
   margin-right: 5px;
   font-weight: bold;
+  color: #260d69;
 `;
 
 const ListHeaderButton = styled.div`
@@ -229,8 +229,8 @@ const ChatArea = styled.div`
   width: 100%;
 
   overflow-y: scroll;
-  background-color: #e5f0ef;
-  height: 375px;
+  background-color: white;
+  height: 100%;
 `;
 
 const ChatElement = styled.div<ChatElementI>`
@@ -303,6 +303,18 @@ const EmployeeName = styled.div`
   margin-left: 7px;
 `;
 
+const CustomerInitiated = styled.div`
+  box-sizing: border-box;
+  width: 90px;
+  height: 90px;
+  background-color: ${(props) => props.color};
+  color: black;
+  font-size: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 function Messages() {
   const [allCoresspondences, setAllCoresspondences] = useState<
     Correspondences[]
@@ -326,6 +338,9 @@ function Messages() {
   const authorId = useSelector(
     (state: RootState) => state.authorization.user.id
   );
+  const userInitialsColor = useSelector(
+    (state: RootState) => state.authorization.user.employerInitialsColor
+  )
   const [text, setText] = useState("");
 
   function handleOnEnter(text: String) {
@@ -352,6 +367,7 @@ function Messages() {
 
   const openCorrespondence = async (corespondenceId: number) => {
     setCurrentCoresspondence(true);
+    alert(corespondenceId);
     setCorrespondenceId(corespondenceId);
     try {
       const response = await axios.post(
@@ -362,16 +378,14 @@ function Messages() {
       );
       console.log(response.data);
       setCorresspondenceMessagesList(response.data);
-      
     } catch (error) {
       console.error("Login error:", error);
     }
   };
 
-
-  const addNewCorrespondence = () =>{
+  const addNewCorrespondence = () => {
     setCurrentCoresspondence(false);
-  }
+  };
 
   useEffect(() => {
     if (correspondenceId) {
@@ -389,12 +403,11 @@ function Messages() {
           console.error("Error fetching correspondence messages:", error);
         }
       };
-  
+
       fetchCorrespondenceMessages();
     }
   }, [corresspondenceMessagesList]);
-  
- 
+
   function formatDate() {
     const date = new Date();
     const year = date.getFullYear();
@@ -429,6 +442,7 @@ function Messages() {
     };
 
     if (!currentCoresspondence) {
+      alert("pierwsze");
       try {
         const response = await fetch(
           "http://localhost:8080/newCorrespondenceAndMessage",
@@ -444,6 +458,7 @@ function Messages() {
         console.error("Error adding vacation:", error);
       }
     } else {
+      alert("drugie");
       try {
         const response = await fetch("http://localhost:8080/newMessage", {
           method: "POST",
@@ -499,12 +514,11 @@ function Messages() {
               <BoxAreaElements>
                 <MessagesListContainer>
                   <MessagesListHeader>
-                    <ListHeaderButton onClick={addNewCorrespondence}>Dodaj korespondencje
-
+                    <ListHeaderButton onClick={addNewCorrespondence}>
+                      Dodaj korespondencje
                     </ListHeaderButton>
                   </MessagesListHeader>
-                  <SearchMessage>
-                  </SearchMessage>
+                  <SearchMessage></SearchMessage>
                   <MessagesListElements>
                     {allCoresspondences.map((coresspondences) => (
                       <React.Fragment key={coresspondences.id}>
@@ -514,14 +528,13 @@ function Messages() {
                               openCorrespondence(coresspondences.id)
                             }
                           />
-                          <MessageElementHeader>Temat</MessageElementHeader>
-                          <MessageElementTitle>
-                            {coresspondences.title}
-                          </MessageElementTitle>
+                          <MessageElementAuthor>
+                            {coresspondences.authorName}
+                          </MessageElementAuthor>
                           <MessageElementFooter>
-                            <MessageElementAuthor>
-                              Autor: {coresspondences.authorName}
-                            </MessageElementAuthor>
+                            <MessageElementTitle>
+                              {coresspondences.title}
+                            </MessageElementTitle>
                             <MessageElementData>
                               Data: {coresspondences.date.split("T")[0]}
                             </MessageElementData>
@@ -577,6 +590,9 @@ function Messages() {
                           }
                         >
                           <ChatElementContainer>
+                            <CustomerInitiated color={userInitialsColor }>
+                              {getInitials(message.authorName)}
+                            </CustomerInitiated>
                             <ChatElementAuthor
                               textAlign={
                                 message.authorId === authorId ? "end" : "start"
@@ -587,8 +603,8 @@ function Messages() {
                             <ChatElementDescription
                               color={
                                 message.authorId === authorId
-                                  ? "#74a4f29f"
-                                  : "#68e89ba4"
+                                  ? "#74a4f27f"
+                                  : "#68e89b75"
                               }
                             >
                               {message.description}
