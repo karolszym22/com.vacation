@@ -3,6 +3,7 @@ interface User {
   name: string;
   email: string;
   employerType: string;
+  employerInitialsColor: string;
 }
 
 interface AppState {
@@ -13,7 +14,7 @@ type AppAction =
    { type: "EMPLOYEE_AUTHORIZATION"; payload: { user: User } }
 
 const initialState: AppState = {
-  user: { id: 0, name: '', email: '', employerType: '' },
+  user: { id: 0, name: '', email: '', employerType: '', employerInitialsColor: '' },
 };
 
 const authorizationReducer = (state: AppState = initialState, action: AppAction): AppState => {
