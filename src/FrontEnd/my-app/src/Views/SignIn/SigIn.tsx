@@ -88,7 +88,8 @@ const Login: React.FC = () => {
             id: response.data.id,
             name: response.data.username,
             email: response.data.email,
-            employerType: response.data.employerType
+            employerType: response.data.employerType,
+            employerInitialsColor: response.data.initialsColor
           })
         );
 
