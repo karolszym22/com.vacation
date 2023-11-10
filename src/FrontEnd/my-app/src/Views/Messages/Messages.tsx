@@ -87,6 +87,7 @@ const BoxContainerTitle = styled.h3`
 const BoxAreaElements = styled.div`
   display: flex;
   height: 100%;
+  background-color: #f2f3f0;
 `;
 
 const MessagesListContainer = styled.div`
@@ -104,6 +105,7 @@ const MessagesListHeader = styled.div`
   -webkit-box-shadow: 0px 3px 4px -4px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 3px 4px -4px rgba(66, 68, 90, 1);
   box-shadow: 0px 3px 4px -4px rgba(66, 68, 90, 1);
+  background-color: #f2f3f0;
 `;
 const SearchMessage = styled.div`
   width: 100%;
@@ -122,16 +124,17 @@ const MessageElement = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  height: 90px;
+  height: 120px;
   -webkit-box-shadow: 0px 4px 3px -5px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 4px 3px -5px rgba(66, 68, 90, 1);
   box-shadow: 0px 4px 3px -5px rgba(66, 68, 90, 1);
   background-color: white;
   position: relative;
+  margin-bottom: 3px;
 `;
 const MessageOverlay = styled.div`
   width: 100%;
-  height: 90px;
+  height: 120px;
   position: absolute;
   cursor: pointer;
   &:hover {
@@ -155,10 +158,11 @@ const MessageElementHeader = styled.div`
 const MessageElementTitle = styled.div`
   width: 100%;
   height: 22px;
-  font-size: 12px;
-  padding: 0px 5px;
+  font-size: 13px;
+  margin-left: 15px;
   font-weight: bold;
   display: flex;
+  color: #46596b;
 `;
 const MessageElementFooter = styled.div`
   height: 35px;
@@ -170,22 +174,23 @@ const MessageElementAuthor = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 14px;
-  margin-left: 5px;
-  margin-top: 10px;
+  margin-left: 15px;
+  margin-top: 15px;
   font-weight: bold;
   color: black;
 `;
 const MessageElementData = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 12px;
+  font-size: 13px;
   margin-right: 5px;
   font-weight: bold;
-  color: #260d69;
+  color: #46596b;
+  font-weight: bold;
 `;
 
 const ListHeaderButton = styled.div`
-  color: orange;
+  color: #0000008d;
   padding-top: 5px;
   font-weight: bold;
   cursor: pointer;
@@ -211,14 +216,17 @@ const CreatorPanelHeader = styled.div<ChangeBoxMessageStatusI>`
   justify-content: space-evenly;
   background-color: rgb(249, 247, 247);
   height: 50px;
+  color: #0000008d;
 `;
 
 const RecipientArea = styled.div``;
-const TitleArea = styled.div``;
+const TitleArea = styled.div`
+`;
 const TitleValue = styled.input`
   border: none;
   margin-left: 3px;
   width: 90%;
+  padding: 7px;
 `;
 
 const TextAreaContainer = styled.div`
@@ -244,21 +252,25 @@ const ChatElementContainer = styled.div`
   max-width: 220px;
   display: flex;
   flex-direction: column;
-
   position: relative;
+  align-items: center;
 `;
+
+const ChatAuthorContainer = styled.div`
+  display: flex;
+`
 const ChatElementDescription = styled.div<ChatElementDescriptionI>`
   background-color: ${(props) => props.color};
-  padding: 4px;
+  padding: 6px;
   border-radius: 8px;
   font-size: 14px;
   color: #4c4747;
-  font-weight: bold;
+  margin-top: 5px;
 `;
 const ChatElementAuthor = styled.div<ChatElementAuthorI>`
   text-align: ${(props) => props.textAlign};
-  font-size: 11px;
-  font-weight: bold;
+  font-size: 12px;
+  margin: 0px 5px;
 `;
 
 const EmployeesListContainer = styled.div<ChangeBoxMessageStatusI>`
@@ -270,6 +282,8 @@ const EmployeesListTitle = styled.div`
   font-weight: bold;
   text-align: center;
   padding: 10px;
+  color: #0000008d;
+  font-size: 15px;
 `;
 const EmployeesListElements = styled.div`
   width: 100%;
@@ -305,11 +319,11 @@ const EmployeeName = styled.div`
 
 const CustomerInitiated = styled.div`
   box-sizing: border-box;
-  width: 90px;
-  height: 90px;
+  width: 30px;
+  height: 30px;
   background-color: ${(props) => props.color};
-  color: black;
-  font-size: 35px;
+  color: #ffffff;
+  font-size: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -590,6 +604,7 @@ function Messages() {
                           }
                         >
                           <ChatElementContainer>
+                            <ChatAuthorContainer>
                             <CustomerInitiated color={userInitialsColor }>
                               {getInitials(message.authorName)}
                             </CustomerInitiated>
@@ -600,6 +615,7 @@ function Messages() {
                             >
                               {message.authorName}
                             </ChatElementAuthor>
+                            </ChatAuthorContainer>
                             <ChatElementDescription
                               color={
                                 message.authorId === authorId
