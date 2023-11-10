@@ -14,6 +14,15 @@ public class Message {
     @Temporal(TemporalType.DATE)
     private Date date;
     private String title;
+    private String initialsColor;
+
+    public String getInitialsColor() {
+        return initialsColor;
+    }
+
+    public void setInitialsColor(String initialsColor) {
+        this.initialsColor = initialsColor;
+    }
 
     public int getCorrespondenceId() {
         return correspondenceId;
