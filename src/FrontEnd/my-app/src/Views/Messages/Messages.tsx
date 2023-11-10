@@ -441,6 +441,7 @@ function Messages() {
       correspondenceId,
       date: formatDate(),
       authorName: userName,
+      initialsColor: userInitialsColor
     };
     const correspondence = {
       title,
@@ -605,7 +606,7 @@ function Messages() {
                         >
                           <ChatElementContainer>
                             <ChatAuthorContainer>
-                            <CustomerInitiated color={userInitialsColor }>
+                            <CustomerInitiated color={message.initialsColor }>
                               {getInitials(message.authorName)}
                             </CustomerInitiated>
                             <ChatElementAuthor
