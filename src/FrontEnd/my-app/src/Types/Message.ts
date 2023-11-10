@@ -7,4 +7,5 @@ export interface Message {
     authorName: string;
     recipientId: number;
     date: String;
+    initialsColor: string;
   }
