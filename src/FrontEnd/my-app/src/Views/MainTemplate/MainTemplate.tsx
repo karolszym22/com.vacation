@@ -18,7 +18,8 @@ const MainTemplate = ({ children }: Props) => {
         id: userData.id,
         name: userData.username,
         email: userData.email,
-        employerType: userData.employerType
+        employerType: userData.employerType,
+        employerInitialsColor: userData.initialsColor
       })
     );
   }
