@@ -248,16 +248,20 @@ const ChatElement = styled.div<ChatElementI>`
   flex-direction: column;
   align-items: ${(props) => props.alignItems};
 `;
-const ChatElementContainer = styled.div`
+const ChatElementContainer = styled.div<ChatElementI>`
   max-width: 220px;
   display: flex;
   flex-direction: column;
   position: relative;
   align-items: center;
+  align-items: ${(props) => props.alignItems};
 `;
 
-const ChatAuthorContainer = styled.div`
+const ChatAuthorContainer = styled.div<ChatElementI>`
   display: flex;
+  justify-content: center;
+  align-items: center;
+  display: ${(props) => props.alignItems};
 `
 const ChatElementDescription = styled.div<ChatElementDescriptionI>`
   background-color: ${(props) => props.color};
@@ -265,7 +269,7 @@ const ChatElementDescription = styled.div<ChatElementDescriptionI>`
   border-radius: 8px;
   font-size: 14px;
   color: #4c4747;
-  margin-top: 5px;
+  margin: 2px 35px;
 `;
 const ChatElementAuthor = styled.div<ChatElementAuthorI>`
   text-align: ${(props) => props.textAlign};
@@ -604,8 +608,15 @@ function Messages() {
                             message.authorId === authorId ? "end" : "start"
                           }
                         >
-                          <ChatElementContainer>
-                            <ChatAuthorContainer>
+                          <ChatElementContainer
+                          alignItems={
+                            message.authorId === authorId ? "end" : "start"
+                          }
+                          
+                          >
+                            <ChatAuthorContainer alignItems={
+                            message.authorId === authorId ? "none" : "flex"
+                          }>
                             <CustomerInitiated color={message.initialsColor }>
                               {getInitials(message.authorName)}
                             </CustomerInitiated>
