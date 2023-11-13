@@ -45,6 +45,7 @@ interface VacationData {
 
 interface TransformedData {
   dayNumber: number;
+  monthNumber: number;
   employeesList: string[];
 }
 
@@ -395,24 +396,25 @@ const Calendar: React.FC = () => {
       const daysDiff = Math.ceil(
         (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
       );
-
+  
       for (let i = 0; i <= daysDiff; i++) {
         const currentDate = new Date(startDate);
         currentDate.setDate(startDate.getDate() + i);
         const dayNumber = currentDate.getDate();
-
+        const monthNumber = currentDate.getMonth(); 
         let entry = transformedData.find(
-          (entry) => entry.dayNumber === dayNumber
+          (entry) => entry.dayNumber === dayNumber && entry.monthNumber === monthNumber
         );
         if (!entry) {
-          entry = { dayNumber, employeesList: [] };
+          entry = { dayNumber, monthNumber, employeesList: [] };
           transformedData.push(entry);
         }
-
+  
         entry.employeesList.push(item.employerName);
       }
     });
     setVacationDays(transformedData);
+    console.log(vacationDays, "MOJE NOWE WAKACJE KURW")
   };
 
   useEffect(() => {
@@ -423,29 +425,31 @@ const Calendar: React.FC = () => {
         })} 2000`
       )
     );
-    alert(date);
+  
     const calculatedMonthNumber = date.getMonth() + 1;
     setMonthNumber(calculatedMonthNumber);
+    alert(calculatedMonthNumber);
     fetch(
       `http://localhost:8080/vacations/calendarVacations/${calculatedMonthNumber}`
     )
       .then((response) => response.json())
       .then((data) => {
         transformData(data, setVacationDays);
+        console.log("MOJE POBRANE WAKACJE", vacationDays)
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   const stateVacationNumber = (day: number, month: number) => {
+    console.log(month)
     let backgroundColor:
       | "#f3201d57"
       | "#edf10f4c"
       | "#2dfc0349"
       | "transparent" = "transparent";
-     console.log("Moje miesiące: ", currentMonth, month)
     if (vacationDays.length > 0) {
       vacationDays.forEach((currentDay) => {
-        if (currentDay.dayNumber === day && currentMonth === month + 1) {
+        if (currentDay.dayNumber === day && currentDay.monthNumber === month) {
           if (currentDay.employeesList.length === 1) {
             backgroundColor = "#2dfc0349";
           } else if (currentDay.employeesList.length === 2) {
@@ -460,16 +464,38 @@ const Calendar: React.FC = () => {
     return backgroundColor;
   };
 
-  const stateElementInformation = (day: number) => {
+  const stateElementInformation = (day: number, month: number) => {
     let display: "block" | "none" = "none";
     vacationDays.forEach((currentDay) => {
-      if (currentDay.dayNumber === day) {
+      if (currentDay.dayNumber === day && currentDay.monthNumber === month) {
         display = "block";
         return display;
       }
     });
 
     return display;
+  };
+  
+  const showVacationEmployees = (day: number, month: number) => {
+    const foundDay = vacationDays.find(
+      (currentDay) => currentDay.dayNumber === day && currentDay.monthNumber === month
+    );
+  
+    if (foundDay) {
+      console.log("udało sie");
+      const employees = foundDay.employeesList;
+  
+      return (
+        <div>
+          {employees.map((employee, index) => (
+            <DateInformationValue key={index}>{employee}</DateInformationValue>
+          ))}
+        </div>
+      );
+    } else {
+      console.log("nie udało sie");
+      return <div></div>;
+    }
   };
 
   const fetchCurrentEmployees = (day: number) => {
@@ -528,9 +554,8 @@ const Calendar: React.FC = () => {
               >
                 {calendarDay?.day !== 0 ? calendarDay.day : null}
                 <DateElementInformation
-                  display={stateElementInformation(calendarDay?.day)}
-                >
-                  <DateInformationValue></DateInformationValue>
+                  display={stateElementInformation(calendarDay?.day, calendarDay.month)}
+                >{showVacationEmployees(calendarDay?.day, calendarDay.month)}
                 </DateElementInformation>
               </DateElement>
             ))}
