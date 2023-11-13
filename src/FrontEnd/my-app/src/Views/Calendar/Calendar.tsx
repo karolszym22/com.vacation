@@ -183,6 +183,9 @@ const Dates = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: 100px 100px 100px 100px 100px;
+  @media (max-width: 1260px) {
+    grid-template-rows: 60px 60px 60px 60px 60px;
+  }
 `;
 const DateElement = styled.div<DateElementProps>`
   cursor: pointer;
@@ -195,6 +198,9 @@ const DateElement = styled.div<DateElementProps>`
   color: #00000094;
   border-radius: 15px;
   background-color: ${(props) => props.backgroundColor};
+  @media (max-width: 1260px) {
+    font-size: 14px;
+  }
 `;
 const DateElementInformation = styled.div<ElementInformationDisplay>`
   position: absolute;
@@ -209,12 +215,19 @@ const DateElementInformation = styled.div<ElementInformationDisplay>`
   ${DateElement}:hover & {
     display: ${(props) => props.display};
   }
+  @media (max-width: 1260px) {
+    height: 60px;
+  }
 `;
 const DateInformationValue = styled.p`
   width: 100%;
   font-size: 10px;
   margin: 0px 5px;
   font-weight: bold;
+  @media (max-width: 1260px) {
+   font-size: 7px
+  }
+  
 `;
 
 const EventModal = styled.div`
