@@ -305,7 +305,6 @@ const Calendar: React.FC = () => {
       calendar.push({ day, month });
     }
     setCalendar(calendar);
-    console.log("MOJ KALENDARZ: ", calendar);
   };
 
   const openEventModal = (year: number, month: number, day: number) => {
@@ -389,7 +388,6 @@ const Calendar: React.FC = () => {
     setVacationDays: React.Dispatch<React.SetStateAction<TransformedData[]>>
   ) => {
     const transformedData: TransformedData[] = [];
-    console.log(data);
     data.forEach((item) => {
       const startDate = new Date(item.startDate);
       const endDate = new Date(item.endDate);
@@ -414,7 +412,6 @@ const Calendar: React.FC = () => {
       }
     });
     setVacationDays(transformedData);
-    console.log(vacationDays, "MOJE NOWE WAKACJE KURW")
   };
 
   useEffect(() => {
@@ -428,20 +425,18 @@ const Calendar: React.FC = () => {
   
     const calculatedMonthNumber = date.getMonth() + 1;
     setMonthNumber(calculatedMonthNumber);
-    alert(calculatedMonthNumber);
+
     fetch(
       `http://localhost:8080/vacations/calendarVacations/${calculatedMonthNumber}`
     )
       .then((response) => response.json())
       .then((data) => {
         transformData(data, setVacationDays);
-        console.log("MOJE POBRANE WAKACJE", vacationDays)
-      })
+        })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   const stateVacationNumber = (day: number, month: number) => {
-    console.log(month)
     let backgroundColor:
       | "#f3201d57"
       | "#edf10f4c"
@@ -482,7 +477,6 @@ const Calendar: React.FC = () => {
     );
   
     if (foundDay) {
-      console.log("udało sie");
       const employees = foundDay.employeesList;
   
       return (
@@ -493,7 +487,6 @@ const Calendar: React.FC = () => {
         </div>
       );
     } else {
-      console.log("nie udało sie");
       return <div></div>;
     }
   };
@@ -501,7 +494,6 @@ const Calendar: React.FC = () => {
   const fetchCurrentEmployees = (day: number) => {
     vacationDays.forEach((currentDay) => {
       if (currentDay.dayNumber === day) {
-        console.log(currentDay.dayNumber, day);
         setCurrentEmployees(currentDay.employeesList);
         setIsHovered(false);
       }
