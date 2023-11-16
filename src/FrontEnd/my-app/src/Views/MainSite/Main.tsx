@@ -38,6 +38,7 @@ const MainWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   flex-grow: 1;
+  position: relative;
 `;
 
 const Wrapper = styled.div`

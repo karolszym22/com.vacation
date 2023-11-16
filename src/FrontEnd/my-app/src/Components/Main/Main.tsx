@@ -10,9 +10,9 @@ import { countDuringVacations } from "../../Functions/getDuringNumber";
 
 const MainMenu = styled.div`
   width: 100%;
-  right: 0px;
   display: flex;
   flex-direction: column;
+  
 `;
 
 const CustomersTitle = styled.div`
