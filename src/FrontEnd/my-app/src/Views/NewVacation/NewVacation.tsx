@@ -100,6 +100,8 @@ const TableCell = styled.td`
 
 const MainWrapper = styled.div`
   width: 100%;
+  height: 100vh;
+  position: relative;
   display: flex;
   justify-content: space-between;
 `;
