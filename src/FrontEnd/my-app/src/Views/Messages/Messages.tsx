@@ -62,10 +62,11 @@ const BoxContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 90%;
+  height: 80%;
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 20px;
+  margin-bottom: 50px;
   -webkit-box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
   -moz-box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
   box-shadow: 0px 0px 2px 0px rgba(66, 68, 90, 1);
@@ -88,14 +89,21 @@ const BoxAreaElements = styled.div`
   display: flex;
   height: 100%;
   background-color: #f2f3f0;
+  @media (max-width: 850px) {
+    flex-direction: column;
+  }
 `;
 
 const MessagesListContainer = styled.div`
   width: 370px;
-  max-width: 370px;
-  min-width: 370px;
+ 
   height: 100%;
   border-right: 1px solid #0000003f;
+  @media (max-width: 850px) {
+    height: 150px;
+    width: 100%;
+    max-width: 100%;
+  }
 `;
 const MessagesListHeader = styled.div`
   width: 100%;
@@ -109,13 +117,12 @@ const MessagesListHeader = styled.div`
 `;
 const SearchMessage = styled.div`
   width: 100%;
-  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 const MessagesListElements = styled.div`
-  height: 420px;
+  height: 80%;
   width: 100%;
   background: #ffffff;
   overflow-y: scroll;
@@ -197,10 +204,11 @@ const ListHeaderButton = styled.div`
 `;
 const MessagesCreatorContainer = styled.div`
   width: 100%;
-  height: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  max-height: 800px;
 `;
 const CreatorPanel = styled.div`
   width: 95%;
@@ -230,15 +238,18 @@ const TitleValue = styled.input`
 `;
 
 const TextAreaContainer = styled.div`
-  height: 70px;
   background-color: #f9f6f6;
 `;
 const ChatArea = styled.div`
   width: 100%;
-
+  height: 100%;
   overflow-y: scroll;
   background-color: white;
-  height: 100%;
+  
+  @media (max-width: 850px) {
+    margin-top: 30px;
+    
+  }
 `;
 
 const ChatElement = styled.div<ChatElementI>`
@@ -270,6 +281,8 @@ const ChatElementDescription = styled.div<ChatElementDescriptionI>`
   font-size: 14px;
   color: #4c4747;
   margin: 2px 35px;
+  max-width: 200px;
+  word-wrap: break-word;
 `;
 const ChatElementAuthor = styled.div<ChatElementAuthorI>`
   text-align: ${(props) => props.textAlign};

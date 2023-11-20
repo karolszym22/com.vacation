@@ -37,7 +37,6 @@ const MainWrapper = styled.div`
   height: 100vh;
   display: flex;
   justify-content: space-between;
-  flex-grow: 1;
   position: relative;
 `;
 
