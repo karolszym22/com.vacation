@@ -87,7 +87,7 @@ const MenuNavLink = styled.div`
 
 const MenuNavLinkSpecial = styled.div<SideMenuProps>`
   color: white;
-  display: flex;
+  display: flex;;
   display: ${({ isLogged }) => (isLogged ? "flex" : "none")};
   width: 100%;
   cursor: pointer;
@@ -111,13 +111,14 @@ const NavLinkNameSpecial = styled.a`
   justify-content: center;
 `;
 
+
+
 const SideMenu = styled.div`
   width: 280px;
   background-color: #2e4051;
-  position: relative;
   display: flex;
+  position: relative;
   flex-direction: column;
-  height: 100vh;
   @media (max-width: 976px) {
     display: none;
   }
@@ -127,6 +128,7 @@ const Menu = () => {
   const { isLogged, LogOut } = useMenuData();
 
   return (
+   
     <SideMenu>
       <MenuLogoContainer>
         <MenuNavLogo>Urlopy</MenuNavLogo>
@@ -141,18 +143,6 @@ const Menu = () => {
         <CustomHomeIcon />
         <NavLinkName as={NavLink} to="/calendar">
           Kalendarz
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomRegisterIcon />
-        <NavLinkName as={NavLink} to="/register">
-          Rejestracja nowego pracownika
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomLoginIcon />
-        <NavLinkName as={NavLink} to="/signIn">
-          Zaloguj się!
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
@@ -173,6 +163,7 @@ const Menu = () => {
         </NavLinkNameSpecial>
       </MenuNavLinkSpecial>
     </SideMenu>
+    
   );
 };
 
