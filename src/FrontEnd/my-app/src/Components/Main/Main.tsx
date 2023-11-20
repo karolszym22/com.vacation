@@ -57,6 +57,7 @@ const CustomerName = styled.div`
   font-size: 24px;
   color: #565454;
   padding: 10px;
+  width: 170px;
 `;
 const CustomerVacationsContainer = styled.div`
   box-sizing: border-box;
