@@ -96,23 +96,32 @@ User registration:
 
 Home
 
-![Glowna](https://github.com/karolszym22/com.vacation/assets/32464644/e08f7f1e-d23b-44a7-8058-91b5abb3688b)
+![glowna](https://github.com/karolszym22/com.vacation/assets/32464644/98b58e74-b790-4ca0-a172-3483eabf1328)
+
+Calendar
+![kalendarz](https://github.com/karolszym22/com.vacation/assets/32464644/d370ff47-33fd-4978-9206-5b20fb81c588)
 
 
 Leave creator
 
-![tworzenie](https://github.com/karolszym22/com.vacation/assets/32464644/9cc54127-7c4b-4ecb-9501-8af6fc4b92db)
+![kreator](https://github.com/karolszym22/com.vacation/assets/32464644/b9564913-8d52-4c04-a22a-1b930a69691f)
+
 
 Date validation
 
-![kolidowanie](https://github.com/karolszym22/com.vacation/assets/32464644/d8e31da9-b881-49bf-97f1-8cc10f862634)
+![walidacja](https://github.com/karolszym22/com.vacation/assets/32464644/1f2d04ca-e708-43e5-8df4-a10f1d126e96)
 
+
+Chat
+
+![czat](https://github.com/karolszym22/com.vacation/assets/32464644/e96f6326-9e35-4641-b5e0-e6ef3d6da453)
 
 
 
 Available steps depend on the logged in user. In this case, the employer is logged in and can take the following steps: Reject, Return, Accept
 
-![podglad](https://github.com/karolszym22/com.vacation/assets/32464644/11580be7-cf45-41c3-98ca-a36d915fddd5)
+![szczegoly](https://github.com/karolszym22/com.vacation/assets/32464644/7bcedc08-e17f-4c3c-bb8a-5fc4bbd67569)
+
 
 
 Generated document
