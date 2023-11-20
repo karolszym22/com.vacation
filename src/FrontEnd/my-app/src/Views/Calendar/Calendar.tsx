@@ -78,6 +78,7 @@ const MainWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  height: 100vh;
 `;
 const FormWrapper = styled.div`
   display: flex;
