@@ -107,8 +107,7 @@ const HeaderElementValue = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  z-index: 50;
+
 `;
 
 const HeaderElementContainer = styled.div`
