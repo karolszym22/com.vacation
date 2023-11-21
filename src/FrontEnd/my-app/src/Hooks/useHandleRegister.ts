@@ -34,7 +34,7 @@ const useHandleRegister = () => {
       setEmailError('Nieprawidłowy adres email.');
       return;
     }
-    alert(initialsColor)
+  
     try {
       const response = await axios.post('http://localhost:8080/newUser', {
         username,

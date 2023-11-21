@@ -3,4 +3,5 @@ export interface UserState {
   name: string;
   email: string;
   employerType: string;
+  employerInitialsColor: string
 }
