@@ -129,7 +129,7 @@ const SideMenu = styled.div<HamburgerMenuProps>`
   animation: ${({ hamburgerVisible }) => (hamburgerVisible ? "slideIn 0.5s" : "none")}; 
   flex-direction: column;
   height: 100vh;
-
+  top: 0;
   @keyframes slideIn {
   from {
     left: -280px;
