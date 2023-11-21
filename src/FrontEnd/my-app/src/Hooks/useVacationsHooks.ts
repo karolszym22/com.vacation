@@ -6,6 +6,8 @@ interface Vacation {
   daysNum: number;
   done: boolean;
   taskStatus: string;
+  employerName:string;
+  personId: number
 }
 
 export const useVacations = () => {
