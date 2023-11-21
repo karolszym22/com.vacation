@@ -11,7 +11,7 @@ interface ModalDescriptionProps{
 
 const OverlayWrapper = styled.div<OverlayWrapperProps>`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   position: absolute;
   z-index: 500;
