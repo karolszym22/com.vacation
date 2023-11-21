@@ -82,6 +82,7 @@ public class UserController {
         user.setPassword(credentials.getPassword());
         user.setEmail(credentials.getEmail());
         user.setEmployerType((credentials.getEmployerType()));
+        user.setInitialsColor(credentials.getInitialsColor());
         return user;
     }
 }
