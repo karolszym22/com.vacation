@@ -1,11 +1,8 @@
 import React, { useState, FormEvent } from "react";
-import axios from "axios";
 import styled from "styled-components";
 import background from "../../resources/rm222batch3-mind-10.jpg";
 import Overlay from "../../Components/Overlay/Overlay";
-import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { useCloseOverlay } from "../../Hooks/useCloseOveraly";
 import useHandleRegister from "../../Hooks/useHandleRegister";
 
 const Container = styled.div`

@@ -21,6 +21,7 @@ interface Overlay {
 const MainWrapper = styled.div`
   display: flex;
   width: 100%;
+  height: 100vh;
 `;
 
 const PreviewWrapper = styled.div`

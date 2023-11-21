@@ -37,13 +37,14 @@ public class MessageController {
 
     @PostMapping("/coresspondenceMessages")
     ResponseEntity<List<Message>> getCorrespondenceMessages(@RequestBody Map<String, Integer> requestBody) {
-        if (requestBody.containsKey("correspondenceId")) {
-            int correspondenceId = requestBody.get("correspondenceId");
+        if (requestBody.containsKey("corespondenceId")) {
+            int correspondenceId = requestBody.get("corespondenceId");
             List<Message> correspondenceMessages = messageService.getCorrespondenceMessages(correspondenceId);
             if (correspondenceMessages.isEmpty()) {
                 return ResponseEntity.notFound().build();
             } else {
                 return ResponseEntity.ok(correspondenceMessages);
+
             }
         } else {
             return ResponseEntity.badRequest().build();
