@@ -29,56 +29,6 @@ compile application.java in
   ...com.vacation\src\main\java\com\vacation\com\vacation> 
 
 ```
-
-
-
-# Update 1.0.2 has been released!
-
-Now the user can exchange messages between employees by creating appropriate correspondence
-
-
-![czat](https://github.com/karolszym22/com.vacation/assets/32464644/1b1f9a8f-ad0e-4d06-ba35-6a07b3790286)
-
-
-
-
-
-
-
-
-
-
-
-
-# Update 1.0.1 has been released!
-
-- better website responsiveness
- - visual improvement of some components (buttons, table - appearance)
-- adding a new menu for phones
-- improved logging
-- improved word document
-- improved tests (using InjectMocks)
-
-
-
-
-
-
-
-
-
-
-
-
-# 1.0 has been released!
-
- - Possibility to register specific users: Employee, Employer, HR, Test
-- Possibility to create leaves
-- Each logged in user is entitled to specific steps depending on their type
-- Validating whether the created leave does not collide with other leaves of thesame user
-- Depending on the status of a given leave, a Word file with a leave application is
-generated at the end of the proces
-
 # Photos:
 
 
@@ -132,6 +82,56 @@ Generated document
 ## Author
 
 - [@karolszym22](https://github.com/karolszym22)
+
+
+
+
+# Update 1.0.2 has been released!
+
+Now the user can exchange messages between employees by creating appropriate correspondence
+
+
+![czat](https://github.com/karolszym22/com.vacation/assets/32464644/1b1f9a8f-ad0e-4d06-ba35-6a07b3790286)
+
+
+
+
+
+
+
+
+
+
+
+
+# Update 1.0.1 has been released!
+
+- better website responsiveness
+ - visual improvement of some components (buttons, table - appearance)
+- adding a new menu for phones
+- improved logging
+- improved word document
+- improved tests (using InjectMocks)
+
+
+
+
+
+
+
+
+
+
+
+
+# 1.0 has been released!
+
+ - Possibility to register specific users: Employee, Employer, HR, Test
+- Possibility to create leaves
+- Each logged in user is entitled to specific steps depending on their type
+- Validating whether the created leave does not collide with other leaves of thesame user
+- Depending on the status of a given leave, a Word file with a leave application is
+generated at the end of the proces
 
 
 
