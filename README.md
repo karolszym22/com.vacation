@@ -62,9 +62,6 @@ Date validation
 ![walidacja](https://github.com/karolszym22/com.vacation/assets/32464644/1f2d04ca-e708-43e5-8df4-a10f1d126e96)
 
 
-Chat
-
-![czat](https://github.com/karolszym22/com.vacation/assets/32464644/e96f6326-9e35-4641-b5e0-e6ef3d6da453)
 
 
 
