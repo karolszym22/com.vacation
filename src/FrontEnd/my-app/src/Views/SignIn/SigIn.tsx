@@ -8,62 +8,7 @@ import styled from "styled-components";
 import Overlay from "../../Components/Overlay/Overlay";
 import { NavLink } from "react-router-dom";
 
-const Container = styled.div`
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-image: url(${background});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh;
-`;
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  min-width: 250px;
- justify-content: center;
- align-items: center;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin: 5px 0;
-  width: 100%;
-  @media (max-width: 360px) {
-    width: 80%
-  }
-`;
-
-const Button = styled.button`
-  padding: 10px 25px;
-  margin: 15px 80px;
-  width: 100px;
-  background-color: orange;
-  color: white;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-`;
-
-const Title = styled.h2`
-  font-size: 1.5em;
-  margin-bottom: 20px;
-  color: #646262;
-`;
-
-const BottomTitle = styled.h3`
-  color: black;
-  cursor: pointer;
-`;
-
-const JoinLink = styled.a`
-  color: #31a6e5;
-  text-decoration: none;
-`
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -141,3 +86,60 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
+const Container = styled.div`
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url(${background});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
+ justify-content: center;
+ align-items: center;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  @media (max-width: 360px) {
+    width: 80%
+  }
+`;
+
+const Button = styled.button`
+  padding: 10px 25px;
+  margin: 15px 80px;
+  width: 100px;
+  background-color: orange;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+`;
+
+const Title = styled.h2`
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #646262;
+`;
+
+const BottomTitle = styled.h3`
+  color: black;
+  cursor: pointer;
+`;
+
+const JoinLink = styled.a`
+  color: #31a6e5;
+  text-decoration: none;
+`
