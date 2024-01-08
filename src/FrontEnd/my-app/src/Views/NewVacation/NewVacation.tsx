@@ -10,9 +10,7 @@ import { Vacation } from "../../Types/Vacation";
 import { AuthorizationState } from "../../Types/AuthorizationState";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
-import { useCloseOverlay } from "../../Hooks/useCloseOveraly";
-import { Interface } from "readline";
-
+import { getColorByTaskStatus } from "../../Utils/getColorByStatus";
 interface Overlay {
   overlayVisible: boolean;
   modalVisible: boolean;
@@ -23,225 +21,12 @@ interface VacationDescriptionI {
   selectedOption: string;
 }
 
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  @media (max-width: 800px) {
-    font-size: 12px;
-  }
-  @media (max-width: 525px) {
-    font-size: 10px;
-  }
-  @media (max-width: 460px) {
-    font-size: 8px;
-  }
-  @media (max-width: 350px) {
-    font-size: 7px;
-  }
-  @media (max-width: 310px) {
-    font-size: 6px;
-  }
-`;
 
-const TableHeader = styled.thead`
-  background-color: #ede7e7;
-`;
-
-const TableTitle = styled.div`
-  margin-top: 5%;
-  width: 100%;
-  height: 50px;
-  background-color: rgb(180, 175, 175);
-  display: flex;
-  align-items: center;
-  @media (max-width: 800px) {
-    font-size: 14px;
-  }
-  @media (max-width: 525px) {
-    font-size: 12px;
-  }
-  @media (max-width: 325px) {
-    font-size: 11px;
-  }
-`;
-const TableHeaderCell = styled.th`
-  padding: 10px;
-  font-weight: bold;
-  border-bottom: 1px solid #ddd;
-  @media (max-width: 460px) {
-    padding: 5px;
-  }
-  @media (max-width: 350px) {
-    padding: 2%.5;
-  }
-`;
-
-const TableBody = styled.tbody``;
-
-const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f0ebeb;
-  }
-`;
-
-const TableCell = styled.td`
-  padding: 10px;
-  text-align: center;
-  font-weight: 500;
-  border-bottom: 1px solid #ddd;
-  color: #565454;
-  @media (max-width: 460px) {
-    padding: 5px;
-  }
-  @media (max-width: 350px) {
-    padding: 2%.5;
-  }
-`;
-
-const MainWrapper = styled.div`
-  width: 100%;
-  height: 100vh;
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-`;
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  font-family: sans-serif;
-  color: #646262;
-`;
-const Header = styled.div`
-  width: 100%;
-  height: 70px;
-  background-color: rgb(248, 244, 244);
-`;
-const HeaderTitle = styled.h1`
-  margin: 10px;
-  color: #696666;
-`;
-
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-  }
-`;
-
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  margin-top: 50px;
-  justify-content: center;
-  width: 30%;
-  @media (max-width: 800px) {
-    width: 60%;
-  }
-  label {
-    margin-bottom: 4px;
-  }
-
-  input,
-  button {
-    margin-bottom: 8px;
-  }
-`;
-const Select = styled.select`
-  padding: 5px;
-  margin: 15px 10px;
-  width: 150px;
-  border: 1px solid #c7bfbf;
-  border-radius: 5px;
-  background-color: #ffffff;
-  color: #646262;
-`;
-
-const Button = styled.button`
-  background-color: orange;
-  color: white;
-  border: none;
-  padding: 10px;
-  font-weight: bold;
-  font-size: 15px;
-  cursor: pointer;
-  width: 110px;
-  border-radius: 5px;
-`;
-
-const DescriptionContainer = styled.div<VacationDescriptionI>`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  display: ${({ selectedOption }) =>
-    selectedOption === "Okolicznościowy" ? "flex" : "none"};
-  position: ${({ selectedOption }) =>
-    selectedOption === "Okolicznościowy" ? "static" : "absolute"};
-`;
-
-const DescriptionInput = styled.textarea`
-  height: 130px;
-  margin: 5px;
-  resize: horizontal;
-  resize: vertical;
-  border: 1px solid #64626268;
-`;
-
-const Input = styled.input`
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f5f5f5;
-  color: #333;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  margin: 8px;
-
-  &:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-`;
-const BottomTitle = styled.h2`
-  color: #646262;
-`;
-const NavLinkName = styled.a`
-  font-size: 15px;
-  margin: 5px;
-  color: #a19b9b;
-  font-weight: bold;
-  text-decoration: none;
-  @media (max-width: 800px) {
-    font-size: 13px;
-  }
-  @media (max-width: 525px) {
-    font-size: 11px;
-  }
-  @media (max-width: 460px) {
-    font-size: 9px;
-  }
-`;
 
 interface RootState {
   authorization: AuthorizationState;
 }
 
-const getColorByTaskStatus = (taskStatus: string) => {
-  switch (taskStatus) {
-    case "Zrealizowano":
-      return "green";
-    case "Odrzucono":
-      return "red";
-    default:
-      return "orange";
-  }
-};
 
 function NewVacation() {
   const [vacations, setVacations] = useState<any[]>([]);
@@ -251,7 +36,7 @@ function NewVacation() {
   const [taskStatus, setTaskStatus] = useState("W realizacji");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [daysNum, setDaysNum] = useState<number>(0);
+  const [, setDaysNum] = useState<number>(0);
   const { overlayVisible } = useContext(OverlayVisibleContext);
   const { modalVisible } = useContext(OverlayVisibleContext);
   const { hamburgerVisible } = useContext(OverlayVisibleContext);
@@ -478,3 +263,210 @@ function NewVacation() {
 }
 
 export default NewVacation;
+
+
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  @media (max-width: 800px) {
+    font-size: 12px;
+  }
+  @media (max-width: 525px) {
+    font-size: 10px;
+  }
+  @media (max-width: 460px) {
+    font-size: 8px;
+  }
+  @media (max-width: 350px) {
+    font-size: 7px;
+  }
+  @media (max-width: 310px) {
+    font-size: 6px;
+  }
+`;
+
+const TableHeader = styled.thead`
+  background-color: #ede7e7;
+`;
+
+const TableTitle = styled.div`
+  margin-top: 5%;
+  width: 100%;
+  height: 50px;
+  background-color: rgb(180, 175, 175);
+  display: flex;
+  align-items: center;
+  @media (max-width: 800px) {
+    font-size: 14px;
+  }
+  @media (max-width: 525px) {
+    font-size: 12px;
+  }
+  @media (max-width: 325px) {
+    font-size: 11px;
+  }
+`;
+const TableHeaderCell = styled.th`
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  @media (max-width: 460px) {
+    padding: 5px;
+  }
+  @media (max-width: 350px) {
+    padding: 2%.5;
+  }
+`;
+
+const TableBody = styled.tbody``;
+
+const TableRow = styled.tr`
+  &:nth-child(even) {
+    background-color: #f0ebeb;
+  }
+`;
+
+const TableCell = styled.td`
+  padding: 10px;
+  text-align: center;
+  font-weight: 500;
+  border-bottom: 1px solid #ddd;
+  color: #565454;
+  @media (max-width: 460px) {
+    padding: 5px;
+  }
+  @media (max-width: 350px) {
+    padding: 2%.5;
+  }
+`;
+
+const MainWrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+`;
+const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  font-family: sans-serif;
+  color: #646262;
+`;
+const Header = styled.div`
+  width: 100%;
+  height: 70px;
+  background-color: rgb(248, 244, 244);
+`;
+const HeaderTitle = styled.h1`
+  margin: 10px;
+  color: #696666;
+`;
+
+const StyledTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+`;
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  justify-content: center;
+  width: 30%;
+  @media (max-width: 800px) {
+    width: 60%;
+  }
+  label {
+    margin-bottom: 4px;
+  }
+
+  input,
+  button {
+    margin-bottom: 8px;
+  }
+`;
+const Select = styled.select`
+  padding: 5px;
+  margin: 15px 10px;
+  width: 150px;
+  border: 1px solid #c7bfbf;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #646262;
+`;
+
+const Button = styled.button`
+  background-color: orange;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  width: 110px;
+  border-radius: 5px;
+`;
+
+const DescriptionContainer = styled.div<VacationDescriptionI>`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  display: ${({ selectedOption }) =>
+    selectedOption === "Okolicznościowy" ? "flex" : "none"};
+  position: ${({ selectedOption }) =>
+    selectedOption === "Okolicznościowy" ? "static" : "absolute"};
+`;
+
+const DescriptionInput = styled.textarea`
+  height: 130px;
+  margin: 5px;
+  resize: horizontal;
+  resize: vertical;
+  border: 1px solid #64626268;
+`;
+
+const Input = styled.input`
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  color: #333;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  margin: 8px;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;
+const BottomTitle = styled.h2`
+  color: #646262;
+`;
+const NavLinkName = styled.a`
+  font-size: 15px;
+  margin: 5px;
+  color: #a19b9b;
+  font-weight: bold;
+  text-decoration: none;
+  @media (max-width: 800px) {
+    font-size: 13px;
+  }
+  @media (max-width: 525px) {
+    font-size: 11px;
+  }
+  @media (max-width: 460px) {
+    font-size: 9px;
+  }
+`;
