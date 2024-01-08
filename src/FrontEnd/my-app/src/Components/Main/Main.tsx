@@ -1,12 +1,97 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useVacations, usePreviewClick } from "../../Hooks/useVacationsHooks";
+import { NavLink} from "react-router-dom";
+import { useVacations} from "../../Hooks/useVacationsHooks";
 import useEmployeeList from "../../Hooks/useAllUsers";
-import { getInitials } from "../../Functions/getInitials.";
-import { countAcceptedVacations } from "../../Functions/getAcceptedNumber";
-import { countRejectedVacations } from "../../Functions/getRejectedNumber";
-import { countDuringVacations } from "../../Functions/getDuringNumber";
+import { getInitials } from "../../Utils/getInitials.";
+import { countAcceptedVacations } from "../../Utils/getAcceptedNumber";
+import { countRejectedVacations } from "../../Utils/getRejectedNumber";
+import { countDuringVacations } from "../../Utils/getDuringNumber";
+import { getColorByTaskStatus } from "../../Utils/getColorByStatus";
+
+
+const Menu = () => {
+  const { vacations } = useVacations();
+  const employeeList = useEmployeeList();
+
+  return (
+    <MainMenu>
+      <CustomersTitle>Pracownicy</CustomersTitle>
+      <CustomersContainer>
+        {employeeList.map((employee) => (
+          <CustomerElement>
+            <CustomerInitiated color={employee.initialsColor}>
+              {getInitials(employee.username)}
+            </CustomerInitiated>
+            <CustomerName>{employee.username}</CustomerName>
+            <CustomerVacationsContainer>
+              <CustomerVacationsAccepts>
+                <VacationsAcceptsColor></VacationsAcceptsColor>
+                <VacationsAcceptsNumber>
+                  {countAcceptedVacations(vacations, employee.id)}
+                </VacationsAcceptsNumber>
+                <CustomerVacationsState></CustomerVacationsState>
+              </CustomerVacationsAccepts>
+            </CustomerVacationsContainer>
+            <CustomerVacationsContainer>
+              <CustomerVacationsDuring>
+                <VacationsDuringColor></VacationsDuringColor>
+                <VacationsAcceptsNumber>
+                  {countDuringVacations(vacations, employee.id)}
+                </VacationsAcceptsNumber>
+                <CustomerVacationsState></CustomerVacationsState>
+              </CustomerVacationsDuring>
+            </CustomerVacationsContainer>
+            <CustomerVacationsContainer>
+              <CustomerVacationsRejected>
+                <VacationsRejectedColor></VacationsRejectedColor>
+                <VacationsAcceptsNumber>
+                  {countRejectedVacations(vacations, employee.id)}
+                </VacationsAcceptsNumber>
+                <CustomerVacationsState></CustomerVacationsState>
+              </CustomerVacationsRejected>
+            </CustomerVacationsContainer>
+          </CustomerElement>
+        ))}
+      </CustomersContainer>
+      <CustomersTitle>Lista urlopów</CustomersTitle>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHeaderCell>Pracownik</TableHeaderCell>
+            <TableHeaderCell>Dni</TableHeaderCell>
+            <TableHeaderCell>Stan</TableHeaderCell>
+            <TableHeaderCell>Szczegóły</TableHeaderCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {vacations.map((vacation) => (
+            <TableRow key={vacation.id}>
+              <TableCell>{vacation.employerName}</TableCell>
+              <TableCell>{vacation.daysNum}</TableCell>
+              <TableCell
+                style={{
+                  color: getColorByTaskStatus(vacation.taskStatus),
+                  fontWeight: "bold",
+                }}
+              >
+                {vacation.taskStatus}
+              </TableCell>
+              <TableCell>
+                <NavLinkName as={NavLink} to={`/vacationId/${vacation.id}`}>
+                  Podgląd
+                </NavLinkName>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </MainMenu>
+  );
+};
+
+export default Menu;
+
 
 const MainMenu = styled.div`
   width: 100%;
@@ -155,95 +240,3 @@ const NavLinkName = styled.a`
   font-weight: bold;
   text-decoration: none;
 `;
-const getColorByTaskStatus = (taskStatus: string) => {
-  switch (taskStatus) {
-    case "Zrealizowano":
-      return "green";
-    case "Odrzucono":
-      return "red";
-    default:
-      return "orange";
-  }
-};
-
-const Menu = () => {
-  const { vacations } = useVacations();
-  const employeeList = useEmployeeList();
-
-  return (
-    <MainMenu>
-      <CustomersTitle>Pracownicy</CustomersTitle>
-      <CustomersContainer>
-        {employeeList.map((employee) => (
-          <CustomerElement>
-            <CustomerInitiated color={employee.initialsColor}>
-              {getInitials(employee.username)}
-            </CustomerInitiated>
-            <CustomerName>{employee.username}</CustomerName>
-            <CustomerVacationsContainer>
-              <CustomerVacationsAccepts>
-                <VacationsAcceptsColor></VacationsAcceptsColor>
-                <VacationsAcceptsNumber>
-                  {countAcceptedVacations(vacations, employee.id)}
-                </VacationsAcceptsNumber>
-                <CustomerVacationsState></CustomerVacationsState>
-              </CustomerVacationsAccepts>
-            </CustomerVacationsContainer>
-            <CustomerVacationsContainer>
-              <CustomerVacationsDuring>
-                <VacationsDuringColor></VacationsDuringColor>
-                <VacationsAcceptsNumber>
-                  {countDuringVacations(vacations, employee.id)}
-                </VacationsAcceptsNumber>
-                <CustomerVacationsState></CustomerVacationsState>
-              </CustomerVacationsDuring>
-            </CustomerVacationsContainer>
-            <CustomerVacationsContainer>
-              <CustomerVacationsRejected>
-                <VacationsRejectedColor></VacationsRejectedColor>
-                <VacationsAcceptsNumber>
-                  {countRejectedVacations(vacations, employee.id)}
-                </VacationsAcceptsNumber>
-                <CustomerVacationsState></CustomerVacationsState>
-              </CustomerVacationsRejected>
-            </CustomerVacationsContainer>
-          </CustomerElement>
-        ))}
-      </CustomersContainer>
-      <CustomersTitle>Lista urlopów</CustomersTitle>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderCell>Pracownik</TableHeaderCell>
-            <TableHeaderCell>Dni</TableHeaderCell>
-            <TableHeaderCell>Stan</TableHeaderCell>
-            <TableHeaderCell>Szczegóły</TableHeaderCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {vacations.map((vacation) => (
-            <TableRow key={vacation.id}>
-              <TableCell>{vacation.employerName}</TableCell>
-              <TableCell>{vacation.daysNum}</TableCell>
-              <TableCell
-                style={{
-                  color: getColorByTaskStatus(vacation.taskStatus),
-                  fontWeight: "bold",
-                }}
-              >
-                {vacation.taskStatus}
-              </TableCell>
-              <TableCell>
-                <NavLinkName as={NavLink} to={`/vacationId/${vacation.id}`}>
-                  Podgląd
-                </NavLinkName>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </MainMenu>
-  );
-};
-
-export default Menu;
