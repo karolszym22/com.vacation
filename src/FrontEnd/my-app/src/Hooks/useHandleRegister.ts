@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { initialsColorGenerator } from '../Functions/InitialsColorGenerator';
+import { initialsColorGenerator } from '../Utils/InitialsColorGenerator';
 
 const useHandleRegister = () => {
   const [usernameError, setUsernameError] = useState('');
