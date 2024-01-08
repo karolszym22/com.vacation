@@ -32,19 +32,7 @@ export interface Vacation {
   personId: number;
 }
 
-const MainWrapper = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-`;
 
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
 
 function Main() {
   const [, setVacations] = useState<Vacation[]>([]);
@@ -94,3 +82,19 @@ function Main() {
 }
 
 export default Main;
+
+
+
+const MainWrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+`;
+
+const Wrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
