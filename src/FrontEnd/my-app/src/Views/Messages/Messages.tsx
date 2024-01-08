@@ -14,7 +14,7 @@ import { ChatElementDescriptionI } from "../../Types/ChatElementDescription";
 import { Correspondences } from "../../Types/Correspondences";
 import { ChangeBoxMessageStatusI } from "../../Types/ChangeBoxMessageStatusI";
 import { ChatElementAuthorI } from "../../Types/ChatElementAuthorI";
-import { getInitials } from "../../Functions/getInitials.";
+import { getInitials } from "../../Utils/getInitials.";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -29,6 +29,344 @@ interface UserState {
   email: string;
   employerType: string;
 }
+
+function Messages() {
+  const [allCoresspondences, setAllCoresspondences] = useState<
+    Correspondences[]
+  >([]);
+  const [userList, setUsersList] = useState<UserState[]>([]);
+  const [description, setMessage] = useState("");
+  const [currentCoresspondence, setCurrentCoresspondence] = useState(false);
+  const [corresspondenceMessagesList, setCorresspondenceMessagesList] =
+    useState<Message[]>([]);
+  const [, setIsMenuOpen] = useState(false);
+  const [recipientName, setRecipientName] = useState<String>();
+  const [recipientId, setRecipientId] = useState<number>();
+  const [correspondenceId, setCorrespondenceId] = useState<number>();
+  const { overlayVisible } = useContext(OverlayVisibleContext);
+  const { modalVisible } = useContext(OverlayVisibleContext);
+  const { hamburgerVisible } = useContext(OverlayVisibleContext);
+  const [title, setTitle] = useState("");
+  const userName = useSelector(
+    (state: RootState) => state.authorization.user.name
+  );
+  const authorId = useSelector(
+    (state: RootState) => state.authorization.user.id
+  );
+  const userInitialsColor = useSelector(
+    (state: RootState) => state.authorization.user.employerInitialsColor
+  );
+  const [text, setText] = useState("");
+
+  function handleOnEnter(text: String) {
+    console.log("enter", text);
+  }
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/NewUser");
+      const data = await response.json();
+      setUsersList(data);
+      console.log("MOJE USERY", userList);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const openCorrespondence = async (corespondenceId: number) => {
+    setCurrentCoresspondence(true);
+    alert(corespondenceId);
+    setCorrespondenceId(corespondenceId);
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/coresspondenceMessages",
+        {
+          corespondenceId: corespondenceId,
+        }
+      );
+      console.log(response.data);
+      setCorresspondenceMessagesList(response.data);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
+
+  const addNewCorrespondence = () => {
+    setCurrentCoresspondence(false);
+  };
+
+  useEffect(() => {
+    if (correspondenceId) {
+      const fetchCorrespondenceMessages = async () => {
+        try {
+          const response = await axios.post(
+            "http://localhost:8080/coresspondenceMessages",
+            {
+              corespondenceId: correspondenceId,
+            }
+          );
+          console.log(response.data);
+          setCorresspondenceMessagesList(response.data);
+        } catch (error) {
+          console.error("Error fetching correspondence messages:", error);
+        }
+      };
+
+      fetchCorrespondenceMessages();
+    }
+  }, [corresspondenceMessagesList]);
+
+  function formatDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  const handleSubmit = async (description: string, title: string) => {
+    const message = {
+      title,
+      description,
+      authorId,
+      userName,
+      recipientId,
+      recipientName,
+      correspondenceId,
+      date: formatDate(),
+      authorName: userName,
+      initialsColor: userInitialsColor,
+    };
+    const correspondence = {
+      title,
+      personOneId: authorId,
+      personTwoId: recipientId,
+      authorName: userName,
+      date: new Date(),
+    };
+
+    const dataToSend = {
+      correspondence,
+      message,
+    };
+
+    if (!currentCoresspondence) {
+      alert("pierwsze");
+      try {
+        const response = await fetch(
+          "http://localhost:8080/newCorrespondenceAndMessage",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+          }
+        );
+      } catch (error) {
+        console.error("Error adding vacation:", error);
+      }
+    } else {
+      alert("drugie");
+      try {
+        const response = await fetch("http://localhost:8080/newMessage", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(message),
+        });
+      } catch (error) {
+        console.error("Error adding vacation:", error);
+      }
+    }
+  };
+
+  const setRecipientData = (recipientName: string, recipientId: number) => {
+    setRecipientName(recipientName);
+    setRecipientId(recipientId);
+  };
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/correspondences`)
+      .then((response) => response.json())
+      .then((data) => {
+        setAllCoresspondences(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, [allCoresspondences]);
+
+  return (
+    <div>
+      <MainWrapper>
+        <Overlay
+          overlayVisible={overlayVisible}
+          modalVisible={modalVisible}
+          hamburgerVisible={hamburgerVisible}
+          onClose={closeMenu}
+          errorMessage=""
+        />
+        <Menu />
+        <Wrapper>
+          <HeaderTop
+            userName={userName}
+            headerText="Skrzynka odbiorcza"
+          ></HeaderTop>
+          <Header>
+            <HeaderTitle>Wiadomości</HeaderTitle>
+          </Header>
+          <MainContainer>
+            <BoxContainer>
+              <BoxContainerHeader>
+                <BoxContainerTitle>Skrzynka z wiadomościami</BoxContainerTitle>
+              </BoxContainerHeader>
+              <BoxAreaElements>
+                <MessagesListContainer>
+                  <MessagesListHeader>
+                    <ListHeaderButton onClick={addNewCorrespondence}>
+                      Dodaj korespondencje
+                    </ListHeaderButton>
+                  </MessagesListHeader>
+                  <SearchMessage></SearchMessage>
+                  <MessagesListElements>
+                    {allCoresspondences.map((coresspondences) => (
+                      <React.Fragment key={coresspondences.id}>
+                        <MessageElement>
+                          <MessageOverlay
+                            onClick={() =>
+                              openCorrespondence(coresspondences.id)
+                            }
+                          />
+                          <MessageElementAuthor>
+                            {coresspondences.authorName}
+                          </MessageElementAuthor>
+                          <MessageElementFooter>
+                            <MessageElementTitle>
+                              {coresspondences.title}
+                            </MessageElementTitle>
+                            <MessageElementData>
+                              Data: {coresspondences.date.split("T")[0]}
+                            </MessageElementData>
+                          </MessageElementFooter>
+                        </MessageElement>
+                      </React.Fragment>
+                    ))}
+                  </MessagesListElements>
+                </MessagesListContainer>
+                <MessagesCreatorContainer>
+                  <CreatorPanel>
+                    <EmployeesListContainer visible={currentCoresspondence}>
+                      <EmployeesListTitle>Pracownicy:</EmployeesListTitle>
+                      <EmployeesListElements>
+                        {userList.map((user, index) => (
+                          <React.Fragment key={user.id}>
+                            <EmployeeElement
+                              onClick={() =>
+                                setRecipientData(user.username, user.id)
+                              }
+                            >
+                              <EmployeeElementOverlay></EmployeeElementOverlay>
+                              <EmployeeNameContainer>
+                                <EmployeeName>{user.username}</EmployeeName>
+                              </EmployeeNameContainer>
+                            </EmployeeElement>
+                            {index !== userList.length - 1 && ", "}
+                          </React.Fragment>
+                        ))}
+                      </EmployeesListElements>
+                    </EmployeesListContainer>
+                    <CreatorPanelHeader visible={currentCoresspondence}>
+                      <RecipientArea>
+                        Do: <a>{recipientName}</a>
+                      </RecipientArea>
+                      <TitleArea>
+                        Tytuł:
+                        <TitleValue
+                          type="text"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                          placeholder="Wpisz tytuł wiadomości..."
+                        />
+                      </TitleArea>
+                    </CreatorPanelHeader>
+                  </CreatorPanel>
+                  <ChatArea>
+                    {corresspondenceMessagesList.map((message) => (
+                      <React.Fragment key={message.id}>
+                        <ChatElement
+                          alignItems={
+                            message.authorId === authorId ? "end" : "start"
+                          }
+                        >
+                          <ChatElementContainer
+                            alignItems={
+                              message.authorId === authorId ? "end" : "start"
+                            }
+                          >
+                            <ChatAuthorContainer
+                              alignItems={
+                                message.authorId === authorId ? "none" : "flex"
+                              }
+                            >
+                              <CustomerInitiated color={message.initialsColor}>
+                                {getInitials(message.authorName)}
+                              </CustomerInitiated>
+                              <ChatElementAuthor
+                                textAlign={
+                                  message.authorId === authorId
+                                    ? "end"
+                                    : "start"
+                                }
+                              >
+                                {message.authorName}
+                              </ChatElementAuthor>
+                            </ChatAuthorContainer>
+                            <ChatElementDescription
+                              color={
+                                message.authorId === authorId
+                                  ? "#74a4f27f"
+                                  : "#68e89b75"
+                              }
+                            >
+                              {message.description}
+                            </ChatElementDescription>
+                          </ChatElementContainer>
+                        </ChatElement>
+                      </React.Fragment>
+                    ))}
+                  </ChatArea>
+                  <TextAreaContainer>
+                    <InputEmoji
+                      value={description}
+                      onChange={setMessage}
+                      cleanOnEnter
+                      onEnter={() => handleSubmit(description, title)}
+                      placeholder="..."
+                    />
+                  </TextAreaContainer>
+                </MessagesCreatorContainer>
+              </BoxAreaElements>
+            </BoxContainer>
+          </MainContainer>
+        </Wrapper>
+      </MainWrapper>
+    </div>
+  );
+}
+
+export default Messages;
+
+
+
+
+
 
 const MainWrapper = styled.div`
   width: 100%;
@@ -345,333 +683,3 @@ const CustomerInitiated = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-function Messages() {
-  const [allCoresspondences, setAllCoresspondences] = useState<
-    Correspondences[]
-  >([]);
-  const [userList, setUsersList] = useState<UserState[]>([]);
-  const [description, setMessage] = useState("");
-  const [currentCoresspondence, setCurrentCoresspondence] = useState(false);
-  const [corresspondenceMessagesList, setCorresspondenceMessagesList] =
-    useState<Message[]>([]);
-  const [, setIsMenuOpen] = useState(false);
-  const [recipientName, setRecipientName] = useState<String>();
-  const [recipientId, setRecipientId] = useState<number>();
-  const [correspondenceId, setCorrespondenceId] = useState<number>();
-  const { overlayVisible } = useContext(OverlayVisibleContext);
-  const { modalVisible } = useContext(OverlayVisibleContext);
-  const { hamburgerVisible } = useContext(OverlayVisibleContext);
-  const [title, setTitle] = useState("");
-  const userName = useSelector(
-    (state: RootState) => state.authorization.user.name
-  );
-  const authorId = useSelector(
-    (state: RootState) => state.authorization.user.id
-  );
-  const userInitialsColor = useSelector(
-    (state: RootState) => state.authorization.user.employerInitialsColor
-  )
-  const [text, setText] = useState("");
-
-  function handleOnEnter(text: String) {
-    console.log("enter", text);
-  }
-  const fetchData = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/NewUser");
-      const data = await response.json();
-      setUsersList(data);
-      console.log("MOJE USERY", userList);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchData();
-  }, []);
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  const openCorrespondence = async (corespondenceId: number) => {
-    setCurrentCoresspondence(true);
-    alert(corespondenceId);
-    setCorrespondenceId(corespondenceId);
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/coresspondenceMessages",
-        {
-          corespondenceId: corespondenceId,
-        }
-      );
-      console.log(response.data);
-      setCorresspondenceMessagesList(response.data);
-    } catch (error) {
-      console.error("Login error:", error);
-    }
-  };
-
-  const addNewCorrespondence = () => {
-    setCurrentCoresspondence(false);
-  };
-
-  useEffect(() => {
-    if (correspondenceId) {
-      const fetchCorrespondenceMessages = async () => {
-        try {
-          const response = await axios.post(
-            "http://localhost:8080/coresspondenceMessages",
-            {
-              corespondenceId: correspondenceId,
-            }
-          );
-          console.log(response.data);
-          setCorresspondenceMessagesList(response.data);
-        } catch (error) {
-          console.error("Error fetching correspondence messages:", error);
-        }
-      };
-
-      fetchCorrespondenceMessages();
-    }
-  }, [corresspondenceMessagesList]);
-
-  function formatDate() {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  }
-
-  const handleSubmit = async (description: string, title: string) => {
-    const message = {
-      title,
-      description,
-      authorId,
-      userName,
-      recipientId,
-      recipientName,
-      correspondenceId,
-      date: formatDate(),
-      authorName: userName,
-      initialsColor: userInitialsColor
-    };
-    const correspondence = {
-      title,
-      personOneId: authorId,
-      personTwoId: recipientId,
-      authorName: userName,
-      date: new Date(),
-    };
-
-    const dataToSend = {
-      correspondence,
-      message,
-    };
-
-    if (!currentCoresspondence) {
-      alert("pierwsze");
-      try {
-        const response = await fetch(
-          "http://localhost:8080/newCorrespondenceAndMessage",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataToSend),
-          }
-        );
-      } catch (error) {
-        console.error("Error adding vacation:", error);
-      }
-    } else {
-      alert("drugie");
-      try {
-        const response = await fetch("http://localhost:8080/newMessage", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(message),
-        });
-      } catch (error) {
-        console.error("Error adding vacation:", error);
-      }
-    }
-  };
-
-  const setRecipientData = (recipientName: string, recipientId: number) => {
-    setRecipientName(recipientName);
-    setRecipientId(recipientId);
-  };
-
-  useEffect(() => {
-    fetch(`http://localhost:8080/correspondences`)
-      .then((response) => response.json())
-      .then((data) => {
-        setAllCoresspondences(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, [allCoresspondences]);
-
-  return (
-    <div>
-      <MainWrapper>
-        <Overlay
-          overlayVisible={overlayVisible}
-          modalVisible={modalVisible}
-          hamburgerVisible={hamburgerVisible}
-          onClose={closeMenu}
-          errorMessage=""
-        />
-        <Menu />
-        <Wrapper>
-          <HeaderTop
-            userName={userName}
-            headerText="Skrzynka odbiorcza"
-          ></HeaderTop>
-          <Header>
-            <HeaderTitle>Wiadomości</HeaderTitle>
-          </Header>
-          <MainContainer>
-            <BoxContainer>
-              <BoxContainerHeader>
-                <BoxContainerTitle>Skrzynka z wiadomościami</BoxContainerTitle>
-              </BoxContainerHeader>
-              <BoxAreaElements>
-                <MessagesListContainer>
-                  <MessagesListHeader>
-                    <ListHeaderButton onClick={addNewCorrespondence}>
-                      Dodaj korespondencje
-                    </ListHeaderButton>
-                  </MessagesListHeader>
-                  <SearchMessage></SearchMessage>
-                  <MessagesListElements>
-                    {allCoresspondences.map((coresspondences) => (
-                      <React.Fragment key={coresspondences.id}>
-                        <MessageElement>
-                          <MessageOverlay
-                            onClick={() =>
-                              openCorrespondence(coresspondences.id)
-                            }
-                          />
-                          <MessageElementAuthor>
-                            {coresspondences.authorName}
-                          </MessageElementAuthor>
-                          <MessageElementFooter>
-                            <MessageElementTitle>
-                              {coresspondences.title}
-                            </MessageElementTitle>
-                            <MessageElementData>
-                              Data: {coresspondences.date.split("T")[0]}
-                            </MessageElementData>
-                          </MessageElementFooter>
-                        </MessageElement>
-                      </React.Fragment>
-                    ))}
-                  </MessagesListElements>
-                </MessagesListContainer>
-                <MessagesCreatorContainer>
-                  <CreatorPanel>
-                    <EmployeesListContainer visible={currentCoresspondence}>
-                      <EmployeesListTitle>Pracownicy:</EmployeesListTitle>
-                      <EmployeesListElements>
-                        {userList.map((user, index) => (
-                          <React.Fragment key={user.id}>
-                            <EmployeeElement
-                              onClick={() =>
-                                setRecipientData(user.username, user.id)
-                              }
-                            >
-                              <EmployeeElementOverlay></EmployeeElementOverlay>
-                              <EmployeeNameContainer>
-                                <EmployeeName>{user.username}</EmployeeName>
-                              </EmployeeNameContainer>
-                            </EmployeeElement>
-                            {index !== userList.length - 1 && ", "}
-                          </React.Fragment>
-                        ))}
-                      </EmployeesListElements>
-                    </EmployeesListContainer>
-                    <CreatorPanelHeader visible={currentCoresspondence}>
-                      <RecipientArea>
-                        Do: <a>{recipientName}</a>
-                      </RecipientArea>
-                      <TitleArea>
-                        Tytuł:
-                        <TitleValue
-                          type="text"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                          placeholder="Wpisz tytuł wiadomości..."
-                        />
-                      </TitleArea>
-                    </CreatorPanelHeader>
-                  </CreatorPanel>
-                  <ChatArea>
-                    {corresspondenceMessagesList.map((message) => (
-                      <React.Fragment key={message.id}>
-                        <ChatElement
-                          alignItems={
-                            message.authorId === authorId ? "end" : "start"
-                          }
-                        >
-                          <ChatElementContainer
-                          alignItems={
-                            message.authorId === authorId ? "end" : "start"
-                          }
-                          
-                          >
-                            <ChatAuthorContainer alignItems={
-                            message.authorId === authorId ? "none" : "flex"
-                          }>
-                            <CustomerInitiated color={message.initialsColor }>
-                              {getInitials(message.authorName)}
-                            </CustomerInitiated>
-                            <ChatElementAuthor
-                              textAlign={
-                                message.authorId === authorId ? "end" : "start"
-                              }
-                            >
-                              {message.authorName}
-                            </ChatElementAuthor>
-                            </ChatAuthorContainer>
-                            <ChatElementDescription
-                              color={
-                                message.authorId === authorId
-                                  ? "#74a4f27f"
-                                  : "#68e89b75"
-                              }
-                            >
-                              {message.description}
-                            </ChatElementDescription>
-                          </ChatElementContainer>
-                        </ChatElement>
-                      </React.Fragment>
-                    ))}
-                  </ChatArea>
-                  <TextAreaContainer>
-                    <InputEmoji
-                      value={description}
-                      onChange={setMessage}
-                      cleanOnEnter
-                      onEnter={() => handleSubmit(description, title)}
-                      placeholder="..."
-                    />
-                  </TextAreaContainer>
-                </MessagesCreatorContainer>
-              </BoxAreaElements>
-            </BoxContainer>
-          </MainContainer>
-        </Wrapper>
-      </MainWrapper>
-    </div>
-  );
-}
-
-export default Messages;
