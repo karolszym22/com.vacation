@@ -5,72 +5,6 @@ import Overlay from "../../Components/Overlay/Overlay";
 import { NavLink } from "react-router-dom";
 import useHandleRegister from "../../Hooks/useHandleRegister";
 
-const Container = styled.div`
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-image: url(${background});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh;
-`;
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 250px;
-  @media (max-width: 360px) {
-    width: 200px;
-  }
-`;
-const Title = styled.h2`
-  font-size: 1.5em;
-  margin-bottom: 20px;
-`;
-
-const ErrorText = styled.div`
-  color: red;
-  padding: 10px;
-  box-sizing: border-box;
-  font-size: 12px;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin: 5px 0;
-  width: 100%;
-`;
-
-const Select = styled.select`
-  padding: 5px;
-  margin: 5px 0;
-  width: 150px;
-  border: 1px solid #b1adad;
-  border-radius: 5px;
-  background-color: #ffffff;
-  color: #646262;
-`;
-
-const Button = styled.button`
-  padding: 10px 25px;
-  margin: 15px 80px;
-  width: 100px;
-  background-color: orange;
-  color: white;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-`;
-const BottomTitle = styled.h2`
-  color: #646262;
-`;
-const JoinLink = styled.a`
-  color: #31a6e5;
-  text-decoration: none;
-`;
-
 const Register: React.FC = () => {
   const {
     handleSubmit,
@@ -166,3 +100,72 @@ const Register: React.FC = () => {
 };
 
 export default Register;
+
+
+
+
+const Container = styled.div`
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url(${background});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+`;
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  @media (max-width: 360px) {
+    width: 200px;
+  }
+`;
+const Title = styled.h2`
+  font-size: 1.5em;
+  margin-bottom: 20px;
+`;
+
+const ErrorText = styled.div`
+  color: red;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 12px;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+`;
+
+const Select = styled.select`
+  padding: 5px;
+  margin: 5px 0;
+  width: 150px;
+  border: 1px solid #b1adad;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #646262;
+`;
+
+const Button = styled.button`
+  padding: 10px 25px;
+  margin: 15px 80px;
+  width: 100px;
+  background-color: orange;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+`;
+const BottomTitle = styled.h2`
+  color: #646262;
+`;
+const JoinLink = styled.a`
+  color: #31a6e5;
+  text-decoration: none;
+`;
