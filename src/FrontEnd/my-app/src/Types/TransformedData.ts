@@ -1,4 +1,5 @@
 export interface TransformedData {
-    dayNumber: number;
-    employeesList: string[];
-  }
+  dayNumber: number;
+  monthNumber: number;
+  employeesList: string[];
+}
