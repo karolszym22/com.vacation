@@ -14,22 +14,57 @@ interface SideMenuProps {
 }
 
 
-const CustomHomeIcon = styled(FiHome)`
-  width: 15px;
-  height: 15px;
-  margin: 5px;
-  display: block;
-  padding: 8px 5px;
-`;
 
-const CustomLoginIcon = styled(FiGitBranch)`
-  width: 15px;
-  height: 15px;
-  margin: 5px;
-  display: block;
-  padding: 8px 5px;
-`;
-const CustomRegisterIcon = styled(FiPlusCircle)`
+
+const Menu = () => {
+  const { isLogged, LogOut } = useMenuData();
+
+  return (
+   
+    <SideMenu>
+      <MenuLogoContainer>
+        <MenuNavLogo>Urlopy</MenuNavLogo>
+      </MenuLogoContainer>
+      <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/">
+          Strona główna
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/calendar">
+          Kalendarz
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/messages">
+          Wiadomości
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomNewVacationIcon />
+        <NavLinkName as={NavLink} to="/newVacation">
+          Dodaj nowy urlop
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLinkSpecial isLogged={isLogged}>
+        <NavLinkNameSpecial onClick={LogOut} as={NavLink} to="/signIn">
+          Wyloguj się
+        </NavLinkNameSpecial>
+      </MenuNavLinkSpecial>
+    </SideMenu>
+    
+  );
+};
+
+export default Menu;
+
+
+
+
+const CustomHomeIcon = styled(FiHome)`
   width: 15px;
   height: 15px;
   margin: 5px;
@@ -123,48 +158,3 @@ const SideMenu = styled.div`
     display: none;
   }
 `;
-
-const Menu = () => {
-  const { isLogged, LogOut } = useMenuData();
-
-  return (
-   
-    <SideMenu>
-      <MenuLogoContainer>
-        <MenuNavLogo>Urlopy</MenuNavLogo>
-      </MenuLogoContainer>
-      <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/">
-          Strona główna
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/calendar">
-          Kalendarz
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/messages">
-          Wiadomości
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomNewVacationIcon />
-        <NavLinkName as={NavLink} to="/newVacation">
-          Dodaj nowy urlop
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLinkSpecial isLogged={isLogged}>
-        <NavLinkNameSpecial onClick={LogOut} as={NavLink} to="/signIn">
-          Wyloguj się
-        </NavLinkNameSpecial>
-      </MenuNavLinkSpecial>
-    </SideMenu>
-    
-  );
-};
-
-export default Menu;
