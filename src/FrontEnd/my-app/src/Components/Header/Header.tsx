@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import img from "../../resources/pexels-karolina-grabowska-7876708.jpg";
-import { useHeaderData } from "../../Hooks/useHeader";
+import { useHeaderData } from "../../Hooks/Header/useHeader";
 
 const Header = () => {
   const {
-    userName,
     realizedVacations,
     rejectedVacations,
     duringVacationCount,
