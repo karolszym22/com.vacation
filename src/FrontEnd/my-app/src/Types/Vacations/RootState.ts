@@ -1,4 +1,4 @@
-import { AuthorizationState } from "./AuthorizationState";
+import { AuthorizationState } from "../User/AuthorizationState";
 import { Vacation } from "./Vacation";
 
 export interface RootState {

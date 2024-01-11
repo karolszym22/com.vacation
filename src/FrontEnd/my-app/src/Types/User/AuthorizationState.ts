@@ -1,4 +1,4 @@
-import { UserState } from "./UserState"
+import { UserState } from "../UserState"
 export {}
 export interface AuthorizationState {
     user: UserState;
