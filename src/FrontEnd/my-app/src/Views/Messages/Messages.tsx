@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext} from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import { useSelector } from "react-redux";
@@ -7,14 +7,16 @@ import Overlay from "../../Components/Overlay/Overlay";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
 import { RootState } from "../../Types/RootState";
 import InputEmoji from "react-input-emoji";
-import axios from "axios";
-import { Message } from "../../Types/Message";
+
 import { ChatElementI } from "../../Types/ChatElementI";
 import { ChatElementDescriptionI } from "../../Types/ChatElementDescription";
-import { Correspondences } from "../../Types/Correspondences";
 import { ChangeBoxMessageStatusI } from "../../Types/ChangeBoxMessageStatusI";
 import { ChatElementAuthorI } from "../../Types/ChatElementAuthorI";
 import { getInitials } from "../../Utils/getInitials.";
+import useFetchUserList from "../../Hooks/Messages/useFetchUserList";
+import useCurrentCoresspondence from "../../Hooks/Messages/useCurrentCorespondance";
+import useCoresspondence from "../../Hooks/Messages/useCorespondance";
+import useReciepientData from "../../Hooks/Messages/useReciepientData";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -23,26 +25,23 @@ interface Overlay {
   setOverlayVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
-interface UserState {
-  id: number;
-  username: string;
-  email: string;
-  employerType: string;
-}
 
 function Messages() {
-  const [allCoresspondences, setAllCoresspondences] = useState<
-    Correspondences[]
-  >([]);
-  const [userList, setUsersList] = useState<UserState[]>([]);
+  const { userList } = useFetchUserList();
+  const { allCoresspondences } = useCoresspondence();
+  const { recipientId, recipientName, setRecipientData } = useReciepientData();
+  const {
+    correspondenceId,
+    currentCoresspondence,
+    corresspondenceMessagesList,
+    openCorrespondence,
+    setCurrentCoresspondence,
+  } = useCurrentCoresspondence();
+
+
+
   const [description, setMessage] = useState("");
-  const [currentCoresspondence, setCurrentCoresspondence] = useState(false);
-  const [corresspondenceMessagesList, setCorresspondenceMessagesList] =
-    useState<Message[]>([]);
   const [, setIsMenuOpen] = useState(false);
-  const [recipientName, setRecipientName] = useState<String>();
-  const [recipientId, setRecipientId] = useState<number>();
-  const [correspondenceId, setCorrespondenceId] = useState<number>();
   const { overlayVisible } = useContext(OverlayVisibleContext);
   const { modalVisible } = useContext(OverlayVisibleContext);
   const { hamburgerVisible } = useContext(OverlayVisibleContext);
@@ -56,80 +55,22 @@ function Messages() {
   const userInitialsColor = useSelector(
     (state: RootState) => state.authorization.user.employerInitialsColor
   );
-  const [text, setText] = useState("");
-
-  function handleOnEnter(text: String) {
-    console.log("enter", text);
-  }
-  const fetchData = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/NewUser");
-      const data = await response.json();
-      setUsersList(data);
-      console.log("MOJE USERY", userList);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchData();
-  }, []);
 
   const closeMenu = () => {
     setIsMenuOpen(false);
-  };
-
-  const openCorrespondence = async (corespondenceId: number) => {
-    setCurrentCoresspondence(true);
-    alert(corespondenceId);
-    setCorrespondenceId(corespondenceId);
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/coresspondenceMessages",
-        {
-          corespondenceId: corespondenceId,
-        }
-      );
-      console.log(response.data);
-      setCorresspondenceMessagesList(response.data);
-    } catch (error) {
-      console.error("Login error:", error);
-    }
   };
 
   const addNewCorrespondence = () => {
     setCurrentCoresspondence(false);
   };
 
-  useEffect(() => {
-    if (correspondenceId) {
-      const fetchCorrespondenceMessages = async () => {
-        try {
-          const response = await axios.post(
-            "http://localhost:8080/coresspondenceMessages",
-            {
-              corespondenceId: correspondenceId,
-            }
-          );
-          console.log(response.data);
-          setCorresspondenceMessagesList(response.data);
-        } catch (error) {
-          console.error("Error fetching correspondence messages:", error);
-        }
-      };
-
-      fetchCorrespondenceMessages();
-    }
-  }, [corresspondenceMessagesList]);
-
-  function formatDate() {
+  const formatDate = () => {
     const date = new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
-  }
+  };
 
   const handleSubmit = async (description: string, title: string) => {
     const message = {
@@ -157,51 +98,26 @@ function Messages() {
       message,
     };
 
-    if (!currentCoresspondence) {
-      alert("pierwsze");
-      try {
-        const response = await fetch(
-          "http://localhost:8080/newCorrespondenceAndMessage",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataToSend),
-          }
-        );
-      } catch (error) {
-        console.error("Error adding vacation:", error);
+    try {
+      let endpoint = "http://localhost:8080/newMessage";
+      let requestBody = JSON.stringify(message);
+
+      if (!currentCoresspondence) {
+        endpoint = "http://localhost:8080/newCorrespondenceAndMessage";
+        requestBody = JSON.stringify(dataToSend);
       }
-    } else {
-      alert("drugie");
-      try {
-        const response = await fetch("http://localhost:8080/newMessage", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(message),
-        });
-      } catch (error) {
-        console.error("Error adding vacation:", error);
-      }
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: requestBody,
+      });
+    } catch (error) {
+      console.error("Error adding vacation:", error);
     }
   };
-
-  const setRecipientData = (recipientName: string, recipientId: number) => {
-    setRecipientName(recipientName);
-    setRecipientId(recipientId);
-  };
-
-  useEffect(() => {
-    fetch(`http://localhost:8080/correspondences`)
-      .then((response) => response.json())
-      .then((data) => {
-        setAllCoresspondences(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, [allCoresspondences]);
 
   return (
     <div>
@@ -363,11 +279,6 @@ function Messages() {
 
 export default Messages;
 
-
-
-
-
-
 const MainWrapper = styled.div`
   width: 100%;
   height: 100vh;
@@ -434,7 +345,7 @@ const BoxAreaElements = styled.div`
 
 const MessagesListContainer = styled.div`
   width: 370px;
- 
+
   height: 100%;
   border-right: 1px solid #0000003f;
   @media (max-width: 850px) {
@@ -487,19 +398,6 @@ const MessageOverlay = styled.div`
   }
 `;
 
-const MessageElementHeader = styled.div`
-  width: 100%;
-  height: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-  background-color: #63c8c89b;
-  color: white;
-  font-weight: bold;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-`;
 const MessageElementTitle = styled.div`
   width: 100%;
   height: 22px;
@@ -566,8 +464,7 @@ const CreatorPanelHeader = styled.div<ChangeBoxMessageStatusI>`
 `;
 
 const RecipientArea = styled.div``;
-const TitleArea = styled.div`
-`;
+const TitleArea = styled.div``;
 const TitleValue = styled.input`
   border: none;
   margin-left: 3px;
@@ -583,10 +480,9 @@ const ChatArea = styled.div`
   height: 100%;
   overflow-y: scroll;
   background-color: white;
-  
+
   @media (max-width: 850px) {
     margin-top: 30px;
-    
   }
 `;
 
@@ -611,7 +507,7 @@ const ChatAuthorContainer = styled.div<ChatElementI>`
   justify-content: center;
   align-items: center;
   display: ${(props) => props.alignItems};
-`
+`;
 const ChatElementDescription = styled.div<ChatElementDescriptionI>`
   background-color: ${(props) => props.color};
   padding: 6px;
@@ -658,6 +554,7 @@ const EmployeeElementOverlay = styled.div`
   width: 140px;
   height: 25px;
   cursor: pointer;
+  color: black;
 `;
 
 const EmployeeNameContainer = styled.div`
