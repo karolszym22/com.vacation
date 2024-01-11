@@ -1,14 +1,5 @@
 import { useEffect, useState } from "react";
-
-interface Vacation {
-  id: number;
-  description: string;
-  daysNum: number;
-  done: boolean;
-  taskStatus: string;
-  employerName:string;
-  personId: number
-}
+import { Vacation } from "../Types/Vacation";
 
 export const useVacations = () => {
   const [vacations, setVacations] = useState<Vacation[]>([]);
