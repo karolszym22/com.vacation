@@ -7,55 +7,15 @@ import background from "../../resources/rm222batch3-mind-10.jpg";
 import styled from "styled-components";
 import Overlay from "../../Components/Overlay/Overlay";
 import { NavLink } from "react-router-dom";
-
-
+import useHandleLogin from "../../Hooks/Login/useHandleLogin";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  const { errorMessage, email, password, setEmail, setPassword, handleSubmit } =
+    useHandleLogin();
+
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [hamburgerVisible, setHamburgerVisible] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); 
-  const [loggedIn, setLoggedIn] = useState(false);
-  const dispatch = useDispatch();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-        const response = await axios.post("http://localhost:8080/login", {
-            email,
-            password,
-        });
-        dispatch(
-          user({
-            id: response.data.id,
-            name: response.data.username,
-            email: response.data.email,
-            employerType: response.data.employerType,
-            employerInitialsColor: response.data.initialsColor
-          })
-        );
-
-        navigate("/");
-        localStorage.setItem("user", JSON.stringify(response.data));
-        setLoggedIn(true);
-
-        console.log(
-            "Initial State after Login:",
-            response.data.id,
-            response.data.username,
-            response.data.email
-        );
-    } catch (error) {
-        console.error("Login error:", error);
-        setOverlayVisible(true);
-        setModalVisible(true);
-        setHamburgerVisible(false);
-        setErrorMessage("Logowanie nie udane. Zły email lub hasło"); 
-    }
-};
 
   const closeOverlay = () => {
     setOverlayVisible(false);
@@ -63,7 +23,13 @@ const Login: React.FC = () => {
 
   return (
     <Container>
-      <Overlay overlayVisible={overlayVisible} modalVisible = {modalVisible} hamburgerVisible={hamburgerVisible}  onClose={closeOverlay} errorMessage={errorMessage} />
+      <Overlay
+        overlayVisible={overlayVisible}
+        modalVisible={modalVisible}
+        hamburgerVisible={hamburgerVisible}
+        onClose={closeOverlay}
+        errorMessage={errorMessage}
+      />
       <Title>Login</Title>
       <Form onSubmit={handleSubmit}>
         <Input
@@ -80,7 +46,12 @@ const Login: React.FC = () => {
         />
         <Button type="submit">Login</Button>
       </Form>
-      <BottomTitle>Nie masz konta? <JoinLink as={NavLink} to="/register">Dołącz do nas jeszcze dzis!</JoinLink></BottomTitle>
+      <BottomTitle>
+        Nie masz konta?{" "}
+        <JoinLink as={NavLink} to="/register">
+          Dołącz do nas jeszcze dzis!
+        </JoinLink>
+      </BottomTitle>
     </Container>
   );
 };
@@ -104,8 +75,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   min-width: 250px;
- justify-content: center;
- align-items: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Input = styled.input`
@@ -113,7 +84,7 @@ const Input = styled.input`
   margin: 5px 0;
   width: 100%;
   @media (max-width: 360px) {
-    width: 80%
+    width: 80%;
   }
 `;
 
@@ -142,4 +113,4 @@ const BottomTitle = styled.h3`
 const JoinLink = styled.a`
   color: #31a6e5;
   text-decoration: none;
-`
+`;
