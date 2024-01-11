@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import RootState from "../../Reducers/Store/index";
-import { addDays, isSaturday, isSunday } from "date-fns";
 import Menu from "../../Components/SideMenu/SideMenu";
 import { NavLink } from "react-router-dom";
 import Overlay from "../../Components/Overlay/Overlay";
@@ -11,6 +10,9 @@ import { AuthorizationState } from "../../Types/AuthorizationState";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
 import { getColorByTaskStatus } from "../../Utils/getColorByStatus";
+import usePersonVacations from "../../Hooks/NewVacation/useFetchPersonVacations";
+import { calculateBusinessDays } from "../../Utils/calculateBusinessDays";
+
 interface Overlay {
   overlayVisible: boolean;
   modalVisible: boolean;
@@ -29,8 +31,20 @@ interface RootState {
 
 
 function NewVacation() {
+
+  const userName = useSelector(
+    (state: RootState) => state.authorization.user.name
+  );
+  const personId = useSelector(
+    (state: RootState) => state.authorization.user.id
+  );
+  const employerName = useSelector(
+    (state: RootState) => state.authorization.user.name
+  );
+
+  const personVacations = usePersonVacations(personId);
   const [vacations, setVacations] = useState<any[]>([]);
-  const [personVacations, setPersonVacations] = useState<Vacation[]>([]);
+
   const [description, setDescription] = useState("");
   const [done, setDone] = useState<boolean>(false);
   const [taskStatus, setTaskStatus] = useState("W realizacji");
@@ -45,39 +59,11 @@ function NewVacation() {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedOption, setSelectedOption] = useState("Okolicznościowy");
 
-  const userName = useSelector(
-    (state: RootState) => state.authorization.user.name
-  );
-  const personId = useSelector(
-    (state: RootState) => state.authorization.user.id
-  );
-  const employerName = useSelector(
-    (state: RootState) => state.authorization.user.name
-  );
 
-  useEffect(() => {
-    fetch(`http://localhost:8080/vacations/personVacations/${personId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setPersonVacations(data);
-        console.log(personVacations);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
 
-  const calculateBusinessDays = (start: Date, end: Date) => {
-    let currentDate = new Date(start);
-    let businessDays = 0;
+  
 
-    while (currentDate <= end) {
-      if (!isSaturday(currentDate) && !isSunday(currentDate)) {
-        businessDays++;
-      }
-      currentDate = addDays(currentDate, 1);
-    }
-
-    return businessDays;
-  };
+ 
   const handleEndDateChange = async (newEndDate: string) => {
     setEndDate(newEndDate);
     console.log("Sending request with data:", {
