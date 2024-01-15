@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../Types/Vacations/RootState";
-import { CalendarDay } from "../Types/Calendar/CalendarDay";
-import { Vacation } from "../Types/Vacations/Vacation";
-import { TransformedData } from "../Types/TransformedData";
+import { RootState } from "../../Types/Vacations/RootState";
+import { CalendarDay } from "../../Types/Calendar/CalendarDay";
+import { Vacation } from "../../Types/Vacations/Vacation";
+import { TransformedData } from "../../Types/TransformedData";
 
 
 const useCalendarData = () => {

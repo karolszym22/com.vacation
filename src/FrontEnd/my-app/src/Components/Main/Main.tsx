@@ -26,29 +26,29 @@ const Menu = () => {
             <CustomerName>{employee.username}</CustomerName>
             <CustomerVacationsContainer>
               <CustomerVacationsAccepts>
-                <VacationsAcceptsColor></VacationsAcceptsColor>
+                <VacationsAcceptsColor/>
                 <VacationsAcceptsNumber>
                   {countAcceptedVacations(vacations, employee.id)}
                 </VacationsAcceptsNumber>
-                <CustomerVacationsState></CustomerVacationsState>
+                <CustomerVacationsState/>
               </CustomerVacationsAccepts>
             </CustomerVacationsContainer>
             <CustomerVacationsContainer>
               <CustomerVacationsDuring>
-                <VacationsDuringColor></VacationsDuringColor>
+                <VacationsDuringColor/>
                 <VacationsAcceptsNumber>
                   {countDuringVacations(vacations, employee.id)}
                 </VacationsAcceptsNumber>
-                <CustomerVacationsState></CustomerVacationsState>
+                <CustomerVacationsState/>
               </CustomerVacationsDuring>
             </CustomerVacationsContainer>
             <CustomerVacationsContainer>
               <CustomerVacationsRejected>
-                <VacationsRejectedColor></VacationsRejectedColor>
+                <VacationsRejectedColor/>
                 <VacationsAcceptsNumber>
                   {countRejectedVacations(vacations, employee.id)}
                 </VacationsAcceptsNumber>
-                <CustomerVacationsState></CustomerVacationsState>
+                <CustomerVacationsState/>
               </CustomerVacationsRejected>
             </CustomerVacationsContainer>
           </CustomerElement>
