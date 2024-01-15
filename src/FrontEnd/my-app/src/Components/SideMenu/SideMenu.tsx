@@ -2,8 +2,6 @@ import { useMenuData } from "../../Hooks/useMenu"
 import styled from "styled-components";
 import {
   FiHome,
-  FiGitBranch,
-  FiPlusCircle,
   FiFile,
 } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
