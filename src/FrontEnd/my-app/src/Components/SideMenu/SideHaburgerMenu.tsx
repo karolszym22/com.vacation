@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import {useHamburgerMenuData} from "../../Hooks/useHamburgerMenu"
+import {useHamburgerMenuData} from "../../Hooks/HamburgerMenu/useHamburgerMenu"
 import styled from "styled-components";
 import {
   FiHome,
@@ -27,7 +27,7 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
   return (
     <SideMenu hamburgerVisible={hamburgerVisible}>
       <HideLogoButtonContainer>
-        <HideLogoButton onClick={toggleMenu}></HideLogoButton>
+        <HideLogoButton onClick={toggleMenu}/>
       </HideLogoButtonContainer>
       <MenuLogoContainer>
         <MenuNavLogo>Urlopy</MenuNavLogo>

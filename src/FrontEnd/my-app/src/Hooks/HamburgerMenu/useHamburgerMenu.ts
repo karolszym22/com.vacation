@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { OverlayVisibleContext } from "../Components/Context/OverlayVisibleContext";
+import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
 
 export const useHamburgerMenuData = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
