@@ -4,7 +4,7 @@ import Menu from "../../Components/SideMenu/SideMenu";
 import Overlay from "../../Components/Overlay/Overlay";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import { useSelector } from "react-redux";
-import { RootState } from "../../Types/RootState";
+import { RootState } from "../../Types/Vacations/RootState";
 interface EventDescriptionMap {
   [date: string]: string;
 }

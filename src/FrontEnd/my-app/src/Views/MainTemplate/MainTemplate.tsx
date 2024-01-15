@@ -1,5 +1,4 @@
-
-import {useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { user } from "../../Components/Actions/actions";
 
 interface Props {
@@ -7,10 +6,9 @@ interface Props {
 }
 
 const MainTemplate = ({ children }: Props) => {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
-
-    const storedUser = localStorage.getItem("user");
+  const storedUser = localStorage.getItem("user");
   if (storedUser) {
     const userData = JSON.parse(storedUser);
     dispatch(
@@ -19,11 +17,10 @@ const MainTemplate = ({ children }: Props) => {
         name: userData.username,
         email: userData.email,
         employerType: userData.employerType,
-        employerInitialsColor: userData.initialsColor
+        employerInitialsColor: userData.initialsColor,
       })
     );
   }
-
 
   return <>{children}</>;
 };

@@ -9,7 +9,7 @@ import {
   FiChevronsLeft,
 } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
-import { OverlayVisibleContext } from "../Context/OverlayVisibleContext";
+
 
 interface HamburgerMenuProps {
   hamburgerVisible: boolean;
@@ -18,6 +18,69 @@ interface HamburgerMenuProps {
 interface SideMenuProps {
   isLogged: boolean
 }
+
+
+
+const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
+  const { isMenuOpen, toggleMenu, isLogged, LogOut } = useHamburgerMenuData();
+
+  return (
+    <SideMenu hamburgerVisible={hamburgerVisible}>
+      <HideLogoButtonContainer>
+        <HideLogoButton onClick={toggleMenu}></HideLogoButton>
+      </HideLogoButtonContainer>
+      <MenuLogoContainer>
+        <MenuNavLogo>Urlopy</MenuNavLogo>
+      </MenuLogoContainer>
+
+      <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/">
+          Strona główna
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/">
+          Kalendarz
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomRegisterIcon />
+        <NavLinkName as={NavLink} to="/register">
+          Rejestracja nowego pracownika
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomLoginIcon />
+        <NavLinkName as={NavLink} to="/signIn">
+          Zaloguj się!
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomHomeIcon />
+        <NavLinkName as={NavLink} to="/messages">
+          Wiadomości
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLink>
+        <CustomNewVacationIcon />
+        <NavLinkName as={NavLink} to="/newVacation">
+          Dodaj nowy urlop
+        </NavLinkName>
+      </MenuNavLink>
+      <MenuNavLinkSpecial isLogged={isLogged}>
+        <NavLinkNameSpecial onClick={LogOut} as={NavLink} to="/signIn">
+          Wyloguj się
+        </NavLinkNameSpecial>
+      </MenuNavLinkSpecial>
+    </SideMenu>
+  );
+};
+
+export default HamburgerMenu;
+
+
 
 const CustomHomeIcon = styled(FiHome)`
   width: 15px;
@@ -139,62 +202,3 @@ const SideMenu = styled.div<HamburgerMenuProps>`
   }
 }
 `;
-
-const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ hamburgerVisible }) => {
-  const { isMenuOpen, toggleMenu, isLogged, LogOut } = useHamburgerMenuData();
-
-  return (
-    <SideMenu hamburgerVisible={hamburgerVisible}>
-      <HideLogoButtonContainer>
-        <HideLogoButton onClick={toggleMenu}></HideLogoButton>
-      </HideLogoButtonContainer>
-      <MenuLogoContainer>
-        <MenuNavLogo>Urlopy</MenuNavLogo>
-      </MenuLogoContainer>
-
-      <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/">
-          Strona główna
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/">
-          Kalendarz
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomRegisterIcon />
-        <NavLinkName as={NavLink} to="/register">
-          Rejestracja nowego pracownika
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomLoginIcon />
-        <NavLinkName as={NavLink} to="/signIn">
-          Zaloguj się!
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomHomeIcon />
-        <NavLinkName as={NavLink} to="/messages">
-          Wiadomości
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLink>
-        <CustomNewVacationIcon />
-        <NavLinkName as={NavLink} to="/newVacation">
-          Dodaj nowy urlop
-        </NavLinkName>
-      </MenuNavLink>
-      <MenuNavLinkSpecial isLogged={isLogged}>
-        <NavLinkNameSpecial onClick={LogOut} as={NavLink} to="/signIn">
-          Wyloguj się
-        </NavLinkNameSpecial>
-      </MenuNavLinkSpecial>
-    </SideMenu>
-  );
-};
-
-export default HamburgerMenu;

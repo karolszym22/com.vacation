@@ -5,13 +5,13 @@ import { useSelector } from "react-redux";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import Overlay from "../../Components/Overlay/Overlay";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
-import { RootState } from "../../Types/RootState";
+import { RootState } from "../../Types/Vacations/RootState";
 import InputEmoji from "react-input-emoji";
 
-import { ChatElementI } from "../../Types/ChatElementI";
-import { ChatElementDescriptionI } from "../../Types/ChatElementDescription";
-import { ChangeBoxMessageStatusI } from "../../Types/ChangeBoxMessageStatusI";
-import { ChatElementAuthorI } from "../../Types/ChatElementAuthorI";
+import { ChatElementI } from "../../Types/Chat/ChatElementI";
+import { ChatElementDescriptionI } from "../../Types/Chat/ChatElementDescription";
+import { ChangeBoxMessageStatusI } from "../../Types/Chat/ChangeBoxMessageStatusI";
+import { ChatElementAuthorI } from "../../Types/Chat/ChatElementAuthorI";
 import { getInitials } from "../../Utils/getInitials.";
 import useFetchUserList from "../../Hooks/Messages/useFetchUserList";
 import useCurrentCoresspondence from "../../Hooks/Messages/useCurrentCorespondance";

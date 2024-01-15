@@ -3,7 +3,7 @@ import styled from "styled-components";
 import background from "../../resources/rm222batch3-mind-10.jpg";
 import Overlay from "../../Components/Overlay/Overlay";
 import { NavLink } from "react-router-dom";
-import useHandleRegister from "../../Hooks/useHandleRegister";
+import useHandleRegister from "../../Hooks/Register/useHandleRegister";
 
 const Register: React.FC = () => {
   const {

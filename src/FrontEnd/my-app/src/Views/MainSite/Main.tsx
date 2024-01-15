@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import Overlay from "../../Components/Overlay/Overlay";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext"
-import { RootState } from "../../Types/RootState";
+import { RootState } from "../../Types/Vacations/RootState";
 
 
 interface Overlay {
