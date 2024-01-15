@@ -1,4 +1,4 @@
-import { Vacation } from "../Types/Vacation";
+import { Vacation } from "../Types/Vacations/Vacation";
 
 export const countAcceptedVacations = (
   vacations: Vacation[],
