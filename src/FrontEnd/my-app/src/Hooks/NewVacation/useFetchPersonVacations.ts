@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Vacation } from "../../Types/Vacation";
+import { Vacation } from "../../Types/Vacations/Vacation";
 
 const usePersonVacations = (personId: number) => {
   const [personVacations, setPersonVacations] = useState<Vacation[]>([]);

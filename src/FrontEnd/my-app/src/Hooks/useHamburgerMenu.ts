@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { OverlayVisibleContext } from "../Components/Context/OverlayVisibleContext";
 
-
 export const useHamburgerMenuData = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setOverlayVisible } = useContext(OverlayVisibleContext);
@@ -27,5 +26,3 @@ export const useHamburgerMenuData = () => {
 
   return { isMenuOpen, toggleMenu, isLogged, LogOut };
 };
-
-

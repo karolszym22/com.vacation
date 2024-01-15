@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import { addDays, isSaturday, isSunday } from "date-fns";
-import { Vacation } from "../Types/Vacation";
-import { AuthorizationState } from "../Types/AuthorizationState";
+import { Vacation } from "../Types/Vacations/Vacation";
+import { AuthorizationState } from "../Types/User/AuthorizationState";
 import { OverlayVisibleContext } from "../Components/Context/OverlayVisibleContext";
 
 interface RootState {

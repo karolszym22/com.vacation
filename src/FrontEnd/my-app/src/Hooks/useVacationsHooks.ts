@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Vacation } from "../Types/Vacation";
+import { Vacation } from "../Types/Vacations/Vacation";
 
 export const useVacations = () => {
   const [vacations, setVacations] = useState<Vacation[]>([]);

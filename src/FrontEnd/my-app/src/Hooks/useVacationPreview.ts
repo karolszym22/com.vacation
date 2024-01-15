@@ -2,9 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "../Types/RootState";
+import { RootState } from "../Types/Vacations/RootState";
 import { OverlayVisibleContext } from "../Components/Context/OverlayVisibleContext";
-import { Vacation } from "../Types/Vacation";
+import { Vacation } from "../Types/Vacations/Vacation";
 
 export const useVacationData = () => {
   const { paramValue } = useParams<{ paramValue: string }>();

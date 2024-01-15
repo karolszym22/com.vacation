@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Correspondences } from "../../Types/Correspondences";
+import { Correspondences } from "../../Types/Chat/Correspondences";
 
 const useCoresspondence = () => {
   const [allCoresspondences, setAllCoresspondences] = useState<

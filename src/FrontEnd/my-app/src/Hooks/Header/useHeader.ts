@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { RootState } from "../../Types/RootState";
+import { RootState } from "../../Types/Vacations/RootState";
 import { Vacation } from "../../Reducers/vacationsReducer";
 
 export const useHeaderData = () => {
