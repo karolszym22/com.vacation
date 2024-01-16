@@ -69,6 +69,10 @@ Available steps depend on the logged in user. In this case, the employer is logg
 
 ![szczegoly](https://github.com/karolszym22/com.vacation/assets/32464644/7bcedc08-e17f-4c3c-bb8a-5fc4bbd67569)
 
+Chat
+
+![czat](https://github.com/karolszym22/com.vacation/assets/32464644/b9e890ce-f9aa-46dd-b4c8-a1b00cec9306)
+
 
 
 Generated document
