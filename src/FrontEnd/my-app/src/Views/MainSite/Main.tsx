@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import Header from "../../Components/Header/Header";
@@ -9,7 +9,7 @@ import HeaderTop from "../../Components/Header/HeaderTop";
 import Overlay from "../../Components/Overlay/Overlay";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext"
 import { RootState } from "../../Types/Vacations/RootState";
-
+import { Vacation } from "../../Types/Vacations/Vacation";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -19,18 +19,6 @@ interface Overlay {
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
-export interface Vacation {
-  id?: number;
-  description?: string;
-  daysNum?: number;
-  done?: boolean;
-  taskStatus: string;
-  startDate?: string;
-  endDate?: string;
-  employerName: string;
-  personId: number;
-}
 
 
 
@@ -57,7 +45,7 @@ function Main() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, []);
 
