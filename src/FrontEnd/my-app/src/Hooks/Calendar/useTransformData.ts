@@ -1,24 +1,14 @@
 import { useEffect, Dispatch, SetStateAction } from "react";
+import { Vacation } from "../../Types/Vacations/Vacation";
+import { TransformedData } from "../../Types/Calendar/TransformedData";
 
-interface VacationData {
-  startDate: string;
-  endDate: string;
-  employerName: string;
-}
-
-interface TransformedData {
-  dayNumber: number;
-  monthNumber: number;
-  employeesList: string[];
-}
-
-const useTransformedVacationData = (
+const useTransformedVacation = (
   currentYear: number,
   currentMonth: number,
   setVacationDays: Dispatch<SetStateAction<TransformedData[]>>
 ) => {
   useEffect(() => {
-    const transformData = (data: VacationData[]) => {
+    const transformData = (data: Vacation[]) => {
       const transformedData: TransformedData[] = [];
       data.forEach((item) => {
         const startDate = new Date(item.startDate);
@@ -61,11 +51,11 @@ const useTransformedVacationData = (
       `http://localhost:8080/vacations/calendarVacations/${calculatedMonthNumber}`
     )
       .then((response) => response.json())
-      .then((data: VacationData[]) => {
+      .then((data: Vacation[]) => {
         transformData(data);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, [currentYear, currentMonth, setVacationDays]);
 };
 
-export default useTransformedVacationData;
+export default useTransformedVacation;
