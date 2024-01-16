@@ -5,49 +5,252 @@ import Overlay from "../../Components/Overlay/Overlay";
 import HeaderTop from "../../Components/Header/HeaderTop";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Types/Vacations/RootState";
-interface EventDescriptionMap {
-  [date: string]: string;
-}
+import { getPolishMonthName } from "../../Utils/getPolishMonthName";
+import useTransformedVacationData from "../../Hooks/Calendar/useTransformData";
+import useMonthChange from "../../Hooks/Calendar/useMonthChange";
+import { CalendarDay } from "../../Types/Calendar/CalendarDay";
+import { DateElementProps } from "../../Types/Calendar/CalendarElementsState";
+import { TransformedData } from "../../Types/Calendar/TransformedData";
+import { CalendarStatusColor } from "../../Types/Calendar/CalendarStatusColor";
+import { ElementInformationDisplay } from "../../Types/Calendar/ElementInformationDisplay";
+import { EventDescriptionMap } from "../../Types/Calendar/EventDescriptionMap";
 
-interface CalendarDay {
-  day: number;
-  month: number;
-}
+const Calendar: React.FC = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [eventModalVisible, setEventModalVisible] = useState<boolean>(false);
+  const [eventModalDate, setEventModalDate] = useState<Date | null>(null);
+  const [eventDescription, setEventDescription] = useState<string>("");
+  const [vacationDays, setVacationDays] = useState<TransformedData[]>([]);
+  const [calendar, setCalendar] = useState<CalendarDay[]>([]);
 
-interface Overlay {
-  overlayVisible: boolean;
-  modalVisible: boolean;
-  hamburgerVisible: boolean;
-}
+  const userName = useSelector(
+    (state: RootState) => state.authorization.user.name
+  );
 
-interface CalendarStatusColor {
-  backgroundColor: string;
-}
+  const { currentYear, currentMonth, changeMonth } = useMonthChange();
+  useTransformedVacationData(currentYear, currentMonth, setVacationDays);
 
-interface VacationDescriptionI {
-  selectedOption: string;
-}
+  const generateCalendar = (month: number, year: number) => {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-interface DateElementProps {
-  backgroundColor: "green" | "yellow" | "red" | "transparent";
-}
+    const calendar: CalendarDay[] = [];
 
-interface ElementInformationDisplay {
-  display: "block" | "none";
-}
+    for (let i = 0; i < firstDay; i++) {
+      calendar.push({ day: 0, month });
+    }
 
-interface VacationData {
-  id: number;
-  startDate: string;
-  endDate: string;
-  employerName: string;
-}
+    for (let day = 1; day <= daysInMonth; day++) {
+      calendar.push({ day, month });
+    }
+    setCalendar(calendar);
+  };
 
-interface TransformedData {
-  dayNumber: number;
-  monthNumber: number;
-  employeesList: string[];
-}
+  const closeEventModal = () => {
+    setEventModalDate(null);
+    setEventDescription("");
+    setEventModalVisible(false);
+  };
+
+  const saveEvent = () => {
+    if (eventModalDate) {
+      const key = eventModalDate.toDateString();
+      const eventDescriptions: EventDescriptionMap = JSON.parse(
+        localStorage.getItem("eventDescriptions") || "{}"
+      );
+      eventDescriptions[key] = eventDescription;
+      localStorage.setItem(
+        "eventDescriptions",
+        JSON.stringify(eventDescriptions)
+      );
+      closeEventModal();
+    }
+  };
+
+  const handlePrevMonthClick = () => {
+    changeMonth(-1);
+  };
+
+  const handleNextMonthClick = () => {
+    changeMonth(1);
+  };
+
+  useEffect(() => {
+    generateCalendar(currentMonth, currentYear);
+  }, [currentMonth, currentYear]);
+
+  const stateVacationNumber = (day: number, month: number) => {
+    let backgroundColor:
+      | "#f3201d57"
+      | "#edf10f4c"
+      | "#2dfc0349"
+      | "transparent" = "transparent";
+    if (vacationDays.length > 0) {
+      vacationDays.forEach((currentDay) => {
+        if (currentDay.dayNumber === day && currentDay.monthNumber === month) {
+          if (currentDay.employeesList.length === 1) {
+            backgroundColor = "#2dfc0349";
+          } else if (currentDay.employeesList.length === 2) {
+            backgroundColor = "#edf10f4c";
+          } else if (currentDay.employeesList.length > 2) {
+            backgroundColor = "#f3201d57";
+          }
+        }
+      });
+    }
+
+    return backgroundColor;
+  };
+
+  const stateElementInformation = (day: number, month: number) => {
+    let display: "block" | "none" = "none";
+    vacationDays.forEach((currentDay) => {
+      if (currentDay.dayNumber === day && currentDay.monthNumber === month) {
+        display = "block";
+        return display;
+      }
+    });
+
+    return display;
+  };
+
+  const showVacationEmployees = (day: number, month: number) => {
+    const foundDay = vacationDays.find(
+      (currentDay) =>
+        currentDay.dayNumber === day && currentDay.monthNumber === month
+    );
+
+    if (foundDay) {
+      const employees = foundDay.employeesList;
+
+      return (
+        <div>
+          {employees.map((employee, index) => (
+            <DateInformationValue key={index}>{employee}</DateInformationValue>
+          ))}
+        </div>
+      );
+    } else {
+      return <div></div>;
+    }
+  };
+
+  const fetchCurrentEmployees = (day: number) => {
+    vacationDays.forEach((currentDay) => {
+      if (currentDay.dayNumber === day) {
+        setIsHovered(false);
+      }
+    });
+  };
+
+  return (
+    <MainWrapper>
+      <Menu />
+      <FormWrapper>
+        <HeaderTop userName={userName} headerText="Generator urlopów" />
+        <Header>
+          <HeaderTitle>Nowy urlop</HeaderTitle>
+        </Header>
+        <CalendarContainer>
+          <CalendarHeader>
+            <PrevButton id="prevBtn" onClick={handlePrevMonthClick}>
+              Poprzedni
+            </PrevButton>
+            <MonthYear id="monthYear">
+              {getPolishMonthName(
+                new Date(currentYear, currentMonth).toLocaleString("default", {
+                  month: "long",
+                })
+              ) +
+                " " +
+                currentYear}
+            </MonthYear>
+            <NextButton id="nextBtn" onClick={handleNextMonthClick}>
+              Następny
+            </NextButton>
+          </CalendarHeader>
+          <DaysContainer>
+            <Day>Poniedziałek</Day>
+            <Day>Wtorek</Day>
+            <Day>Środa</Day>
+            <Day>Czwartek</Day>
+            <Day>Piątek</Day>
+            <Day>Sobota</Day>
+            <Day>Niedziela</Day>
+          </DaysContainer>
+
+          <Dates>
+            {calendar.map((calendarDay, index) => (
+              <DateElement
+                key={index}
+                backgroundColor={stateVacationNumber(
+                  calendarDay?.day,
+                  calendarDay.month
+                )}
+                onMouseEnter={() => fetchCurrentEmployees(calendarDay?.day)}
+                onMouseLeave={() => setIsHovered(true)}
+              >
+                {calendarDay?.day !== 0 ? calendarDay.day : null}
+                <DateElementInformation
+                  display={stateElementInformation(
+                    calendarDay?.day,
+                    calendarDay.month
+                  )}
+                >
+                  {showVacationEmployees(calendarDay?.day, calendarDay.month)}
+                </DateElementInformation>
+              </DateElement>
+            ))}
+          </Dates>
+
+          {eventModalVisible && (
+            <EventModal>
+              <EventModalContent>
+                <CloseButton className="close" onClick={closeEventModal}>
+                  &times;
+                </CloseButton>
+                <EventDate id="eventDate">
+                  {eventModalDate?.toDateString()}
+                </EventDate>
+                <EventDescription
+                  className="area"
+                  id="eventDescription"
+                  value={eventDescription}
+                  onChange={(e) => setEventDescription(e.currentTarget.value)}
+                />
+                <SaveEventButton id="saveEventBtn" onClick={saveEvent}>
+                  Save
+                </SaveEventButton>
+              </EventModalContent>
+            </EventModal>
+          )}
+        </CalendarContainer>
+
+        <CalendarHelperContainer>
+          <CalendarLegendContainer>
+            <h1>FAQ</h1>
+            <StatusContainer>
+              <StatusColor backgroundColor={"#2dfc0367"} />
+              <StatusInformation>Jedna osoba ma urlop</StatusInformation>
+            </StatusContainer>
+            <StatusContainer>
+              <StatusColor backgroundColor={"#eef10fa3"} />
+              <StatusInformation>Dwie osoby mają urlop</StatusInformation>
+            </StatusContainer>
+            <StatusContainer>
+              <StatusColor backgroundColor={"#f3211d93"} />
+              <StatusInformation>
+                Wiecej niż dwie osoby mają urlop
+              </StatusInformation>
+            </StatusContainer>
+          </CalendarLegendContainer>
+        </CalendarHelperContainer>
+      </FormWrapper>
+    </MainWrapper>
+  );
+};
+
+export default Calendar;
 
 const Table = styled.table`
   width: 100%;
@@ -226,9 +429,8 @@ const DateInformationValue = styled.p`
   margin: 0px 5px;
   font-weight: bold;
   @media (max-width: 1260px) {
-   font-size: 7px
+    font-size: 7px;
   }
-  
 `;
 
 const EventModal = styled.div`
@@ -276,342 +478,3 @@ const EventDescription = styled.textarea`
 const SaveEventButton = styled.button`
   font-size: 22px;
 `;
-
-const Calendar: React.FC = () => {
-  const currentDate = new Date();
-  const [currentMonth, setCurrentMonth] = useState<number>(
-    currentDate.getMonth()
-  );
-  const [currentYear, setCurrentYear] = useState<number>(
-    currentDate.getFullYear()
-  );
-
-  const [hoveredDay, setHoveredDay] = useState<number | null>(null);
-
-  const [isHovered, setIsHovered] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [eventModalVisible, setEventModalVisible] = useState<boolean>(false);
-  const [eventModalDate, setEventModalDate] = useState<Date | null>(null);
-  const [eventDescription, setEventDescription] = useState<string>("");
-  const [monthNumber, setMonthNumber] = useState<Number>();
-  const [vacationDays, setVacationDays] = useState<TransformedData[]>([]);
-  const [calendar, setCalendar] = useState<CalendarDay[]>([]);
-  const [currentEmployees, setCurrentEmployees] = useState<String[]>([]);
-
-  const [dateElementBackgroundColors, setDateElementBackgroundColors] =
-    useState<Array<"red" | "yellow" | "green" | "transparent">>([]);
-
-  const userName = useSelector(
-    (state: RootState) => state.authorization.user.name
-  );
-
-  const generateCalendar = (month: number, year: number) => {
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    const calendar: CalendarDay[] = [];
-
-    for (let i = 0; i < firstDay; i++) {
-      calendar.push({ day: 0, month });
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      calendar.push({ day, month });
-    }
-    setCalendar(calendar);
-  };
-
-  const openEventModal = (year: number, month: number, day: number) => {
-    setEventModalDate(new Date(year, month, day));
-    setEventDescription(getEventDescription(new Date(year, month, day)) || "");
-    setEventModalVisible(true);
-  };
-
-  const closeEventModal = () => {
-    setEventModalDate(null);
-    setEventDescription("");
-    setEventModalVisible(false);
-  };
-
-  const saveEvent = () => {
-    if (eventModalDate) {
-      const key = eventModalDate.toDateString();
-      const eventDescriptions: EventDescriptionMap = JSON.parse(
-        localStorage.getItem("eventDescriptions") || "{}"
-      );
-      eventDescriptions[key] = eventDescription;
-      localStorage.setItem(
-        "eventDescriptions",
-        JSON.stringify(eventDescriptions)
-      );
-      closeEventModal();
-    }
-  };
-
-  const getPolishMonthName = (englishMonthName: string): string => {
-    const monthNames: { [key: string]: string } = {
-      January: "Styczeń",
-      February: "Luty",
-      March: "Marzec",
-      April: "Kwiecień",
-      May: "Maj",
-      June: "Czerwiec",
-      July: "Lipiec",
-      August: "Sierpień",
-      September: "Wrzesień",
-      October: "Październik",
-      November: "Listopad",
-      December: "Grudzień",
-    };
-
-    const date = new Date(Date.parse(`1 ${englishMonthName} 2000`));
-    const monthNumber = date.getMonth() + 1;
-
-    return monthNames[englishMonthName] || englishMonthName;
-  };
-
-  const getEventDescription = (date: Date): string | undefined => {
-    const key = date.toDateString();
-    const eventDescriptions: EventDescriptionMap = JSON.parse(
-      localStorage.getItem("eventDescriptions") || "{}"
-    );
-    return eventDescriptions[key];
-  };
-
-  const changeMonth = (amount: number) => {
-    const newDate = new Date(currentYear, currentMonth + amount, 1);
-
-    setCurrentYear(newDate.getFullYear());
-    setCurrentMonth(newDate.getMonth());
-  };
-
-  const handlePrevMonthClick = () => {
-    changeMonth(-1);
-  };
-
-  const handleNextMonthClick = () => {
-    changeMonth(1);
-  };
-
-  useEffect(() => {
-    generateCalendar(currentMonth, currentYear);
-  }, [currentMonth, currentYear]);
-
-  const transformData = (
-    data: VacationData[],
-    setVacationDays: React.Dispatch<React.SetStateAction<TransformedData[]>>
-  ) => {
-    const transformedData: TransformedData[] = [];
-    data.forEach((item) => {
-      const startDate = new Date(item.startDate);
-      const endDate = new Date(item.endDate);
-      const daysDiff = Math.ceil(
-        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
-  
-      for (let i = 0; i <= daysDiff; i++) {
-        const currentDate = new Date(startDate);
-        currentDate.setDate(startDate.getDate() + i);
-        const dayNumber = currentDate.getDate();
-        const monthNumber = currentDate.getMonth(); 
-        let entry = transformedData.find(
-          (entry) => entry.dayNumber === dayNumber && entry.monthNumber === monthNumber
-        );
-        if (!entry) {
-          entry = { dayNumber, monthNumber, employeesList: [] };
-          transformedData.push(entry);
-        }
-  
-        entry.employeesList.push(item.employerName);
-      }
-    });
-    setVacationDays(transformedData);
-  };
-
-  useEffect(() => {
-    const date = new Date(
-      Date.parse(
-        `1 ${new Date(currentYear, currentMonth).toLocaleString("default", {
-          month: "long",
-        })} 2000`
-      )
-    );
-  
-    const calculatedMonthNumber = date.getMonth() + 1;
-    setMonthNumber(calculatedMonthNumber);
-
-    fetch(
-      `http://localhost:8080/vacations/calendarVacations/${calculatedMonthNumber}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        transformData(data, setVacationDays);
-        })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
-
-  const stateVacationNumber = (day: number, month: number) => {
-    let backgroundColor:
-      | "#f3201d57"
-      | "#edf10f4c"
-      | "#2dfc0349"
-      | "transparent" = "transparent";
-    if (vacationDays.length > 0) {
-      vacationDays.forEach((currentDay) => {
-        if (currentDay.dayNumber === day && currentDay.monthNumber === month) {
-          if (currentDay.employeesList.length === 1) {
-            backgroundColor = "#2dfc0349";
-          } else if (currentDay.employeesList.length === 2) {
-            backgroundColor = "#edf10f4c";
-          } else if (currentDay.employeesList.length > 2) {
-            backgroundColor = "#f3201d57";
-          }
-        }
-      });
-    }
-
-    return backgroundColor;
-  };
-
-  const stateElementInformation = (day: number, month: number) => {
-    let display: "block" | "none" = "none";
-    vacationDays.forEach((currentDay) => {
-      if (currentDay.dayNumber === day && currentDay.monthNumber === month) {
-        display = "block";
-        return display;
-      }
-    });
-
-    return display;
-  };
-  
-  const showVacationEmployees = (day: number, month: number) => {
-    const foundDay = vacationDays.find(
-      (currentDay) => currentDay.dayNumber === day && currentDay.monthNumber === month
-    );
-  
-    if (foundDay) {
-      const employees = foundDay.employeesList;
-  
-      return (
-        <div>
-          {employees.map((employee, index) => (
-            <DateInformationValue key={index}>{employee}</DateInformationValue>
-          ))}
-        </div>
-      );
-    } else {
-      return <div></div>;
-    }
-  };
-
-  const fetchCurrentEmployees = (day: number) => {
-    vacationDays.forEach((currentDay) => {
-      if (currentDay.dayNumber === day) {
-        setCurrentEmployees(currentDay.employeesList);
-        setIsHovered(false);
-      }
-    });
-  };
-
-  return (
-    <MainWrapper>
-      <Menu />
-      <FormWrapper>
-        <HeaderTop userName={userName} headerText="Generator urlopów" />
-        <Header>
-          <HeaderTitle>Nowy urlop</HeaderTitle>
-        </Header>
-        <CalendarContainer>
-          <CalendarHeader>
-            <PrevButton id="prevBtn" onClick={handlePrevMonthClick}>
-              Poprzedni
-            </PrevButton>
-            <MonthYear id="monthYear">
-              {getPolishMonthName(
-                new Date(currentYear, currentMonth).toLocaleString("default", {
-                  month: "long",
-                })
-              ) +
-                " " +
-                currentYear}
-            </MonthYear>
-            <NextButton id="nextBtn" onClick={handleNextMonthClick}>
-              Następny
-            </NextButton>
-          </CalendarHeader>
-          <DaysContainer>
-            <Day>Poniedziałek</Day>
-            <Day>Wtorek</Day>
-            <Day>Środa</Day>
-            <Day>Czwartek</Day>
-            <Day>Piątek</Day>
-            <Day>Sobota</Day>
-            <Day>Niedziela</Day>
-          </DaysContainer>
-
-          <Dates>
-            {calendar.map((calendarDay, index) => (
-              <DateElement
-                key={index}
-                backgroundColor={stateVacationNumber(calendarDay?.day, calendarDay.month)}
-                onMouseEnter={() => fetchCurrentEmployees(calendarDay?.day)}
-                onMouseLeave={() => setIsHovered(true)}
-              >
-                {calendarDay?.day !== 0 ? calendarDay.day : null}
-                <DateElementInformation
-                  display={stateElementInformation(calendarDay?.day, calendarDay.month)}
-                >{showVacationEmployees(calendarDay?.day, calendarDay.month)}
-                </DateElementInformation>
-              </DateElement>
-            ))}
-          </Dates>
-
-          {eventModalVisible && (
-            <EventModal>
-              <EventModalContent>
-                <CloseButton className="close" onClick={closeEventModal}>
-                  &times;
-                </CloseButton>
-                <EventDate id="eventDate">
-                  {eventModalDate?.toDateString()}
-                </EventDate>
-                <EventDescription
-                  className="area"
-                  id="eventDescription"
-                  value={eventDescription}
-                  onChange={(e) => setEventDescription(e.currentTarget.value)}
-                />
-                <SaveEventButton id="saveEventBtn" onClick={saveEvent}>
-                  Save
-                </SaveEventButton>
-              </EventModalContent>
-            </EventModal>
-          )}
-        </CalendarContainer>
-
-        <CalendarHelperContainer>
-          <CalendarLegendContainer>
-            <h1>FAQ</h1>
-            <StatusContainer>
-              <StatusColor backgroundColor={"#2dfc0367"} />
-              <StatusInformation>Jedna osoba ma urlop</StatusInformation>
-            </StatusContainer>
-            <StatusContainer>
-              <StatusColor backgroundColor={"#eef10fa3"} />
-              <StatusInformation>Dwie osoby mają urlop</StatusInformation>
-            </StatusContainer>
-            <StatusContainer>
-              <StatusColor backgroundColor={"#f3211d93"} />
-              <StatusInformation>
-                Wiecej niż dwie osoby mają urlop
-              </StatusInformation>
-            </StatusContainer>
-          </CalendarLegendContainer>
-        </CalendarHelperContainer>
-      </FormWrapper>
-    </MainWrapper>
-  );
-};
-
-export default Calendar;
