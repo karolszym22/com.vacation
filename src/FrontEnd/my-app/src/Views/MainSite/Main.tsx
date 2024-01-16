@@ -11,14 +11,6 @@ import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleCo
 import { RootState } from "../../Types/Vacations/RootState";
 import { Vacation } from "../../Types/Vacations/Vacation";
 
-interface Overlay {
-  overlayVisible: boolean;
-  modalVisible: boolean;
-  hamburgerVisible: boolean
-  setOverlayVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
 
 
 
