@@ -12,6 +12,7 @@ import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleCo
 import { getColorByTaskStatus } from "../../Utils/getColorByStatus";
 import usePersonVacations from "../../Hooks/NewVacation/useFetchPersonVacations";
 import { calculateBusinessDays } from "../../Utils/calculateBusinessDays";
+import useDateValidation from "../../Hooks/NewVacation/useDateValidate";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -23,15 +24,11 @@ interface VacationDescriptionI {
   selectedOption: string;
 }
 
-
-
 interface RootState {
   authorization: AuthorizationState;
 }
 
-
 function NewVacation() {
-
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
   );
@@ -49,67 +46,26 @@ function NewVacation() {
   const [done, setDone] = useState<boolean>(false);
   const [taskStatus, setTaskStatus] = useState("W realizacji");
   const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
+
   const [, setDaysNum] = useState<number>(0);
-  const { overlayVisible } = useContext(OverlayVisibleContext);
-  const { modalVisible } = useContext(OverlayVisibleContext);
+
   const { hamburgerVisible } = useContext(OverlayVisibleContext);
   const { setOverlayVisible } = useContext(OverlayVisibleContext);
   const { setModalVisible } = useContext(OverlayVisibleContext);
-  const [errorMessage, setErrorMessage] = useState("");
+
   const [selectedOption, setSelectedOption] = useState("Okolicznościowy");
 
-
-
-  
-
- 
-  const handleEndDateChange = async (newEndDate: string) => {
-    setEndDate(newEndDate);
-    console.log("Sending request with data:", {
-      personId,
-      startDate,
-      endDate: newEndDate,
-    });
-
-    const startDateObj = new Date(startDate);
-    const endDateObj = new Date(newEndDate);
-    try {
-      const response = await fetch("http://localhost:8080/dateValidate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          personId,
-          startDate: startDateObj,
-          endDate: endDateObj,
-        }),
-      });
-
-      if (!response.ok) {
-        const responseData = await response.text();
-        throw new Error(
-          `Request failed with status: ${response.status}, Response data: ${responseData}`
-        );
-      }
-
-      const validationResult = await response.text();
-      console.log(validationResult);
-    } catch (error) {
-      console.error("Error validating date:", error);
-      setErrorMessage(
-        "Tworzony przez Ciebie urlop koliduje z innym urlopem dziejącym się w tym samym okresie"
-      );
-      setModalVisible(true);
-      setOverlayVisible(true);
-    }
-  };
+  const {
+    endDate,
+    errorMessage,
+    modalVisible,
+    overlayVisible,
+    setEndDate,
+    handleEndDateChange,
+  } = useDateValidation();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-
 
     const vacationData = {
       description,
@@ -180,7 +136,7 @@ function NewVacation() {
               id="endDate"
               name="endDate"
               value={endDate}
-              onChange={(e) => handleEndDateChange(e.target.value)}
+              onChange={(e) => handleEndDateChange(personId, startDate, endDate)}
             />
             <Select
               value={selectedOption}
@@ -249,8 +205,6 @@ function NewVacation() {
 }
 
 export default NewVacation;
-
-
 
 const Table = styled.table`
   width: 100%;
@@ -352,17 +306,6 @@ const HeaderTitle = styled.h1`
   color: #696666;
 `;
 
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: left;
-  }
-`;
 
 const StyledForm = styled.form`
   display: flex;
