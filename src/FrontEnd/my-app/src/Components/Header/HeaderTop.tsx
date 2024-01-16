@@ -1,19 +1,10 @@
 import styled from "styled-components";
-import {useHeaderTopData} from "../../Hooks/Header/useHeaderTop";
-import {FiCopy, FiAlignJustify} from "react-icons/fi";
+import { useHeaderTopData } from "../../Hooks/Header/useHeaderTop";
+import { FiCopy, FiAlignJustify } from "react-icons/fi";
+import { HeaderTopProps } from "../../Types/Header/headerTop";
 
-interface Overlay {
-  overlayVisible: boolean;
-  setOverlayVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
-interface VacationPreviewProps {
-  userName: string;
-  headerText: string;
-}
-
-const HeaderTop: React.FC<VacationPreviewProps> = ({userName, headerText}) => {
- 
- const { toggleMenu } = useHeaderTopData();
+const HeaderTop: React.FC<HeaderTopProps> = ({ userName, headerText }) => {
+  const { toggleMenu } = useHeaderTopData();
   return (
     <Header>
       <HeaderTopInformation>
@@ -22,15 +13,13 @@ const HeaderTop: React.FC<VacationPreviewProps> = ({userName, headerText}) => {
       </HeaderTopInformation>
       <SignIn>
         <a>{userName}</a>
-        <HamburgerLogo onClick={toggleMenu}></HamburgerLogo>
+        <HamburgerLogo onClick={toggleMenu} />
       </SignIn>
     </Header>
   );
 };
 
 export default HeaderTop;
-
-
 
 const HeaderTopInformation = styled.div`
   display: flex;
