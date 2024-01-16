@@ -7,7 +7,6 @@ import Overlay from "../../Components/Overlay/Overlay";
 import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
 import { RootState } from "../../Types/Vacations/RootState";
 import InputEmoji from "react-input-emoji";
-
 import { ChatElementI } from "../../Types/Chat/ChatElementI";
 import { ChatElementDescriptionI } from "../../Types/Chat/ChatElementDescription";
 import { ChangeBoxMessageStatusI } from "../../Types/Chat/ChangeBoxMessageStatusI";
@@ -17,6 +16,7 @@ import useFetchUserList from "../../Hooks/Messages/useFetchUserList";
 import useCurrentCoresspondence from "../../Hooks/Messages/useCurrentCorespondance";
 import useCoresspondence from "../../Hooks/Messages/useCorespondance";
 import useReciepientData from "../../Hooks/Messages/useReciepientData";
+import { formatDate } from "../../Utils/formatDate";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -64,13 +64,6 @@ function Messages() {
     setCurrentCoresspondence(false);
   };
 
-  const formatDate = () => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
 
   const handleSubmit = async (description: string, title: string) => {
     const message = {
