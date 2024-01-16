@@ -1,22 +1,24 @@
 import { useState } from 'react';
 
 const useDateValidation = () => {
+  const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [overlayVisible, setOverlayVisible] = useState(false);
 
   const handleEndDateChange = async (personId: number, startDate: string, newEndDate: string) => {
+    
     setEndDate(newEndDate);
     console.log("Sending request with data:", {
       personId,
       startDate,
-      endDate: newEndDate,
+      endDate,
     });
 
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(newEndDate);
-
+    console.log(startDate + " = startdata a " + endDate + "enddata")
     try {
       const response = await fetch("http://localhost:8080/dateValidate", {
         method: "POST",
@@ -50,11 +52,13 @@ const useDateValidation = () => {
   };
 
   return {
+    startDate,
     endDate,
     errorMessage,
     modalVisible,
     overlayVisible,
     setEndDate,
+    setStartDate,
     handleEndDateChange,
   };
 };
