@@ -2,7 +2,9 @@ package com.vacation.com.vacation.Controller;
 import com.vacation.com.vacation.Model.Document;
 import com.vacation.com.vacation.Service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -45,9 +47,13 @@ public class DocumentController {
         int vacationId = requestData.get("vacationId");
         Document document = documentService.getCurrentDocument(personId, vacationId);
 
-        documentService.generateAndSaveDocument(personId, vacationId, document);
+        byte[] documentBytes = documentService.generateDocumentBytes(personId, vacationId, document);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "wniosek_urlopowy.docx");
+        headers.add("Access-Control-Expose-Headers", "Content-Disposition");
+        return new ResponseEntity<>(documentBytes, headers, HttpStatus.OK);
     }
 
 }
