@@ -52,7 +52,7 @@ public class DateValidationServiceTest {
     }
 
     @Test
-    public void testInvalidDateRange() {
+    public void testInvalidDateRangeOne() {
         // Given
         DateValidationRequest request = new DateValidationRequest();
         request.setPersonId(1);
@@ -64,6 +64,29 @@ public class DateValidationServiceTest {
         leave.setPersonId(1);
         leave.setStartDate(new Date(2023, 8, 3));
         leave.setEndDate(new Date(2023, 8, 7));
+        overlappingLeaves.add(leave);
+
+        when(holidayLeaveRepository.findByPersonId(1)).thenReturn(overlappingLeaves);
+
+        // When
+        boolean isDateValid = dateValidationService.isDateValid(request);
+
+        // Then
+        assertFalse(isDateValid);
+    }
+    @Test
+    public void testInvalidDateRangeTwo() {
+        // Given
+        DateValidationRequest request = new DateValidationRequest();
+        request.setPersonId(1);
+        request.setStartDate(new Date(2023, 8, 1));
+        request.setEndDate(new Date(2023, 9, 4));
+
+        List<HolidayLeave> overlappingLeaves = new ArrayList<>();
+        HolidayLeave leave = new HolidayLeave();
+        leave.setPersonId(1);
+        leave.setStartDate(new Date(2023, 8, 27));
+        leave.setEndDate(new Date(2023, 9, 2));
         overlappingLeaves.add(leave);
 
         when(holidayLeaveRepository.findByPersonId(1)).thenReturn(overlappingLeaves);
