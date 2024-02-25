@@ -13,7 +13,7 @@ import OverlayVisibleProvider from "../../Components/Context/OverlayVisibleConte
 import Messages from "../Messages/Messages";
 import Calendar from "../Calendar/Calendar";
 
-const Root: React.FC = () => {
+const Root = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
@@ -23,7 +23,7 @@ const Root: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
+const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
