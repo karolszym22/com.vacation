@@ -3,7 +3,7 @@ import { useHeaderTopData } from "../../Hooks/Header/useHeaderTop";
 import { FiCopy, FiAlignJustify } from "react-icons/fi";
 import { HeaderTopProps } from "../../Types/Header/headerTop";
 
-const HeaderTop: React.FC<HeaderTopProps> = ({ userName, headerText }) => {
+const HeaderTop: React.FC<HeaderTopProps> = ({ userName, userType, headerText }) => {
   const { toggleMenu } = useHeaderTopData();
   return (
     <Header>
@@ -11,17 +11,31 @@ const HeaderTop: React.FC<HeaderTopProps> = ({ userName, headerText }) => {
         <Information />
         <a>{headerText}</a>
       </HeaderTopInformation>
+      <SignInContainer>
       <SignIn>
         <a>{userName}</a>
         <HamburgerLogo onClick={toggleMenu} />
       </SignIn>
+      </SignInContainer>
     </Header>
   );
 };
 
 export default HeaderTop;
 
+const AccountType = styled.div`
+  font-size: 11px;
+  font-weight: bold;
+`
+
 const HeaderTopInformation = styled.div`
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  color: #928d8d;
+`;
+const SignInContainer = styled.div`
   display: flex;
   height: 100%;
   justify-content: center;
