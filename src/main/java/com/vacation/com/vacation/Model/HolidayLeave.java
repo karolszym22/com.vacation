@@ -20,6 +20,8 @@ public class HolidayLeave implements Vacation {
     private int id;
 
     @Temporal(TemporalType.DATE)
+    private Date createdDate;
+    @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @Temporal(TemporalType.DATE)
@@ -29,7 +31,8 @@ public class HolidayLeave implements Vacation {
     private boolean done;
     private String employerName;
     private String taskStatus;
-
+    private String step;
+    private String employeeTheme;
     private int personId;
 
     public boolean isDone() {
