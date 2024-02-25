@@ -1,11 +1,15 @@
-import { useMenuData } from "../../Hooks/Login/useMenu"
+import { useMenuData } from "../../Hooks/SignIn/useMenu"
 import styled from "styled-components";
 import {
   FiHome,
   FiFile,
 } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
-
+import { IoCalendar } from "react-icons/io5";
+import { IoHomeSharp } from "react-icons/io5";
+import { BiSolidMessageSquareDots } from "react-icons/bi";
+import { IoIosPaper } from "react-icons/io";
+import { SiGooglemessages } from "react-icons/si";
 
 interface SideMenuProps {
   isLogged: boolean
@@ -30,19 +34,19 @@ const Menu = () => {
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
-        <CustomHomeIcon />
+        <CalendarHomeIcon />
         <NavLinkName as={NavLink} to="/calendar">
           Kalendarz
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
-        <CustomHomeIcon />
+        <MessageIcon />
         <NavLinkName as={NavLink} to="/messages">
           Wiadomości
         </NavLinkName>
       </MenuNavLink>
       <MenuNavLink>
-        <CustomNewVacationIcon />
+        <PaperHomeIcon />
         <NavLinkName as={NavLink} to="/newVacation">
           Dodaj nowy urlop
         </NavLinkName>
@@ -62,17 +66,33 @@ export default Menu;
 
 
 
-const CustomHomeIcon = styled(FiHome)`
-  width: 15px;
-  height: 15px;
+const CustomHomeIcon = styled(IoHomeSharp)`
+  width: 30px;
+  height: 30px;
   margin: 5px;
   display: block;
   padding: 8px 5px;
 `;
 
-const CustomNewVacationIcon = styled(FiFile)`
-  width: 15px;
-  height: 15px;
+const CalendarHomeIcon = styled(IoCalendar)`
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  display: block;
+  padding: 8px 5px;
+`;
+
+const PaperHomeIcon = styled(IoIosPaper)`
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  display: block;
+  padding: 8px 5px;
+`;
+
+const MessageIcon = styled(SiGooglemessages)`
+  width: 30px;
+  height: 25px;
   margin: 5px;
   display: block;
   padding: 8px 5px;
