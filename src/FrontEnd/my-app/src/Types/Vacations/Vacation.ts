@@ -3,6 +3,7 @@ export {}
 export interface Vacation {
     id: number;
     description: string;
+    createdDate: string;
     daysNum: number;
     done: boolean;
     taskStatus: string;
@@ -10,4 +11,6 @@ export interface Vacation {
     endDate: string;
     employerName: string;
     personId: number;
+    step: string;
+    employeeTheme: string;
   }
