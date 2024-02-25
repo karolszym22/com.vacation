@@ -1,27 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Message } from "../../Types/Chat/Message";
+
 const useCurrentCoresspondence = () => {
   const [correspondenceId, setCorrespondenceId] = useState<number>();
   const [currentCoresspondence, setCurrentCoresspondence] = useState(false);
-  const [corresspondenceMessagesList, setCorresspondenceMessagesList] =
+  const [corresspondenceMessagesList, setCorrespondenceMessagesList] =
     useState<Message[]>([]);
 
-  const openCorrespondence = async (corespondenceId: number) => {
-    setCurrentCoresspondence(true);
-    alert(corespondenceId);
-    setCorrespondenceId(corespondenceId);
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/coresspondenceMessages",
-        {
-          corespondenceId: corespondenceId,
-        }
-      );
-      setCorresspondenceMessagesList(response.data);
-    } catch (error) {
-      console.error("Login error:", error);
+  useEffect(() => {
+    const fetchCorrespondenceMessages = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/coresspondenceMessages",
+          {
+            corespondenceId: correspondenceId,
+          }
+        );
+        setCorrespondenceMessagesList(response.data);
+      } catch (error) {
+        console.error("Fetch correspondence messages error:", error);
+      }
+    };
+
+    if (currentCoresspondence && correspondenceId) {
+      fetchCorrespondenceMessages();
     }
+  }, [currentCoresspondence, correspondenceId, corresspondenceMessagesList]);
+
+  const openCorrespondence = (corespondenceId: number) => {
+    setCurrentCoresspondence(true);
+    setCorrespondenceId(corespondenceId);
+    alert(corespondenceId);
   };
 
   return {
