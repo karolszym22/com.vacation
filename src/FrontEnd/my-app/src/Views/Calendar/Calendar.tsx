@@ -26,6 +26,9 @@ const Calendar: React.FC = () => {
   const userName = useSelector(
     (state: RootState) => state.authorization.user.name
   );
+  const userType = useSelector(
+    (state: RootState) => state.authorization.user.employerType
+  );
 
   const { currentYear, currentMonth, changeMonth } = useMonthChange();
   useTransformedVacationData(currentYear, currentMonth, setVacationDays);
@@ -147,7 +150,7 @@ const Calendar: React.FC = () => {
     <MainWrapper>
       <Menu />
       <FormWrapper>
-        <HeaderTop userName={userName} headerText="Generator urlopów" />
+        <HeaderTop userName={userName} userType={userType} headerText="Generator urlopów" />
         <Header>
           <HeaderTitle>Nowy urlop</HeaderTitle>
         </Header>
