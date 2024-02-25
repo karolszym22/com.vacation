@@ -26,6 +26,10 @@ function Main() {
     (state: RootState) => state.authorization.user.name
   );
 
+  const userType =  useSelector(
+    (state: RootState) => state.authorization.user.employerType
+  );
+
   const fetchData = async () => {
     try {
       const response = await fetch("http://localhost:8080/vacations");
@@ -51,9 +55,9 @@ function Main() {
       <Overlay overlayVisible={overlayVisible} modalVisible = {modalVisible} hamburgerVisible={hamburgerVisible} onClose={closeMenu} errorMessage="" />
         <Menu />
         <Wrapper>
-          <HeaderTop userName = {userName} headerText="Strona główna"></HeaderTop>
+          <HeaderTop userName = {userName} userType = {userType} headerText="Strona główna"></HeaderTop>
           <Header />
-          <MainMenu />
+          <MainMenu userType = {userType}/>
         </Wrapper>
       </MainWrapper>
       
