@@ -116,6 +116,18 @@ const Container = styled.div`
   background-repeat: no-repeat;
   height: 100vh;
 `;
+const RegisterContainer = styled.div`
+   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url(${background});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
