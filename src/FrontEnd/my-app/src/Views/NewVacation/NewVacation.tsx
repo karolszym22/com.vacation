@@ -13,6 +13,8 @@ import { getColorByTaskStatus } from "../../Utils/getColorByStatus";
 import usePersonVacations from "../../Hooks/NewVacation/useFetchPersonVacations";
 import { calculateBusinessDays } from "../../Utils/calculateBusinessDays";
 import useDateValidation from "../../Hooks/NewVacation/useDateValidate";
+import { set } from "date-fns";
+import vacationValidation from "../../Utils/vacationValidation";
 
 interface Overlay {
   overlayVisible: boolean;
@@ -38,7 +40,14 @@ function NewVacation() {
   const employerName = useSelector(
     (state: RootState) => state.authorization.user.name
   );
+  
+const userType = useSelector(
+    (state: RootState) => state.authorization.user.employerType
+  );
 
+  const userTheme = useSelector(
+    (state: RootState) => state.authorization.user.employerInitialsColor
+  );
   const personVacations = usePersonVacations(personId);
   const [vacations, setVacations] = useState<any[]>([]);
 
@@ -46,36 +55,56 @@ function NewVacation() {
   const [done, setDone] = useState<boolean>(false);
   const [taskStatus, setTaskStatus] = useState("W realizacji");
   const [startDate, setStartDate] = useState<string>("");
-
+  const [endDate, setEndDate] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [, setDaysNum] = useState<number>(0);
 
-  const { hamburgerVisible } = useContext(OverlayVisibleContext);
-  const { setOverlayVisible } = useContext(OverlayVisibleContext);
-  const { setModalVisible } = useContext(OverlayVisibleContext);
+  const overlayContext = useContext(OverlayVisibleContext);
+  const { hamburgerVisible, overlayVisible, modalVisible, setOverlayVisible, setModalVisible } = overlayContext;
+  
 
   const [selectedOption, setSelectedOption] = useState("Okolicznościowy");
 
   const {
-    endDate,
-    errorMessage,
-    modalVisible,
-    overlayVisible,
-    setEndDate,
+    //errorMessage,
+   // modalVisible,
+    //overlayVisible,
+
     handleEndDateChange,
   } = useDateValidation();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    const isEndDateValid = await handleEndDateChange(personId, startDate, endDate);
+    const areFormValues = vacationValidation(startDate, endDate, selectedOption)
+
+    if (!isEndDateValid) {
+      setErrorMessage("Tworzony przez Ciebie urlop koliduje z innym urlopem dziejącym się w tym samym okresie!");
+      setModalVisible(true)
+      setOverlayVisible(true)
+    }else if(!areFormValues){
+      setErrorMessage("Nie wszystkie pola są uzupełnione!");
+      setModalVisible(true)
+      setOverlayVisible(true)
+    }else if(!areFormValues && !isEndDateValid){
+      setErrorMessage("Nie wszystkie pola są uzupełnione oraz urlop koliduje z innym urlopem dziejącym się w tym samym okresie!");
+      setModalVisible(true)
+      setOverlayVisible(true)
+    }
+    else{
     const vacationData = {
       description,
       daysNum: calculateBusinessDays(new Date(startDate), new Date(endDate)),
+      createdDate: new Date(),
       done,
       personId,
       employerName,
       taskStatus,
       startDate,
       endDate,
+      step: "Akcpetacja Pracodawcy",
+      employeeTheme: userTheme
     };
 
     try {
@@ -97,11 +126,15 @@ function NewVacation() {
     } catch (error) {
       console.error("Error adding vacation:", error);
     }
-  };
+  }};
 
   const closeOverlay = () => {
     setOverlayVisible(false);
     setModalVisible(false);
+  };
+
+  const allErrorsValidate = async (endDateValue: string) => {
+   
   };
 
   return (
@@ -116,7 +149,7 @@ function NewVacation() {
         />
         <Menu />
         <FormWrapper>
-          <HeaderTop userName={userName} headerText="Generator urlopów" />
+          <HeaderTop userName={userName} userType={userType} headerText="Generator urlopów" />
           <Header>
             <HeaderTitle>Nowy urlop</HeaderTitle>
           </Header>
@@ -136,7 +169,7 @@ function NewVacation() {
               id="endDate"
               name="endDate"
               value={endDate}
-              onChange={(e) => handleEndDateChange(personId, startDate, endDate)}
+              onChange={(e) => setEndDate(e.target.value)}
             />
             <Select
               value={selectedOption}
