@@ -1,4 +1,4 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import Menu from "../../Components/SideMenu/SideMenu";
 import { useSelector } from "react-redux";
@@ -38,8 +38,6 @@ function Messages() {
     setCurrentCoresspondence,
   } = useCurrentCoresspondence();
 
-
-
   const [description, setMessage] = useState("");
   const [, setIsMenuOpen] = useState(false);
   const { overlayVisible } = useContext(OverlayVisibleContext);
@@ -55,7 +53,9 @@ function Messages() {
   const userInitialsColor = useSelector(
     (state: RootState) => state.authorization.user.employerInitialsColor
   );
-
+  const userType = useSelector(
+    (state: RootState) => state.authorization.user.employerType
+  );
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
@@ -63,7 +63,6 @@ function Messages() {
   const addNewCorrespondence = () => {
     setCurrentCoresspondence(false);
   };
-
 
   const handleSubmit = async (description: string, title: string) => {
     const message = {
@@ -126,6 +125,7 @@ function Messages() {
         <Wrapper>
           <HeaderTop
             userName={userName}
+            userType={userType}
             headerText="Skrzynka odbiorcza"
           ></HeaderTop>
           <Header>
@@ -153,6 +153,7 @@ function Messages() {
                               openCorrespondence(coresspondences.id)
                             }
                           />
+                          
                           <MessageElementAuthor>
                             {coresspondences.authorName}
                           </MessageElementAuthor>
@@ -288,7 +289,7 @@ const Wrapper = styled.div`
 const Header = styled.div`
   width: 100%;
   height: 70px;
-  background-color: rgb(201, 194, 194);
+  background-color: rgb(248, 244, 244);
 `;
 const HeaderTitle = styled.h1`
   margin: 10px;
@@ -297,7 +298,6 @@ const HeaderTitle = styled.h1`
 const MainContainer = styled.div`
   width: 100%;
   display: flex;
-  background-color: #eceaea;
   height: 100%;
 `;
 const BoxContainer = styled.div`
@@ -409,7 +409,7 @@ const MessageElementFooter = styled.div`
 const MessageElementAuthor = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 14px;
+  font-size: 11px;
   margin-left: 15px;
   margin-top: 15px;
   font-weight: bold;
