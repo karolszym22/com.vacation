@@ -150,9 +150,9 @@ const Calendar: React.FC = () => {
     <MainWrapper>
       <Menu />
       <FormWrapper>
-        <HeaderTop userName={userName} userType={userType} headerText="Generator urlopów" />
+        <HeaderTop userName={userName} userType={userType} headerText="Kalendarz z urlopami" />
         <Header>
-          <HeaderTitle>Nowy urlop</HeaderTitle>
+          <HeaderTitle>Kalendarz</HeaderTitle>
         </Header>
         <CalendarContainer>
           <CalendarHeader>
