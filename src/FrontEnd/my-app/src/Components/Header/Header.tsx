@@ -4,8 +4,8 @@ import { useHeaderData } from "../../Hooks/Header/useHeader";
 
 const Header = () => {
   const {
-    realizedVacations,
-    rejectedVacations,
+    realizedVacationsCount,
+    rejectedVacationsCount,
     duringVacationCount,
   } = useHeaderData();
 
@@ -17,7 +17,7 @@ const Header = () => {
           <HeaderElement>
             {" "}
             <HeaderElementValue color="#2dfc0394">
-              {realizedVacations.length}
+              {realizedVacationsCount}
             </HeaderElementValue>
             <Value>Zaakceptowane</Value>
           </HeaderElement>
@@ -31,7 +31,7 @@ const Header = () => {
           <HeaderElement>
             {" "}
             <HeaderElementValue color="#f3211d93">
-              {rejectedVacations.length}
+              {rejectedVacationsCount}
             </HeaderElementValue>
             <Value>Odrzucone</Value>
           </HeaderElement>
@@ -61,7 +61,7 @@ const HeaderContainer = styled.div`
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center 60%;
-    opacity: 0.2;
+    opacity: 0.1;
     z-index: -1;
   }
   @media (max-width: 530px) {

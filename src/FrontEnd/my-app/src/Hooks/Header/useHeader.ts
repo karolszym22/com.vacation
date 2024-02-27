@@ -14,6 +14,8 @@ export const useHeaderData = () => {
     (state: RootState) => state.vacations.vacationsCount
   );
   const duringVacationCount = vacationsCount - realizedVacations.length - rejectedVacations.length;
+  const realizedVacationsCount = realizedVacations.length;
+  const rejectedVacationsCount = rejectedVacations.length;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,5 +52,5 @@ export const useHeaderData = () => {
     fetchData();
   }, []);
 
-  return { userName, realizedVacations, rejectedVacations, duringVacationCount };
+  return { userName, realizedVacationsCount, rejectedVacationsCount, duringVacationCount };
 };
