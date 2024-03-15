@@ -2,9 +2,10 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "../Types/Vacations/RootState";
-import { OverlayVisibleContext } from "../Components/Context/OverlayVisibleContext";
-import { Vacation } from "../Types/Vacations/Vacation";
+import { RootState } from "../../Types/Vacations/RootState";
+import { OverlayVisibleContext } from "../../Components/Context/OverlayVisibleContext";
+import { Vacation } from "../../Types/Vacations/Vacation";
+import { FaBookmark } from "react-icons/fa6";
 
 export const useVacationData = () => {
   const { paramValue } = useParams<{ paramValue: string }>();
@@ -27,32 +28,20 @@ export const useVacationData = () => {
     }
   };
 
-  const downloadDocument = async () => {
+  const downloadDocument = () => {
     try {
       if (vacationData) {
         const downloadUrl = `http://localhost:8080/document/word/download`;
-        const requestData = {
-          personId: userId,
-          vacationId: vacationData.id,
-        };
-        const response = await fetch(downloadUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        });
-        if (response.ok) {
-          console.log("Document downloaded successfully");
-        } else {
-          console.error("Error downloading document:", response.statusText);
-        }
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.target = '_blank';
+        link.download = 'wniosek_urlopowy.docx';
+        link.click();
       }
     } catch (error) {
       console.error("Error downloading document:", error);
     }
   };
-
   const sendTask = async () => {
     try {
       if (vacationData) {
