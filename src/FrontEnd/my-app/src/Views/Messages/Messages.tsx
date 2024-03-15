@@ -155,7 +155,7 @@ function Messages() {
                           />
                           
                           <MessageElementAuthor>
-                            {coresspondences.authorName}
+                            <Author>Autor: </Author> {coresspondences.authorName}
                           </MessageElementAuthor>
                           <MessageElementFooter>
                             <MessageElementTitle>
@@ -392,7 +392,7 @@ const MessageOverlay = styled.div`
 `;
 
 const MessageElementTitle = styled.div`
-  width: 100%;
+  width: 40%;
   height: 22px;
   font-size: 13px;
   margin-left: 15px;
@@ -409,20 +409,25 @@ const MessageElementFooter = styled.div`
 const MessageElementAuthor = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 11px;
+  font-size: 14px;
   margin-left: 15px;
   margin-top: 15px;
   font-weight: bold;
   color: black;
 `;
+const Author = styled.a`
+  font-size: 12px;
+  color: #46596b;
+`
 const MessageElementData = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 13px;
+  font-size: 10px;
   margin-right: 5px;
   font-weight: bold;
   color: #46596b;
   font-weight: bold;
+  width: 100px;
 `;
 
 const ListHeaderButton = styled.div`
