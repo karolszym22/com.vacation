@@ -104,7 +104,8 @@ Generated document
 ![lights](https://github.com/karolszym22/com.vacation/assets/32464644/eb29bc3d-cd71-44a0-a90a-12a029f0ebd4)
 
 Now, if a logged-in employee is entitled to a certain step, a lit icon will inform him about it
-![legends](https://github.com/karolszym22/com.vacation/assets/32464644/7af06309-bd45-4aba-be0d-d3a625c6ef8d)
+![legends](https://github.com/karolszym22/com.vacation/assets/32464644/063302d8-c845-4cbc-a4c9-b0cfd2d63c33)
+
 Now, when the user's employee avatars appear on the home page, each user will have a record of how many leaves they have in their invoice, whether they have been accepted or rejected.
 
 # Update 1.1.0 has been released!
