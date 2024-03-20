@@ -28,6 +28,7 @@ const useSendTask = (vacationData: Vacation | null, userType: string) => {
               console.log("Task sent successfully:", response.data.taskEnums);
               console.log(response.data);
               setTaskEnums(response.data.taskEnums);
+              
             } else {
               console.error("Failed to send task.");
             }
@@ -37,7 +38,6 @@ const useSendTask = (vacationData: Vacation | null, userType: string) => {
         }
       };
   
-      // Check if vacationData is truthy before making the API call
       if (vacationData) {
         sendTask();
       }

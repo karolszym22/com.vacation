@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const useCheckDocumentExistence = (userId: number, vacationData: Vacation | null) => {
   const [documentExistence, setDocumentExistence] = useState(null);
-
+  console.log(vacationData?.id, userId)
   useEffect(() => {
     const checkDocumentExistence = async () => {
       try {
@@ -14,6 +14,7 @@ const useCheckDocumentExistence = (userId: number, vacationData: Vacation | null
         );
 
         const data = response.data;
+        
         setDocumentExistence(data);
       } catch (error) {
         console.error("Error checking document existence:", error);
@@ -24,7 +25,6 @@ const useCheckDocumentExistence = (userId: number, vacationData: Vacation | null
       checkDocumentExistence();
     }
   }, [userId, vacationData]);
-
   return documentExistence;
 };
 
