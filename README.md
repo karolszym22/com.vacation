@@ -49,7 +49,6 @@ Home
 ![obrazek1](https://github.com/karolszym22/com.vacation/assets/32464644/bc0f33e0-5c60-4c39-8416-c4aa3d463ac0)
 
 
-![obrazek1](https://github.com/karolszym22/com.vacation/assets/32464644/7a64fbaf-73b3-4652-9b93-a1615ec38e6a)
 
 
 Calendar
