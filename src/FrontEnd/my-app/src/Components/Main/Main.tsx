@@ -1,18 +1,40 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import { NavLink} from "react-router-dom";
-import { useVacations} from "../../Hooks/useVacationsHooks";
+import { NavLink } from "react-router-dom";
+import { useVacations } from "../../Hooks/useVacationsHooks";
 import useEmployeeList from "../../Hooks/useAllUsers";
 import { getInitials } from "../../Utils/getInitials.";
 import { countAcceptedVacations } from "../../Utils/getAcceptedNumber";
 import { countRejectedVacations } from "../../Utils/getRejectedNumber";
 import { countDuringVacations } from "../../Utils/getDuringNumber";
 import { getColorByTaskStatus } from "../../Utils/getColorByStatus";
+import { FaExclamation } from "react-icons/fa";
+import { FaBookmark } from "react-icons/fa6";
+import { TbExclamationMark } from "react-icons/tb";
+export interface HeaderTopProps {
+  userType: string;
+}
 
-
-const Menu = () => {
+const Menu: React.FC<HeaderTopProps> = ({ userType }) => {
   const { vacations } = useVacations();
   const employeeList = useEmployeeList();
+
+  const renderUserRoleIcon = (userType: string, vacationStep: string) => {
+    if (
+      ((userType === "TESTER" || userType === "HR") &&
+        vacationStep === "Akcpetacja HR") ||
+      ((userType === "TESTER" || userType === "PRACODAWCA") &&
+        vacationStep === "Akcpetacja Pracodawcy")
+    ) {
+      return (
+        <TableCell>
+          <WordIcon />
+        </TableCell>
+      );
+    } else {
+      return <TableCell />;
+    }
+  };
 
   return (
     <MainMenu>
@@ -26,29 +48,32 @@ const Menu = () => {
             <CustomerName>{employee.username}</CustomerName>
             <CustomerVacationsContainer>
               <CustomerVacationsAccepts>
-                <VacationsAcceptsColor/>
+                <VacationsAcceptsColor />
                 <VacationsAcceptsNumber>
                   {countAcceptedVacations(vacations, employee.id)}
                 </VacationsAcceptsNumber>
-                <CustomerVacationsState/>
+                <LegendInfo>Skończone</LegendInfo>
+                <CustomerVacationsState />
               </CustomerVacationsAccepts>
             </CustomerVacationsContainer>
             <CustomerVacationsContainer>
               <CustomerVacationsDuring>
-                <VacationsDuringColor/>
+                <VacationsDuringColor />
                 <VacationsAcceptsNumber>
                   {countDuringVacations(vacations, employee.id)}
                 </VacationsAcceptsNumber>
-                <CustomerVacationsState/>
+                <LegendInfo>W trakcie</LegendInfo>
+                <CustomerVacationsState />
               </CustomerVacationsDuring>
             </CustomerVacationsContainer>
             <CustomerVacationsContainer>
               <CustomerVacationsRejected>
-                <VacationsRejectedColor/>
+                <VacationsRejectedColor />
                 <VacationsAcceptsNumber>
                   {countRejectedVacations(vacations, employee.id)}
                 </VacationsAcceptsNumber>
-                <CustomerVacationsState/>
+                <LegendInfo>Odrzucone</LegendInfo>
+                <CustomerVacationsState />
               </CustomerVacationsRejected>
             </CustomerVacationsContainer>
           </CustomerElement>
@@ -61,6 +86,7 @@ const Menu = () => {
             <TableHeaderCell>Pracownik</TableHeaderCell>
             <TableHeaderCell>Dni</TableHeaderCell>
             <TableHeaderCell>Stan</TableHeaderCell>
+            <TableHeaderCell></TableHeaderCell>
             <TableHeaderCell>Szczegóły</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -77,6 +103,7 @@ const Menu = () => {
               >
                 {vacation.taskStatus}
               </TableCell>
+              {renderUserRoleIcon(userType, vacation.step)}
               <TableCell>
                 <NavLinkName as={NavLink} to={`/vacationId/${vacation.id}`}>
                   Podgląd
@@ -92,12 +119,10 @@ const Menu = () => {
 
 export default Menu;
 
-
 const MainMenu = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  
 `;
 
 const CustomersTitle = styled.div`
@@ -144,6 +169,7 @@ const CustomerName = styled.div`
   padding: 10px;
   width: 170px;
 `;
+
 const CustomerVacationsContainer = styled.div`
   box-sizing: border-box;
   padding: 10px;
@@ -176,6 +202,23 @@ const VacationsRejectedColor = styled.div`
   background-color: brown;
 `;
 
+const WordIcon = styled(FaExclamation)`
+  width: 25px;
+  height: 25px;
+  border-bottom: 1px solid #ddd;
+  animation: slideIn 0.75s infinite alternate;
+  @keyframes slideIn {
+    from {
+      fill: #e7ca78;
+    }
+    to {
+      fill: #ce2626;
+    }
+  }
+`;
+
+
+
 const CustomerVacationsDuring = styled.div`
   height: 100%;
   display: flex;
@@ -190,6 +233,13 @@ const CustomerVacationsRejected = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
+const LegendInfo = styled.div`
+  font-size: 13px;
+  font-weight: bold;
+  color: #504f4f;
+`
+
 const CustomerVacationsState = styled.div`
   font-size: 16px;
   color: grey;
