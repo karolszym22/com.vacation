@@ -47,6 +47,7 @@ public class VacationService {
         if (optionalVacation.isPresent()) {
             HolidayLeave vacation = optionalVacation.get();
             vacation.setTaskStatus(updatedVacation.getTaskStatus());
+            vacation.setStep(updatedVacation.getStep());
             holidayLeaveRepository.save(vacation);
         }
     }
