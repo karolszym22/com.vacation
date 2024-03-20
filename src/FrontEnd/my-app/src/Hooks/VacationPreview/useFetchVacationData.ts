@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Vacation } from '../../Types/Vacations/Vacation';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Vacation } from "../../Types/Vacations/Vacation";
 
 const useFetchVacationData = (paramValue: string | undefined) => {
-    const [vacationData, setVacationData] = useState<Vacation | null>(null);
-  const [error, setError] = useState<Error | null>(null); 
+  const [vacationData, setVacationData] = useState<Vacation | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,4 +30,3 @@ const useFetchVacationData = (paramValue: string | undefined) => {
 };
 
 export default useFetchVacationData;
-
