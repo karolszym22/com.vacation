@@ -9,6 +9,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,9 +47,7 @@ public class DocumentService {
         return documentRepository.findByPersonIdAndVacationId(personId,  vacationId);
 
     }
-
-    public void generateAndSaveDocument(int personId, int vacationId, Document document) {
-
+    public byte[] generateDocumentBytes(int personId, int vacationId, Document document) {
         Date startDate = document.getStartDate();
         Date endDate = document.getEndDate();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -123,5 +122,14 @@ public class DocumentService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            wordDocument.write(byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
     }
+
 }
