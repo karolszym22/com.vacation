@@ -17,7 +17,7 @@ const usePersonVacations = (personId: number) => {
     };
 
     fetchData();
-  }, [personVacations]);
+  }, [personVacations, personId]);
 
   return personVacations;
 };
