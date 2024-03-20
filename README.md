@@ -46,7 +46,8 @@ User registration:
 
 Home
 
-![glowna](https://github.com/karolszym22/com.vacation/assets/32464644/98b58e74-b790-4ca0-a172-3483eabf1328)
+![obrazek1](https://github.com/karolszym22/com.vacation/assets/32464644/c1d9058f-78a3-44be-a575-5f24c12c6556)
+
 
 Calendar
 ![kalendarz](https://github.com/karolszym22/com.vacation/assets/32464644/d370ff47-33fd-4978-9206-5b20fb81c588)
@@ -67,7 +68,8 @@ Date validation
 
 Available steps depend on the logged in user. In this case, the employer is logged in and can take the following steps: Reject, Return, Accept
 
-![szczegoly](https://github.com/karolszym22/com.vacation/assets/32464644/7bcedc08-e17f-4c3c-bb8a-5fc4bbd67569)
+
+![obrazek2](https://github.com/karolszym22/com.vacation/assets/32464644/491c3188-a05c-45de-a8b7-8578cdc59d22)
 
 
 
