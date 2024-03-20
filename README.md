@@ -100,7 +100,7 @@ Generated document
 - better project structure
 - adding new types
 - adding more imported hooks
-- # New features:
+- # New features and changes:
 ![lights](https://github.com/karolszym22/com.vacation/assets/32464644/eb29bc3d-cd71-44a0-a90a-12a029f0ebd4)
 
 Now, if a logged-in employee is entitled to a certain step, a lit icon will inform him about it
