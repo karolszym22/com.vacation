@@ -306,6 +306,12 @@ const CalendarContainer = styled.div`
   padding: 0px;
 `;
 
+const CalendarDataContainer = styled.div`
+  height: 500px;
+  width: 300px;
+`
+
+
 const CalendarHelperContainer = styled.div`
   width: 90%;
   padding: 0px;
@@ -389,9 +395,9 @@ const Day = styled.div`
 const Dates = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: 100px 100px 100px 100px 100px;
+  grid-template-rows: 100px 100px 100px 100px 100px 100px;
   @media (max-width: 1260px) {
-    grid-template-rows: 60px 60px 60px 60px 60px;
+    grid-template-rows: 60px 60px 60px 60px 60px 60px;
   }
 `;
 const DateElement = styled.div<DateElementProps>`
